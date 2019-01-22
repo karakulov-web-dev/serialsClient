@@ -18,7 +18,7 @@ export default class HeaderComponent extends BaseComponent {
 
     let img = document.createElement("img");
     img.className = "app_HeaderComponent_img";
-    img.src = "http://seasonvar.ru/tpl/asset/img/top.logo.png";
+    img.src = "./img/top.logo.png";
 
     elem.appendChild(img);
 

@@ -326,7 +326,7 @@ define("Components/HeaderComponent", ["require", "exports", "Components/BaseComp
             }
             var img = document.createElement("img");
             img.className = "app_HeaderComponent_img";
-            img.src = "http://seasonvar.ru/tpl/asset/img/top.logo.png";
+            img.src = "./img/top.logo.png";
             elem.appendChild(img);
             return elem;
         };
@@ -1412,251 +1412,56 @@ define("Polyfill/Promise_simple", ["require", "exports"], function (require, exp
 define("HTTP", ["require", "exports", "Polyfill/Promise_simple"], function (require, exports, Promise_simple_1) {
     "use strict";
     exports.__esModule = true;
-    function getSeason(id) {
+    function getSerials(config) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
-            resolve({
-                "id": "3801",
-                "poster": "http://cdn.seasonvar.ru/oblojka/3801.jpg",
-                "poster_small": "http://cdn.seasonvar.ru/oblojka/small/3801.jpg",
-                "season_number": "0",
-                "name": "Пение птиц",
-                "name_original": "Birdsong",
-                "year": "2012",
-                "genre": [
-                    "драмы",
-                    "исторические"
-                ],
-                "country": [
-                    "Великобритания"
-                ],
-                "description": "В основе этого коротенького сериала лежит сюжет романа «Пение птиц» известного Британского писателя Чарльза Фолкса, который был написан в1993 году. В книге изложена биография Стивена Рейсфорда. Он делится со зрителем своими воспоминаниями, когда во время Первой мировой войны испытывал сильные любовные чувства к одной француженке. Но эта любовь была запретной.",
-                "rating": {
-                    "imdb": {
-                        "ratio": "7.40",
-                        "votes_count": "4862"
-                    },
-                    "kinopoisk": {
-                        "ratio": "7.45",
-                        "votes_count": "2092"
-                    }
-                },
-                "playlist": [
-                    {
-                        "name": "1 серия",
-                        "link": "http://data12-cdn.datalock.ru/fi2lm/7fb1bcc5ec91dc657d77778f954c754a/7f_Birdsong.E01.2012.DUAL.BDRip.XviD.AC3.-J.R.A.a1.03.12.12.mp4"
-                    },
-                    {
-                        "name": "2 серия",
-                        "link": "http://data09-cdn.datalock.ru/fi2lm/7fb1bcc5ec91dc657d77778f954c754a/7f_Birdsong.E02.2012.DUAL.BDRip.XviD.AC3.-J.R.A.a1.03.12.12.mp4"
-                    }
-                ]
+            if (typeof config.limit === 'undefined') {
+                config.limit = 10;
+            }
+            if (typeof config.offset === 'undefined') {
+                config.offset = 0;
+            }
+            var data = JSON.stringify({
+                "type": "getData",
+                "from": "serials",
+                "limit": config.limit,
+                "offset": config.offset
             });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
         });
     }
-    exports.getSeason = getSeason;
-    function getAllSerials() {
+    exports.getSerials = getSerials;
+    ;
+    function getSeasons(idArr) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
-            resolve([
-                [{ id: 1,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/1.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/1.jpg',
-                        season_number: 1,
-                        name: '4400',
-                        name_original: 'The 4400',
-                        name_alternative: ['Четыре тысячи четыреста'],
-                        year: '2004',
-                        genre: ['фантастические'],
-                        country: ['США'],
-                        description: '4 тысячи 400 человек, которые непонятным образом исчезли в отдельные промежутки времени 20 столетия, вдруг очутились снова на земле, они появились точь-в-точь теми же, какими и исчезали. Государство берётся за дело, чтобы понять, где они были и почему они вернулись. Но ясно одно, что их присутствие запросто может поменять мир...',
-                        rating: { imdb: '7.40', kinopoisk: '7.46' } },
-                    { id: 2,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/2.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/2.jpg',
-                        season_number: 2,
-                        name: '4400',
-                        name_original: 'The 4400',
-                        name_alternative: ['Четыре тысячи четыреста'],
-                        year: '2004',
-                        genre: ['фантастические'],
-                        country: ['США'],
-                        description: 'Именно 4400 людей, о которых ни духу ни слуху не стало слышно в годы 20 века, но они снова на нашей планете, они не чуть не изменились. Но это серьёзно удивило высших чиновников, они тотчас же желают разобраться, что же происходило с этими необычными людьми. Ясно становится теперь, что эти люди в силах изменить всё вокруг...',
-                        rating: { imdb: '7.40', kinopoisk: '7.46' } },
-                    { id: 3,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/3.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/3.jpg',
-                        season_number: 3,
-                        name: '4400',
-                        name_original: 'The 4400',
-                        name_alternative: ['Четыре тысячи четыреста'],
-                        year: '2006',
-                        genre: ['фантастические'],
-                        country: ['США'],
-                        description: 'Загадочно то, что четыре тысячи четыреста людей пропадали в течение всего 20 столетия, а потом они спустя время оказываются снова на земле, они не состарились, они такие, какими были в момент пропажи. Правительству приходится начинать розыск людей с целью выяснения, кто же они такие, почему они снова вернулись. Не за горами то время, когда все поймут, что они могут поменять устои этого мира...',
-                        rating: { imdb: '7.40', kinopoisk: '7.46' } },
-                    { id: 4,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/4.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/4.jpg',
-                        season_number: 4,
-                        name: '4400',
-                        name_original: 'The 4400',
-                        name_alternative: ['Четыре тысячи четыреста'],
-                        year: '2007',
-                        genre: ['фантастические'],
-                        country: ['США'],
-                        description: 'На протяжении двадцатого века пропало 4 тысячи 400 человек, а теперь неслыханно, но они возвратились такими же, какими и ушли. Власти волнуются, они пытаются осознать, где всё это время были эти люди и отчего их кто-то отпустил. В скором будет всё ясно, что их прибывание может поменять необычайно этот мир...',
-                        rating: { imdb: '7.40', kinopoisk: '7.46' } }],
-                [{ id: 5,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/5.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/5.jpg',
-                        season_number: 1,
-                        name: 'Герои',
-                        name_original: 'Heroes',
-                        year: '2006',
-                        genre: ['фантастические', 'ужасы', 'драмы'],
-                        country: ['США'],
-                        description: 'Планета находится во власти ночи. Специалист по генетике, находящийся в Индии и обеспокоенный пропажей папы, создаёт открытие - о сверхлюдях, которые живут вокруг нас. Парень начал убеждать брата, который занимается политикой, в том, что умеет летать. Девушка из старших классов соображает, что обладает вечной жизнью. Девушка, которая прокармливает сына за счёт показа своего красивого тела, узнаёт, что в её отображении есть какая-то тайна. Один нарушитель удачно увиливает от властей, которые уже не один раз хотели его взять. Гениальный, но наркозависимый рисовальщик изображает то, что должно случится. Копу из Лос-Анджелеса, которому хоть и не везёт удаётся поймать несносного маньяка благодаря его способности к чтению мыслей. Сверхлюди либо делают всё куда лучше, либо...',
-                        rating: { imdb: '7.60', kinopoisk: '7.82' } },
-                    { id: 6,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/6.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/6.jpg',
-                        season_number: 2,
-                        name: 'Герои',
-                        name_original: 'Heroes',
-                        year: '2007',
-                        genre: ['фантастические', 'ужасы', 'драмы'],
-                        country: ['США'],
-                        description: 'Тьма затмила Землю. Профессор, увлекающийся генетикой, находится в недоумении от того, что его отец куда-то пропастился, но он обнаружил нечто интересное  - на нашей планете существуют люди с уникальными способностями. Мальчик утверждает, что способен летать, о чём и сообщает политически грамотному брату. Выпускница школы узнала, что ей не страшна смерть. Девушка - работница стрипклуба, которая перебивается со своим сыном ото дня день, заметила, что её вид в зеркале несёт в себе тайну. Парень обхитрил правительство, которые уже пару раз стремились остановить его. Наркоман рисует картины, на которых видно будущее время. Парню из полиции, у которого мало, что получается, есть способности к тому, о чём думают люди, поэтому он ловит опасного преступника. В стране восходящего солнца юноша в силах остановить время своим устремлением. Они сильно влияют на мир, но в какую сторону...',
-                        rating: { imdb: '7.60', kinopoisk: '7.82' } },
-                    { id: 7,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/7.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/7.jpg',
-                        season_number: 3,
-                        name: 'Герои',
-                        name_original: 'Heroes',
-                        year: '2008',
-                        genre: ['фантастические', 'ужасы', 'драмы'],
-                        country: ['США'],
-                        description: 'Ночь оковала Голубую планету. У индуса генетика странным образом исчезает папа, ошеломлённый этим он всё-таки сделал секретную теорию - рядом имеюются люди, которые способны на многое. Парень, витающий в воздушных замках, говорит своему брату-политику о своём даре к полёту. Девушке со школы никогда не угрожает быть мёртвой. Доступная девушка занимается ремеслом ради сына, она углядела, что её зеркальный образ таит загадку. Преступник умудряется дважды обыграть суд, который никак его не сумеет прихватить. В начертаниях картин художника, который сидит на наркотиках, отображаются ситуации, которые произойдут. Служащий полиции лишь из=за того, что знает мысли окружающих ловит дикого преступника. В Японии имеется личность, которая тормозит временное пространство. Голубая планета в опасности, ей нужна помощь...',
-                        rating: { imdb: '7.60', kinopoisk: '7.82' } },
-                    { id: 392,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/392.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/392.jpg',
-                        season_number: 4,
-                        name: 'Герои',
-                        name_original: 'Heroes',
-                        year: '2009',
-                        genre: ['фантастические', 'ужасы', 'драмы'],
-                        country: ['США'],
-                        description: 'Мрак скрыл планету. И тогда учёный-генетик индус, после исчезновения отца смог открыть теорию о людях с феноменальными возможностями... Один говорит брату-политику, что способен летать. Школьнице становится ясно, что ничто не сможет ей причинить увечье. On-line cтриптизерша из Лас-Вегаса старается помочь своему сыну и однажды замечает, что в отражении зеркальном имеется тайна. Преступник уже не единожды сумел уйти от копов. Гениальный художник-наркоман испортил отношения с любимой, но теперь видит будущее с помощью своих картин. Один непутёвый коп с Лос-Анджелеса читает мысли свирепых преступников! Юноша с Японии останавливает время. Эта команда должна спасти мир от катастрофы!',
-                        rating: { imdb: '7.60', kinopoisk: '7.82' } }],
-                [{ id: 8,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/8.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/8.jpg',
-                        season_number: 1,
-                        name: 'Говорящая с призраками',
-                        name_original: 'Ghost Whisperer',
-                        year: '2005',
-                        genre: ['мистические', 'фэнтези', 'драмы'],
-                        country: ['США'],
-                        description: 'Привидение идёт по пятам за приятельницей Мелинды Андреа. Оно перемещает вещи, дабы привлечь взгляды на него. Отлично выходит у приведения это нагнать страх на Андреа. Приятельница желает посодействовать в этой ситуации, чтоб уяснить, кто оно, что ему надо. Андреа думает, что это тот, встреча с которым была пару лет назад, ещё в Нью-Йорке...\r\n\r\n',
-                        rating: { imdb: '6.40', kinopoisk: '7.32' } },
-                    { id: 9,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/9.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/9.jpg',
-                        season_number: 2,
-                        name: 'Говорящая с призраками',
-                        name_original: 'Ghost Whisperer',
-                        year: '2006',
-                        genre: ['мистические', 'фэнтези', 'драмы'],
-                        country: ['США'],
-                        description: 'Мелинда недавно сыграла свадьбу. Она занимается продажей старинных вещей. Можно подумать, что она похоже на всех девушек. Но она необычайна, она контактирует с призраками погибших. Благодаря такому дару она может помочь живым людям, ведь призраки передают информацию...',
-                        rating: { imdb: '6.40', kinopoisk: '7.32' } },
-                    { id: 10,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/10.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/10.jpg',
-                        season_number: 3,
-                        name: 'Говорящая с призраками',
-                        name_original: 'Ghost Whisperer',
-                        year: '2007',
-                        genre: ['мистические', 'фэнтези', 'драмы'],
-                        country: ['США'],
-                        description: 'Мелинда недавно сыграла свадьбу. Она занимается продажей старинных вещей. Можно подумать, что она похоже на всех девушек. Но она необычайна, она контактирует с призраками погибших. Благодаря такому дару она может помочь живым людям, ведь призраки передают информацию…',
-                        rating: { imdb: '6.40', kinopoisk: '7.32' } },
-                    { id: 11,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/11.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/11.jpg',
-                        season_number: 4,
-                        name: 'Говорящая с призраками',
-                        name_original: 'Ghost Whisperer',
-                        year: '2008',
-                        genre: ['мистические', 'фэнтези', 'драмы'],
-                        country: ['США'],
-                        description: 'Дар медиума (человека, который способен общаться с умершими) в семье Мелинды Гордон передавался из поколения в поколение. Женщина сочувствует мертвым, которые не могут упокоиться с миром, и без колебаний старается помочь им: передает приветы их близким, советует, каким образом уладить те дела, который не успел закончить умерший. Однако с переездом в новый дом начинают происходить пугающие события – на зеркалах появляются таинственные символы, а по темным коридорам бродят зловещие призраки...',
-                        rating: { imdb: '6.40', kinopoisk: '7.32' } },
-                    { id: 462,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/462.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/462.jpg',
-                        season_number: 5,
-                        name: 'Говорящая с призраками',
-                        name_original: 'Ghost Whisperer',
-                        year: '2009',
-                        genre: ['мистические', 'фэнтези', 'драмы'],
-                        country: ['США'],
-                        description: 'Мелинда Гордон недавно справила свадьбу и начала вести свой антикварный магазин. Можно решить, что она такая же как и все девушки, но это не так. Мелинда имеет контакт с душами ушедших в мир иной. Она беседует с душами и получает от них важные сведения, которые помогают людям в её мире...',
-                        rating: { imdb: '6.40', kinopoisk: '7.32' } }],
-                [{ id: 3790,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/3790.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/3790.jpg',
-                        name: 'Последний враг',
-                        name_original: 'The Last Enemy',
-                        year: '2008',
-                        genre: ['драмы', 'триллеры'],
-                        country: ['Великобритания'],
-                        description: 'Недалекое будущее. После теракта на одной из станций лондонского метро британские власти устанавливают в стране тоталитарный режим. Население отчаянно боится террористов, поэтому не возражает, когда каждый гражданин получает обязательный электронный жетон, отслеживающий его местонахождение в любой момент дня и ночи. Большой Брат уже проснулся, но никто против этого не возражает, все боятся.',
-                        rating: { imdb: '7.10', kinopoisk: '7.22' } }],
-                [{ id: 3792,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/3792.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/3792.jpg',
-                        name: 'Закон',
-                        year: '2002',
-                        genre: ['драмы', 'криминальные', 'отечественные'],
-                        country: ['Россия'],
-                        description: 'Беззаконие и произвол захлестнули жизнь небольшого провинциального городка. Согласно неофициальным уликам, выясняется, что пособничество делам банды оказывает известный телевизионный ведущий религиозной программы, пользующийся в народе большим уважением. Иван Скляр - тот человек, который встанет у него на пути – бесстрашный и очень опытный судья, свято верящий в неизбежность наказания. \r\n\r\nНо вскоре, за недостатком доказательств, суд присяжных выносит убийце оправдательный приговор. Так, для Ивана Скляра, этот процесс, становится долгом чести: он поклялся найти дополнительные улики против злодея. Личная жизнь судебного исполнителя рушится: жена уходит из дому, а дочь безумно влюблена с предполагаемого преступника…',
-                        rating: { imdb: '7.50', kinopoisk: '7.75' } }],
-                [{ id: 3793,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/3793.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/3793.jpg',
-                        name: 'Робинзон',
-                        year: '2010',
-                        genre: ['драмы', 'отечественные'],
-                        country: ['Россия'],
-                        description: 'Действие фильма берёт своё начало 1985 году. В небольшом городке на севере страны живут трое совсем ещё юных мальчишек - Лёшка Балунов, Вовка Титов и Сашка Робертсон. Все они когда-то мечтали стать офицерами военно-морского флота. Их отцы служат на подводной лодке и часто уходят на секретные задания. \r\n\r\nПо прошествии времени, когда закадычные друзья оканчивали школу, военная служба уже не представлялась настолько престижной, ценности общества менялись, а подлодки только ржавели… \r\n\r\nТак, Вовка отправляется в Москву и начинает заниматься бизнесом. Лёшка пошёл случить в морскую пехоту. И только Сашка всегда был верным юношеской мечте – он начинает карьеру подводника… После событий, прогремевших на всю страну, когда в 1996 году на подлодке произошла авария, Сашка был там, на «краю бездны». Оказавшись заблокированным в отсеке, в кромешной тьме, Робертсон выжил! Невзирая на ультиматум жены – или она или флот, он по-прежнему верен присяге и продолжает нести службу.',
-                        rating: { imdb: '8.40', kinopoisk: '6.77' } }],
-                [{ id: 3801,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/3801.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/3801.jpg',
-                        name: 'Пение птиц',
-                        name_original: 'Birdsong',
-                        year: '2012',
-                        genre: ['драмы', 'исторические'],
-                        country: ['Великобритания'],
-                        description: 'В основе этого коротенького сериала лежит сюжет романа «Пение птиц» известного Британского писателя Чарльза Фолкса, который был написан в1993 году. В книге изложена биография Стивена Рейсфорда. Он делится со зрителем своими воспоминаниями, когда во время Первой мировой войны испытывал сильные любовные чувства к одной француженке. Но эта любовь была запретной.',
-                        rating: { imdb: '7.40', kinopoisk: '7.45' } }],
-                [{ id: 3803,
-                        poster: 'http://cdn.seasonvar.ru/oblojka/3803.jpg',
-                        poster_small: 'http://cdn.seasonvar.ru/oblojka/small/3803.jpg',
-                        season_number: 1,
-                        name: 'Это - Англия. Год 1986',
-                        name_original: 'This Is England \'86',
-                        year: '2010',
-                        genre: ['драмы'],
-                        country: ['Великобритания'],
-                        description: 'Действия фильма разворачиваются в 986 году. Только недавно, всего четыре года назад, прогремела Фолклендская война, а страну уже ждут новые потрясения. В центре этих событий и оказываются герои данной картины.',
-                        rating: { imdb: '8.30', kinopoisk: '8.25' } }]
-            ]);
+            var data = JSON.stringify({
+                "type": "getData",
+                "from": "seasons",
+                "where": "" + ("idSeasonvar = " + idArr.join(" OR idSeasonvar = "))
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
         });
     }
-    exports.getAllSerials = getAllSerials;
+    exports.getSeasons = getSeasons;
 });
 define("ListControllerChannels", ["require", "exports", "ListController", "RouteManager", "HTTP"], function (require, exports, ListController_1, RouteManager_1, HTTP_1) {
     "use strict";
@@ -1676,27 +1481,12 @@ define("ListControllerChannels", ["require", "exports", "ListController", "Route
             var display = this.display.get()();
             this.activeItem = display[focusPosition];
         };
-        ListControllerChannels.prototype.openVideoList = function () {
-            this.model.channelSections.scrolPosition.set(0);
-            this.model.channelSections.focusPosition.set(0);
-            var videoList = this.model.getInstance("video").getValue("list");
-            var model = this.model;
-            var nextPageToken = this.model
-                .getInstance("video")
-                .getValue("nextPageToken");
-            var route = this.model.getInstance("App").getValue("route");
-            HTTPgetVideo(this.activeItem.id).then(function (data) {
-                videoList.set(data.items);
-                nextPageToken.set(data.nextPageToken);
-                model.video.totalResults.set(data.pageInfo.totalResults);
-                new RouteManager_1["default"]().set("/video");
-            });
-        };
         ListControllerChannels.prototype.openSerial = function () {
-            if (this.activeItem.length > 1) {
+            if (this.activeItem.seasons_number > 1) {
                 this.openSeasonList();
             }
             else {
+                console.log('ffff');
                 this.openSeriesList();
             }
         };
@@ -1705,8 +1495,9 @@ define("ListControllerChannels", ["require", "exports", "ListController", "Route
             var list = this.model.getInstance("seriesList").getValue("list");
             this.model.seasonList.scrolPosition.set(0);
             this.model.seasonList.focusPosition.set(0);
-            console.log(this.activeItem);
-            HTTP_1.getSeason(this.activeItem[0].id).then(function (data) {
+            var seasonsIdList = JSON.parse(this.activeItem.seasonListIdJson);
+            var seasonId = seasonsIdList[0];
+            HTTP_1.getSeason(seasonId).then(function (data) {
                 data.playlist.forEach(function (item) {
                     item.poster = data.poster;
                 });
@@ -1718,51 +1509,25 @@ define("ListControllerChannels", ["require", "exports", "ListController", "Route
             var list = this.model.getInstance("seasonList").getValue("list");
             this.model.seasonList.scrolPosition.set(0);
             this.model.seasonList.focusPosition.set(0);
-            list.set(this.activeItem);
+            HTTP_1.getSeasons(JSON.parse(this.activeItem.seasonListIdJson)).then(function (data) {
+                list.set(data);
+            });
         };
-        ListControllerChannels.prototype.openChannelSections = function () {
-            var list = this.model.getInstance("channelSections").getValue("list");
-            new RouteManager_1["default"]().set("/channelSection");
-            this.model.channelSections.scrolPosition.set(0);
-            this.model.channelSections.focusPosition.set(0);
-            var allVideos = {
-                id: this.activeItem.id,
-                snippet: {
-                    title: "Все видео",
-                    type: "allVideos"
-                },
-                firstPlayList: {
-                    snippet: {
-                        thumbnails: {
-                            medium: {
-                                url: "./img/allVideos.png"
-                            }
-                        }
-                    }
-                }
-            };
-            getChannelSections(this.activeItem.id).then(function (data) {
-                var itemsArr = data.items.filter(function (item) {
-                    if (typeof item.contentDetails !== 'undefined') {
-                        if (typeof item.contentDetails.playlists !== 'undefined') {
-                            if (typeof item.contentDetails.playlists[0] !== 'undefined') {
-                                return item.firstPlayList = item.contentDetails.playlists[0];
-                            }
-                        }
-                    }
-                });
-                var stringPlayListId = itemsArr.map(function (item) {
-                    return item.firstPlayList;
-                }).join(",");
-                getPlaylistsForIdList(stringPlayListId).then(function (data) {
-                    var i = 0;
-                    itemsArr.forEach(function (item) {
-                        item.firstPlayList = data.items[i];
-                        i++;
-                    });
-                    itemsArr.unshift(allVideos);
-                    list.set(itemsArr);
-                });
+        ListControllerChannels.prototype.infiniteScroll = function () {
+            var length = this.model.serialList.list.get().length;
+            var scrolPosition = this.model.serialList.scrolPosition.get();
+            var dif = length - scrolPosition;
+            if (dif < 20) {
+                this.addContent();
+            }
+        };
+        ListControllerChannels.prototype.addContent = function () {
+            var _this = this;
+            var length = this.model.serialList.list.get().length;
+            var currentList = this.model.serialList.list.get();
+            HTTP_1.getSerials({ limit: 50, offset: length }).then(function (data) {
+                currentList = currentList.concat(data);
+                _this.model.serialList.list.set(currentList);
             });
         };
         return ListControllerChannels;
@@ -2940,7 +2705,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             appContainer.appendChild(pageRouterWrap);
             var model = new AppModel_7["default"]();
             window.model = model;
-            HTTP_3.getAllSerials().then(function (data) {
+            HTTP_3.getSerials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
             inputLayer_1["default"].init();

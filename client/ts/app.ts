@@ -4,7 +4,7 @@ import PageRouter from "./Components/PageRouter";
 import inputLayer from "./inputLayer";
 import {stbObj} from "./interfaceGlobal"
 import adaptation from "./adaptation"
-import {getAllSerials} from "./HTTP"
+import {getSerials} from "./HTTP"
 import aspectRatioManager from "./aspectRatioManager"
 
 declare var gSTB:stbObj 
@@ -16,7 +16,7 @@ var prodaction = true
 class App {
   static main(appContainerSelector: string) {
     bindPolifil();
-    adaptation()
+    adaptation();
     try {
       netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
 
@@ -43,7 +43,7 @@ class App {
 
     let model:any = new AppModel();
     window.model = model;
-    getAllSerials().then(data => {
+    getSerials({limit: 50, offset: 0}).then(data => {
       model.serialList.list.set(data)
     })
 

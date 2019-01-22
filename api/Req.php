@@ -1,5 +1,5 @@
 <?php
-$mysqli = new mysqli("127.0.0.1", "seasonvar", "lolkarakul111", "seasonvar", 3306);
+$mysqli = new mysqli("127.0.0.1", "seasonvar", "jnfKLBY7ZfJq6WZG", "seasonvar", 3306);
 $mysqli->set_charset("utf8");
 
 class Req {
