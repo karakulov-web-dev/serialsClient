@@ -1,5 +1,5 @@
 import AppModel from "./AppModel";
-import ListControllerChannels from "./ListControllerChannels";
+import ListControllerSerials from "./ListControllerSerials";
 import ListControllerVideo from "./ListControllerVideo";
 import ListControllerPlayLists from "./ListControllerPlayLists";
 import Play from "./Play";
@@ -10,7 +10,7 @@ import aspectRatioManager from "./aspectRatioManager"
 let model = new AppModel();
 
 let instanceModel = model.getInstance("serialList");
-let listControllerChannels = new ListControllerChannels(instanceModel);
+let listControllerSerials = new ListControllerSerials(instanceModel);
 
 let instanceModelVideo = model.getInstance("seriesList");
 let listControllerVideo = new ListControllerVideo(instanceModelVideo);
@@ -47,22 +47,22 @@ var _: inputLayer = {
         exitManager.exitReq()
           break;
         case 40:
-          listControllerChannels.downFocusPosition();
+        listControllerSerials.downFocusPosition();
           break;
         case 38:
-          listControllerChannels.upFocusPosition();
+        listControllerSerials.upFocusPosition();
           break;
         case 39:
-          listControllerChannels.rigthFocusPosition();
+        listControllerSerials.rigthFocusPosition();
           break;
         case 37:
-          listControllerChannels.leftFocusPosition();
+        listControllerSerials.leftFocusPosition();
           break;
         case 13:
-          listControllerChannels.onEnter();
+        listControllerSerials.onEnter();
           break;
         case 113:
-          listControllerChannels.onEnter();
+        listControllerSerials.onEnter();
           break;
           case 112: 
           exitManager.exitReq()

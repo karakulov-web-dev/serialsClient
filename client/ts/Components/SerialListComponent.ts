@@ -1,6 +1,6 @@
 import ListComponent from "./ListComponent";
 
-export default class ChannelListComponent extends ListComponent {
+export default class SerialListComponent extends ListComponent {
   constructor() {
     super("serialList", {
       elemClassName: "app_ChannelListComponent",

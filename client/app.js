@@ -448,12 +448,12 @@ define("Components/ListComponent", ["require", "exports", "Components/BaseCompon
         return (timeString);
     }
 });
-define("Components/ChannelListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_1) {
+define("Components/SerialListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_1) {
     "use strict";
     exports.__esModule = true;
-    var ChannelListComponent = /** @class */ (function (_super) {
-        __extends(ChannelListComponent, _super);
-        function ChannelListComponent() {
+    var SerialListComponent = /** @class */ (function (_super) {
+        __extends(SerialListComponent, _super);
+        function SerialListComponent() {
             return _super.call(this, "serialList", {
                 elemClassName: "app_ChannelListComponent",
                 wrapClassName: "app_ChannelListComponent_wrap_elem",
@@ -463,9 +463,9 @@ define("Components/ChannelListComponent", ["require", "exports", "Components/Lis
                 h1ClassName: "app_ChannelListComponent_card_h1"
             }) || this;
         }
-        return ChannelListComponent;
+        return SerialListComponent;
     }(ListComponent_1["default"]));
-    exports["default"] = ChannelListComponent;
+    exports["default"] = SerialListComponent;
 });
 define("Components/ButtonComponent", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_3) {
     "use strict";
@@ -532,7 +532,7 @@ define("Components/BottomButtonComponent", ["require", "exports", "Components/Ba
     }(BaseComponent_4["default"]));
     exports["default"] = BottomButtonComponent;
 });
-define("Components/HomeComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/ChannelListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_5, HeaderComponent_1, ChannelListComponent_1, BottomButtonComponent_1) {
+define("Components/HomeComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_5, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -543,7 +543,7 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [HeaderComponent_1["default"], ChannelListComponent_1["default"]];
+            var compList = [HeaderComponent_1["default"], SerialListComponent_1["default"]];
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -1462,35 +1462,51 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple"], function (requ
         });
     }
     exports.getSeasons = getSeasons;
+    function getSeason(id) {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({ "season": id });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSeason.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.getSeason = getSeason;
 });
-define("ListControllerChannels", ["require", "exports", "ListController", "RouteManager", "HTTP"], function (require, exports, ListController_1, RouteManager_1, HTTP_1) {
+define("ListControllerSerials", ["require", "exports", "ListController", "RouteManager", "HTTP"], function (require, exports, ListController_1, RouteManager_1, HTTP_1) {
     "use strict";
     exports.__esModule = true;
     new RouteManager_1["default"]().set;
-    var ListControllerChannels = /** @class */ (function (_super) {
-        __extends(ListControllerChannels, _super);
-        function ListControllerChannels() {
+    var ListControllerSerials = /** @class */ (function (_super) {
+        __extends(ListControllerSerials, _super);
+        function ListControllerSerials() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        ListControllerChannels.prototype.onEnter = function () {
+        ListControllerSerials.prototype.onEnter = function () {
             this.defineActiveItem();
             this.openSerial();
         };
-        ListControllerChannels.prototype.defineActiveItem = function () {
+        ListControllerSerials.prototype.defineActiveItem = function () {
             var focusPosition = this.focusPosition.get();
             var display = this.display.get()();
             this.activeItem = display[focusPosition];
         };
-        ListControllerChannels.prototype.openSerial = function () {
+        ListControllerSerials.prototype.openSerial = function () {
             if (this.activeItem.seasons_number > 1) {
                 this.openSeasonList();
             }
             else {
-                console.log('ffff');
                 this.openSeriesList();
             }
         };
-        ListControllerChannels.prototype.openSeriesList = function () {
+        ListControllerSerials.prototype.openSeriesList = function () {
             new RouteManager_1["default"]().set("/seriesList");
             var list = this.model.getInstance("seriesList").getValue("list");
             this.model.seasonList.scrolPosition.set(0);
@@ -1504,7 +1520,7 @@ define("ListControllerChannels", ["require", "exports", "ListController", "Route
                 list.set(data.playlist);
             });
         };
-        ListControllerChannels.prototype.openSeasonList = function () {
+        ListControllerSerials.prototype.openSeasonList = function () {
             new RouteManager_1["default"]().set("/seasonList");
             var list = this.model.getInstance("seasonList").getValue("list");
             this.model.seasonList.scrolPosition.set(0);
@@ -1513,7 +1529,7 @@ define("ListControllerChannels", ["require", "exports", "ListController", "Route
                 list.set(data);
             });
         };
-        ListControllerChannels.prototype.infiniteScroll = function () {
+        ListControllerSerials.prototype.infiniteScroll = function () {
             var length = this.model.serialList.list.get().length;
             var scrolPosition = this.model.serialList.scrolPosition.get();
             var dif = length - scrolPosition;
@@ -1521,7 +1537,7 @@ define("ListControllerChannels", ["require", "exports", "ListController", "Route
                 this.addContent();
             }
         };
-        ListControllerChannels.prototype.addContent = function () {
+        ListControllerSerials.prototype.addContent = function () {
             var _this = this;
             var length = this.model.serialList.list.get().length;
             var currentList = this.model.serialList.list.get();
@@ -1530,9 +1546,9 @@ define("ListControllerChannels", ["require", "exports", "ListController", "Route
                 _this.model.serialList.list.set(currentList);
             });
         };
-        return ListControllerChannels;
+        return ListControllerSerials;
     }(ListController_1["default"]));
-    exports["default"] = ListControllerChannels;
+    exports["default"] = ListControllerSerials;
 });
 define("interfaceGlobal", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2379,12 +2395,12 @@ define("aspectRatioManager", ["require", "exports"], function (require, exports)
     };
     exports["default"] = _;
 });
-define("inputLayer", ["require", "exports", "AppModel", "ListControllerChannels", "ListControllerVideo", "ListControllerPlayLists", "Play", "ExitManager", "RouteManager", "aspectRatioManager"], function (require, exports, AppModel_6, ListControllerChannels_1, ListControllerVideo_1, ListControllerPlayLists_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1) {
+define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerPlayLists", "Play", "ExitManager", "RouteManager", "aspectRatioManager"], function (require, exports, AppModel_6, ListControllerSerials_1, ListControllerVideo_1, ListControllerPlayLists_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_6["default"]();
     var instanceModel = model.getInstance("serialList");
-    var listControllerChannels = new ListControllerChannels_1["default"](instanceModel);
+    var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
     var instanceModelVideo = model.getInstance("seriesList");
     var listControllerVideo = new ListControllerVideo_1["default"](instanceModelVideo);
     var instanceModelPlayListsList = model.getInstance("playListsList");
@@ -2411,22 +2427,22 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerChannels"
                         exitManager.exitReq();
                         break;
                     case 40:
-                        listControllerChannels.downFocusPosition();
+                        listControllerSerials.downFocusPosition();
                         break;
                     case 38:
-                        listControllerChannels.upFocusPosition();
+                        listControllerSerials.upFocusPosition();
                         break;
                     case 39:
-                        listControllerChannels.rigthFocusPosition();
+                        listControllerSerials.rigthFocusPosition();
                         break;
                     case 37:
-                        listControllerChannels.leftFocusPosition();
+                        listControllerSerials.leftFocusPosition();
                         break;
                     case 13:
-                        listControllerChannels.onEnter();
+                        listControllerSerials.onEnter();
                         break;
                     case 113:
-                        listControllerChannels.onEnter();
+                        listControllerSerials.onEnter();
                         break;
                     case 112:
                         exitManager.exitReq();

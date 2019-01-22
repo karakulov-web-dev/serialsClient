@@ -1,7 +1,7 @@
 import BaseComponent from "./BaseComponent";
 
 import HeaderComponent from "./HeaderComponent";
-import ChannelListComponent from "./ChannelListComponent";
+import SerialListComponent from "./SerialListComponent";
 import BottomButtonComponent from "./BottomButtonComponent";
 
 export default class HomeComponent extends BaseComponent {
@@ -9,7 +9,7 @@ export default class HomeComponent extends BaseComponent {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [HeaderComponent, ChannelListComponent];
+    let compList = [HeaderComponent, SerialListComponent];
 
     compList.forEach(Comp => {
       let wrap = document.createElement("div");

@@ -4,7 +4,7 @@ import {getSeasons,getSerials,getSeason} from "./HTTP"
 
 new RouteManager().set
 
-export default class ListControllerChannels extends ListController {
+export default class ListControllerSerials extends ListController {
   public onEnter() {
     this.defineActiveItem();
     this.openSerial();
@@ -18,7 +18,6 @@ export default class ListControllerChannels extends ListController {
     if (this.activeItem.seasons_number > 1) {
       this.openSeasonList()
     } else {
-      console.log('ffff')
       this.openSeriesList()
     }
   }
@@ -27,10 +26,8 @@ export default class ListControllerChannels extends ListController {
     let list: any = this.model.getInstance("seriesList").getValue("list")
     this.model.seasonList.scrolPosition.set(0)
     this.model.seasonList.focusPosition.set(0)
-
     let seasonsIdList = JSON.parse(this.activeItem.seasonListIdJson);
     let seasonId = seasonsIdList[0];
-    
     getSeason(seasonId).then(data => {
       data.playlist.forEach(item => {
         item.poster = data.poster
