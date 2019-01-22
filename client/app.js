@@ -1207,7 +1207,88 @@ define("Components/PlayComponent", ["require", "exports", "Components/BaseCompon
         return PauseIndicator;
     }(BaseComponent_10["default"]));
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent"], function (require, exports, BaseComponent_11, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1) {
+define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_11) {
+    "use strict";
+    exports.__esModule = true;
+    var ExitReqComp = /** @class */ (function (_super) {
+        __extends(ExitReqComp, _super);
+        function ExitReqComp() {
+            var _this = _super.call(this) || this;
+            _this.ExitMenuInstance = _this.model.getInstance("ExitMenuInstance");
+            _this.ExitConfig = _this.ExitMenuInstance.getValue("config");
+            _this.ExitConfig.subscribe(_this);
+            return _this;
+        }
+        ExitReqComp.prototype.create = function () {
+            var data = this.ExitConfig.get();
+            var div = document.createElement("div");
+            div.className = "app_ExitReqComp";
+            var h1 = document.createElement("h1");
+            var list = document.createElement("div");
+            div.appendChild(h1);
+            div.appendChild(list);
+            h1.className = "app_ExitReqComp_h1";
+            h1.innerHTML = data.text;
+            data.list.forEach(function (item) {
+                list.appendChild((function (item) {
+                    var div = document.createElement("div");
+                    div.className = "app_ExitReqComp_item";
+                    if (item.active) {
+                        div.className = "app_ExitReqComp_item active";
+                    }
+                    var p = document.createElement("p");
+                    p.innerHTML = item.name;
+                    div.appendChild(p);
+                    return div;
+                }(item)));
+            });
+            return div;
+        };
+        return ExitReqComp;
+    }(BaseComponent_11["default"]));
+    exports["default"] = ExitReqComp;
+});
+define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/ExitReqComp"], function (require, exports, BaseComponent_12, HeaderComponent_4, BottomButtonComponent_4, ExitReqComp_1) {
+    "use strict";
+    exports.__esModule = true;
+    var ExitReqPageComp = /** @class */ (function (_super) {
+        __extends(ExitReqPageComp, _super);
+        function ExitReqPageComp() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ExitReqPageComp.prototype.create = function () {
+            var div = document.createElement("div");
+            div.className = "app_ExitReqPageComp";
+            new HeaderComponent_4["default"]().render(div.appendChild(document.createElement("div")));
+            new ExitReqComp_1["default"]().render(div.appendChild(document.createElement("div")));
+            var bottomBtnComp = new BottomButtonComponent_4["default"]({
+                red: {
+                    text: "Отмена",
+                    visible: true
+                },
+                green: {
+                    text: "Смотреть",
+                    visible: false
+                },
+                yellow: {
+                    text: "На главную",
+                    visible: false
+                },
+                blue: {
+                    text: "1",
+                    visible: false
+                }
+            });
+            var btnWrap = document.createElement("div");
+            div.appendChild(btnWrap);
+            bottomBtnComp.render(btnWrap);
+            return div;
+        };
+        return ExitReqPageComp;
+    }(BaseComponent_12["default"]));
+    exports["default"] = ExitReqPageComp;
+});
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp"], function (require, exports, BaseComponent_13, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -1241,11 +1322,14 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             else if (route === '/play') {
                 page = new PlayComponent_1["default"]();
             }
+            else if (route === '/exitReq') {
+                page = new ExitReqPageComp_1["default"]();
+            }
             page.render(elem);
             return elem;
         };
         return PageRouter;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_13["default"]));
     exports["default"] = PageRouter;
 });
 define("ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
@@ -2422,6 +2506,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
         },
         handlers: {
             "/home": function (code) {
+                console.log(code);
                 switch (code) {
                     case 27:
                         exitManager.exitReq();
@@ -2440,12 +2525,6 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                     case 13:
                         listControllerSerials.onEnter();
-                        break;
-                    case 113:
-                        listControllerSerials.onEnter();
-                        break;
-                    case 112:
-                        exitManager.exitReq();
                         break;
                 }
             },

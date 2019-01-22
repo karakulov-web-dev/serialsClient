@@ -42,6 +42,7 @@ var _: inputLayer = {
   },
   handlers: {
     "/home": function(code) {
+      console.log(code)
       switch (code) {
         case 27:
         exitManager.exitReq()
@@ -61,12 +62,6 @@ var _: inputLayer = {
         case 13:
         listControllerSerials.onEnter();
           break;
-        case 113:
-        listControllerSerials.onEnter();
-          break;
-          case 112: 
-          exitManager.exitReq()
-          break
       }
     },
     "/channelSection": function(code) {

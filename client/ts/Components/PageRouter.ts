@@ -3,6 +3,7 @@ import HomeComponent from "./HomeComponent";
 import SeasonsComponent from "./SeasonsComponent"
 import SeriesComponent from "./SeriesComponent"
 import PlayComponent from "./PlayComponent"
+import ExitReqPageComp from "./ExitReqPageComp"
 
 export default class PageRouter extends BaseComponent {
   constructor() {
@@ -32,7 +33,10 @@ export default class PageRouter extends BaseComponent {
       page = new SeriesComponent()
     } else if (route === '/play') {
       page = new PlayComponent()
+    } else if (route === '/exitReq') {
+      page = new ExitReqPageComp()
     }
+    
     page.render(elem);
     return elem;
   }
