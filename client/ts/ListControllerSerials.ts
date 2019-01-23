@@ -3,7 +3,6 @@ import RouteManager from "./RouteManager"
 import {getSeasons,get_Serials,getSeason} from "./HTTP"
 import createPrevViewData from "./createPrevViewData"
 
-new RouteManager().set
 
 export default class ListControllerSerials extends ListController {
   public onEnter() {

@@ -714,7 +714,7 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
             var compList = [SeasonListComponent_1["default"]];
-            new HeaderComponent_2["default"](this.model.serialList.display.get()()[this.model.serialList.focusPosition.get()].name).render(elem.appendChild(document.createElement("div")));
+            new HeaderComponent_2["default"](this.model.getInstance('serialList').getValue('display').get()()[this.model.getInstance('serialList').getValue('focusPosition').get()].name).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -1658,7 +1658,6 @@ define("createPrevViewData", ["require", "exports"], function (require, exports)
 define("ListControllerSerials", ["require", "exports", "ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_1, RouteManager_1, HTTP_1, createPrevViewData_1) {
     "use strict";
     exports.__esModule = true;
-    new RouteManager_1["default"]().set;
     var ListControllerSerials = /** @class */ (function (_super) {
         __extends(ListControllerSerials, _super);
         function ListControllerSerials() {

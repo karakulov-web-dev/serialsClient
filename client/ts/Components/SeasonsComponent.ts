@@ -11,7 +11,7 @@ export default class HomeComponent extends BaseComponent {
 
     let compList = [SeasonListComponent];
 
-    new HeaderComponent(this.model.serialList.display.get()()[this.model.serialList.focusPosition.get()].name).render(
+    new HeaderComponent(this.model.getInstance('serialList').getValue('display').get()()[this.model.getInstance('serialList').getValue('focusPosition').get()].name).render(
       elem.appendChild(document.createElement("div"))
     );
 
