@@ -1,6 +1,6 @@
 import ListController from "./ListController";
 import RouteManager from "./RouteManager"
-import {getSeasons,getSerials,getSeason} from "./HTTP"
+import {getSeasons,get_Serials,getSeason} from "./HTTP"
 import createPrevViewData from "./createPrevViewData"
 
 new RouteManager().set
@@ -60,7 +60,7 @@ export default class ListControllerSerials extends ListController {
   private addContent () {
     let length = this.model.serialList.list.get().length
     let currentList = this.model.serialList.list.get()
-    getSerials({limit: 50, offset: length}).then(data => {
+    get_Serials({limit: 50, offset: length}).then(data => {
       currentList = currentList.concat(data)
       this.model.serialList.list.set(currentList)
     })

@@ -1,5 +1,11 @@
 import { Promise_simple, Promise } from "./Polyfill/Promise_simple";
 
+
+export function get_Serials (config:any):Promise {
+  return getSerials(config)
+};
+
+
 export function getSerials (config:any):Promise {
   return new Promise_simple(function(resolve) {
     if (typeof config.limit === 'undefined') {

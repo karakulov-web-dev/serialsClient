@@ -1568,6 +1568,11 @@ define("Polyfill/Promise_simple", ["require", "exports"], function (require, exp
 define("HTTP", ["require", "exports", "Polyfill/Promise_simple"], function (require, exports, Promise_simple_1) {
     "use strict";
     exports.__esModule = true;
+    function get_Serials(config) {
+        return getSerials(config);
+    }
+    exports.get_Serials = get_Serials;
+    ;
     function getSerials(config) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
             if (typeof config.limit === 'undefined') {
@@ -1715,7 +1720,7 @@ define("ListControllerSerials", ["require", "exports", "ListController", "RouteM
             var _this = this;
             var length = this.model.serialList.list.get().length;
             var currentList = this.model.serialList.list.get();
-            HTTP_1.getSerials({ limit: 50, offset: length }).then(function (data) {
+            HTTP_1.get_Serials({ limit: 50, offset: length }).then(function (data) {
                 currentList = currentList.concat(data);
                 _this.model.serialList.list.set(currentList);
             });
@@ -2864,7 +2869,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             var model = new AppModel_7["default"]();
             window.model = model;
             model.serialList.list.set(createPrevViewData_3["default"]());
-            HTTP_3.getSerials({ limit: 50, offset: 0 }).then(function (data) {
+            HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
             inputLayer_1["default"].init();
