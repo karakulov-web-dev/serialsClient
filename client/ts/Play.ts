@@ -1,6 +1,5 @@
 import AppModel from "./AppModel";
 import { stbObj } from "./interfaceGlobal";
-import RouteManager from "./RouteManager"
 
 let model = new AppModel();
 let Play: any = model.getInstance("Play");
@@ -40,6 +39,14 @@ _.playControlInterfaceInit = function() {
   var display = namespace.model.VideoList.display.get()();
   var activePosition = namespace.model.VideoList.focusPosition.get();
   var name = display[activePosition].name;
+  let item = display[activePosition];
+  let season = item.season_number;
+  if (+season > 0) {
+    season = `${season} сезон`
+  } else {
+    season = '';
+  }
+  name = `${item.serial}: ${season} ${item.name}`;
 
   namespace.model.Play.name.set(name);
   this.showPlayInfo();
@@ -130,7 +137,7 @@ _.exitPlay = function() {
   } catch (e) {
     console.log(e);
   }
-  namespace.model.App.route.set("/video")
+  namespace.model.App.route.set("/seriesList")
   try {
     stb.SetVideoState(0);
     stb.Stop();
@@ -400,15 +407,9 @@ _.OpenSettingMenu = function() {
   if (typeof _.showPlayInfo.timer !== "undefined") {
     clearTimeout(_.showPlayInfo.timer);
   }
-  ///
-  this.SettingMenuCommands.openQualityList()  /// <--- 
-  /// временно вместо SettingMenu сразу открывается QualityList (на текущий момент кроме QualityList ет настроек)
-  /// var menuList = namespace.model.Play.settingMenu.mainList.get();
-  /// menuList = JSON.parse(JSON.stringify(menuList));
-  /// namespace.model.Play.settingMenu.list.set(menuList);
-  //var menuList = namespace.model.Play.settingMenu.mainList.get();
-  //menuList = JSON.parse(JSON.stringify(menuList));
-  //namespace.model.Play.settingMenu.list.set(menuList);
+  var menuList = namespace.model.Play.settingMenu.mainList.get();
+  menuList = JSON.parse(JSON.stringify(menuList));
+  namespace.model.Play.settingMenu.list.set(menuList);
 };
 
 _.playSettingMenuNextElem = function() {
@@ -512,6 +513,22 @@ _.SettingMenuCommands = {
     });
     namespace.model.Play.settingMenu.list.set(qualityList);
     namespace.model.Play.settingMenu.qualityList.set(qualityList);
+  },
+  openVolumeList: function () {
+    var volumeList = namespace.model.Play.settingMenu.volumeList.get();
+    namespace.model.Play.settingMenu.list.set(volumeList);
+  },
+  changeVolume: function (item) {
+    var vol = +(item.name.split("%")[0])
+    try {
+      stb.SetVolume(vol);
+      namespace.model.Play.volume.set(stb.GetVolume());
+    } catch (e) {
+      console.log(e)
+    }
+    namespace.model.App.route.set("/play")
+    _.showPlayInfo();
+    namespace.model.Play.settingMenu.visible.set(false);
   },
   changeQuality: function(item) {
     try {

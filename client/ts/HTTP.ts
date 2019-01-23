@@ -8,12 +8,11 @@ export function getSerials (config:any):Promise {
     if (typeof config.offset === 'undefined') {
       config.offset = 0;
     }
-    var data = JSON.stringify({
-      "type": "getData",
-      "from": "serials",
-      "limit": config.limit ,
-      "offset": config.offset
-    });
+    let data = config;
+    data.type = "getData";
+    data.from = "serials";
+    data.orderBy = "kinopoisk DESC"
+    data = JSON.stringify(data);
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",

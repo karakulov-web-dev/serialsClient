@@ -1,7 +1,7 @@
 import AppModel from "./AppModel";
 import ListControllerSerials from "./ListControllerSerials";
 import ListControllerVideo from "./ListControllerVideo";
-import ListControllerPlayLists from "./ListControllerPlayLists";
+import ListControllerSeasons from "./ListControllerSeasons";
 import Play from "./Play";
 import ExitManager from "./ExitManager";
 import RouteManager from "./RouteManager"
@@ -15,8 +15,8 @@ let listControllerSerials = new ListControllerSerials(instanceModel);
 let instanceModelVideo = model.getInstance("seriesList");
 let listControllerVideo = new ListControllerVideo(instanceModelVideo);
 
-let instanceModelPlayListsList = model.getInstance("playListsList");
-let listControllerPlayListsList = new ListControllerPlayLists(instanceModelPlayListsList)
+let instanceModelSeasonList = model.getInstance("seasonList");
+let listControllerSeasons = new ListControllerSeasons(instanceModelSeasonList)
 
 let exitManager = new ExitManager()
 
@@ -64,62 +64,35 @@ var _: inputLayer = {
           break;
       }
     },
-    "/channelSection": function(code) {
+    "/seasonList": function(code) {
       switch (code) {
         case 8:
         routeManager.back()
-          break;
+        break;
         case 27:
-        routeManager.back()
+          routeManager.home()
           break;
         case 40:
-        listControllerCS.downFocusPosition();
+        listControllerSeasons.downFocusPosition();
           break;
         case 38:
-        listControllerCS.upFocusPosition();
+        listControllerSeasons.upFocusPosition();
           break;
         case 39:
-        listControllerCS.rigthFocusPosition();
+        listControllerSeasons.rigthFocusPosition();
           break;
         case 37:
-        listControllerCS.leftFocusPosition();
+        listControllerSeasons.leftFocusPosition();
           break;
         case 13:
-        listControllerCS.onEnter();
+        listControllerSeasons.onEnter();
           break;
-        case 113:
-        listControllerCS.onEnter();
-          break;
-          case 112: 
-          exitManager.exitReq()
-          break
-          case 114: 
-          routeManager.back()
-          break
       }
     },
     "/playListsList": function(code) {
       switch (code) {
         case 27:
         routeManager.home()
-          break;
-        case 40:
-        listControllerPlayListsList.downFocusPosition();
-          break;
-        case 38:
-        listControllerPlayListsList.upFocusPosition();
-          break;
-        case 39:
-        listControllerPlayListsList.rigthFocusPosition();
-          break;
-        case 37:
-        listControllerPlayListsList.leftFocusPosition();
-          break;
-        case 13:
-        listControllerPlayListsList.onEnter();
-          break;
-        case 113:
-        listControllerPlayListsList.onEnter();
           break;
           case 112: 
           exitManager.exitReq()
@@ -159,18 +132,6 @@ var _: inputLayer = {
         case 13:
           listControllerVideo.onEnter();
           break;
-          case 113:
-          listControllerVideo.onEnter();
-          break;
-          case 114:
-          routeManager.back()
-          break;
-          case 115:
-          routeManager.home()
-          break;
-          case 112: 
-          exitManager.exitReq()
-          break
       }
     },
     "/play": function(code) {

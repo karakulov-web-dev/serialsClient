@@ -150,6 +150,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     return status;
                 });
             });
+            serialList.createValue("modyfyReqSerials", {});
             var seasonList = _this.createInstance("seasonList");
             seasonList.createValue("list", []);
             seasonList.createValue("focusPosition", 0);
@@ -222,7 +223,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             PlayInstance.createValue("progress", { play: 0, duration: 100 });
             PlayInstance.createValue("status", false);
             PlayInstance.createValue("visibleControlBar", false);
-            PlayInstance.createValue("volume", 50);
+            PlayInstance.createValue("volume", 100);
             PlayInstance.createValue("name", "");
             PlayInstance.createValue("timeBar", {
                 playSec: 0,
@@ -252,11 +253,48 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             settingMenuInstance.createValue('visible', false);
             settingMenuInstance.createValue('list', []);
             settingMenuInstance.createValue('mainList', [
-                { name: "Качество", active: true, command: "openQualityList" },
-                { name: "Интервал перемотки", command: "openTimeShiftSize" },
+                //{ name: "Качество", active: true, command: "openQualityList" },
+                { name: "Громкость", active: true, command: "openVolumeList" }
             ]);
             settingMenuInstance.createValue('displayType', 'main');
             settingMenuInstance.createValue('qualityList', []);
+            settingMenuInstance.createValue('volumeList', [
+                {
+                    name: "100%",
+                    active: true,
+                    command: "changeVolume"
+                },
+                {
+                    name: "80%",
+                    active: false,
+                    command: "changeVolume"
+                },
+                {
+                    name: "60%",
+                    active: false,
+                    command: "changeVolume"
+                },
+                {
+                    name: "50%",
+                    active: false,
+                    command: "changeVolume"
+                },
+                {
+                    name: "30%",
+                    active: false,
+                    command: "changeVolume"
+                },
+                {
+                    name: "20%",
+                    active: false,
+                    command: "changeVolume"
+                },
+                {
+                    name: "0%",
+                    active: false,
+                    command: "changeVolume"
+                }
+            ]);
             var ExitMenuInstance = _this.createInstance("ExitMenuInstance");
             ExitMenuInstance.createValue("config", {
                 text: "Вы дейстивтельно хотите выйти?",
@@ -417,7 +455,9 @@ define("Components/ListComponent", ["require", "exports", "Components/BaseCompon
                 title = title + "...";
             }
             h1.innerHTML = title;
-            img.src = imgSrc;
+            if (imgSrc !== 'posterPrevView') {
+                img.src = imgSrc;
+            }
             return wrap;
         };
         return ListComponent;
@@ -626,7 +666,12 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
                 title = title + "...";
             }
             h1.innerHTML = title;
-            img.src = imgSrc;
+            if (imgSrc !== 'posterPrevView') {
+                img.src = imgSrc;
+            }
+            else {
+                h1.innerHTML = 'Идет Загрузка';
+            }
             return wrap;
         };
         return SeasonListComponent;
@@ -668,7 +713,8 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [HeaderComponent_2["default"], SeasonListComponent_1["default"]];
+            var compList = [SeasonListComponent_1["default"]];
+            new HeaderComponent_2["default"](this.model.serialList.display.get()()[this.model.serialList.focusPosition.get()].name).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -751,7 +797,9 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
                 title = title + "...";
             }
             h1.innerHTML = title;
-            img.src = imgSrc;
+            if (imgSrc !== 'posterPrevView') {
+                img.src = imgSrc;
+            }
             return wrap;
         };
         return SeriesListComponent;
@@ -793,7 +841,31 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [HeaderComponent_3["default"], SeriesListComponent_1["default"]];
+            var compList = [SeriesListComponent_1["default"]];
+            var title;
+            var seasonListActiveName;
+            var season_Number;
+            var serialAtiveName;
+            var seasonList = this.model.getInstance('seasonList').getValue('display').get()();
+            var seasonFocusPosition = this.model.getInstance('seasonList').getValue('focusPosition').get();
+            if (typeof seasonList[seasonFocusPosition] !== 'undefined') {
+                seasonListActiveName = seasonList[seasonFocusPosition].name;
+                season_Number = seasonList[seasonFocusPosition].season_number;
+            }
+            else {
+                seasonListActiveName = false;
+                season_Number = null;
+            }
+            var serialList = this.model.getInstance('serialList').getValue('display').get()();
+            var serialFocusPosition = this.model.getInstance('serialList').getValue('focusPosition').get();
+            serialAtiveName = serialList[serialFocusPosition].name;
+            if (seasonListActiveName && seasonListActiveName === serialAtiveName) {
+                title = seasonListActiveName + ' (' + season_Number + " сезон)";
+            }
+            else {
+                title = serialAtiveName;
+            }
+            new HeaderComponent_3["default"](title).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -1467,8 +1539,8 @@ define("RouteManager", ["require", "exports", "AppModel"], function (require, ex
         RouteManager.prototype.home = function () {
             this.historyArr = [];
             this.route.set("/home");
-            this.model.channels.focusPosition.set(0);
-            this.model.channels.scrolPosition.set(0);
+            this.model.serialList.focusPosition.set(0);
+            this.model.serialList.scrolPosition.set(0);
         };
         return RouteManager;
     }());
@@ -1504,12 +1576,11 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple"], function (requ
             if (typeof config.offset === 'undefined') {
                 config.offset = 0;
             }
-            var data = JSON.stringify({
-                "type": "getData",
-                "from": "serials",
-                "limit": config.limit,
-                "offset": config.offset
-            });
+            var data = config;
+            data.type = "getData";
+            data.from = "serials";
+            data.orderBy = "kinopoisk DESC";
+            data = JSON.stringify(data);
             var xhr = new XMLHttpRequest();
             xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php", true);
             xhr.send(data);
@@ -1564,7 +1635,22 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple"], function (requ
     }
     exports.getSeason = getSeason;
 });
-define("ListControllerSerials", ["require", "exports", "ListController", "RouteManager", "HTTP"], function (require, exports, ListController_1, RouteManager_1, HTTP_1) {
+define("createPrevViewData", ["require", "exports"], function (require, exports) {
+    "use strict";
+    exports.__esModule = true;
+    function createPrevViewData() {
+        var arr = [];
+        for (var i = 0; i < 20; i++) {
+            arr.push({
+                name: "Идет Загрузка",
+                poster: "posterPrevView"
+            });
+        }
+        return arr;
+    }
+    exports["default"] = createPrevViewData;
+});
+define("ListControllerSerials", ["require", "exports", "ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_1, RouteManager_1, HTTP_1, createPrevViewData_1) {
     "use strict";
     exports.__esModule = true;
     new RouteManager_1["default"]().set;
@@ -1593,13 +1679,16 @@ define("ListControllerSerials", ["require", "exports", "ListController", "RouteM
         ListControllerSerials.prototype.openSeriesList = function () {
             new RouteManager_1["default"]().set("/seriesList");
             var list = this.model.getInstance("seriesList").getValue("list");
-            this.model.seasonList.scrolPosition.set(0);
-            this.model.seasonList.focusPosition.set(0);
+            this.model.seriesList.scrolPosition.set(0);
+            this.model.seriesList.focusPosition.set(0);
             var seasonsIdList = JSON.parse(this.activeItem.seasonListIdJson);
             var seasonId = seasonsIdList[0];
+            list.set(createPrevViewData_1["default"]());
             HTTP_1.getSeason(seasonId).then(function (data) {
                 data.playlist.forEach(function (item) {
                     item.poster = data.poster;
+                    item.season_number = data.season_number;
+                    item.serial = data.name;
                 });
                 list.set(data.playlist);
             });
@@ -1609,6 +1698,7 @@ define("ListControllerSerials", ["require", "exports", "ListController", "RouteM
             var list = this.model.getInstance("seasonList").getValue("list");
             this.model.seasonList.scrolPosition.set(0);
             this.model.seasonList.focusPosition.set(0);
+            list.set(createPrevViewData_1["default"]());
             HTTP_1.getSeasons(JSON.parse(this.activeItem.seasonListIdJson)).then(function (data) {
                 list.set(data);
             });
@@ -1671,6 +1761,15 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
         var display = namespace.model.VideoList.display.get()();
         var activePosition = namespace.model.VideoList.focusPosition.get();
         var name = display[activePosition].name;
+        var item = display[activePosition];
+        var season = item.season_number;
+        if (+season > 0) {
+            season = season + " \u0441\u0435\u0437\u043E\u043D";
+        }
+        else {
+            season = '';
+        }
+        name = item.serial + ": " + season + " " + item.name;
         namespace.model.Play.name.set(name);
         this.showPlayInfo();
         this.progresControllStart();
@@ -1762,7 +1861,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
         catch (e) {
             console.log(e);
         }
-        namespace.model.App.route.set("/video");
+        namespace.model.App.route.set("/seriesList");
         try {
             stb.SetVideoState(0);
             stb.Stop();
@@ -2017,15 +2116,9 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
         if (typeof _.showPlayInfo.timer !== "undefined") {
             clearTimeout(_.showPlayInfo.timer);
         }
-        ///
-        this.SettingMenuCommands.openQualityList(); /// <--- 
-        /// временно вместо SettingMenu сразу открывается QualityList (на текущий момент кроме QualityList ет настроек)
-        /// var menuList = namespace.model.Play.settingMenu.mainList.get();
-        /// menuList = JSON.parse(JSON.stringify(menuList));
-        /// namespace.model.Play.settingMenu.list.set(menuList);
-        //var menuList = namespace.model.Play.settingMenu.mainList.get();
-        //menuList = JSON.parse(JSON.stringify(menuList));
-        //namespace.model.Play.settingMenu.list.set(menuList);
+        var menuList = namespace.model.Play.settingMenu.mainList.get();
+        menuList = JSON.parse(JSON.stringify(menuList));
+        namespace.model.Play.settingMenu.list.set(menuList);
     };
     _.playSettingMenuNextElem = function () {
         changePlaySettingMenuElemPosition("+");
@@ -2133,6 +2226,23 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
             namespace.model.Play.settingMenu.list.set(qualityList);
             namespace.model.Play.settingMenu.qualityList.set(qualityList);
         },
+        openVolumeList: function () {
+            var volumeList = namespace.model.Play.settingMenu.volumeList.get();
+            namespace.model.Play.settingMenu.list.set(volumeList);
+        },
+        changeVolume: function (item) {
+            var vol = +(item.name.split("%")[0]);
+            try {
+                stb.SetVolume(vol);
+                namespace.model.Play.volume.set(stb.GetVolume());
+            }
+            catch (e) {
+                console.log(e);
+            }
+            namespace.model.App.route.set("/play");
+            _.showPlayInfo();
+            namespace.model.Play.settingMenu.visible.set(false);
+        },
         changeQuality: function (item) {
             try {
                 var position = stb.GetPosTimeEx();
@@ -2218,54 +2328,46 @@ define("ListControllerVideo", ["require", "exports", "ListController", "Play", "
     }(ListController_2["default"]));
     exports["default"] = ListControllerVideo;
 });
-define("ListControllerPlayLists", ["require", "exports", "ListController", "HTTP", "RouteManager"], function (require, exports, ListController_3, HTTP_2, RouteManager_3) {
+define("ListControllerSeasons", ["require", "exports", "ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_3, RouteManager_3, HTTP_2, createPrevViewData_2) {
     "use strict";
     exports.__esModule = true;
-    var ListControllerChannelSections = /** @class */ (function (_super) {
-        __extends(ListControllerChannelSections, _super);
-        function ListControllerChannelSections() {
+    new RouteManager_3["default"]().set;
+    var ListControllerSeasons = /** @class */ (function (_super) {
+        __extends(ListControllerSeasons, _super);
+        function ListControllerSeasons() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        ListControllerChannelSections.prototype.goHome = function () {
-            new RouteManager_3["default"]().set("/home");
-        };
-        ListControllerChannelSections.prototype.onEnter = function () {
+        ListControllerSeasons.prototype.onEnter = function () {
             this.defineActiveItem();
-            this.openItem();
+            this.openSeason();
         };
-        ListControllerChannelSections.prototype.defineActiveItem = function () {
+        ListControllerSeasons.prototype.defineActiveItem = function () {
             var focusPosition = this.focusPosition.get();
             var display = this.display.get()();
             this.activeItem = display[focusPosition];
         };
-        ListControllerChannelSections.prototype.openItem = function () {
-            this.openSinglePlaylist();
+        ListControllerSeasons.prototype.openSeason = function () {
+            this.openSeriesList();
         };
-        ListControllerChannelSections.prototype.openSinglePlaylist = function () {
-            this.model.video.focusPosition.set(0);
-            this.model.video.scrolPosition.set(0);
-            var videoList = this.model.getInstance("video").getValue("list");
-            var model = this.model;
-            var nextPageToken = this.model
-                .getInstance("video")
-                .getValue("nextPageToken");
-            var route = this.model.getInstance("App").getValue("route");
-            HTTP_2.getPlaylistItems(this.activeItem.id).then(function (data) {
-                nextPageToken.set(data.nextPageToken);
-                videoList.set(data.items);
-                model.video.totalResults.set(data.pageInfo.totalResults);
-                var idString = data.items.map(function (item) {
-                    return item.contentDetails.videoId;
-                }).join(",");
-                HTTP_2.HTTPgetVideoDetails(idString).then(function (data) {
-                    videoList.set(data.items);
+        ListControllerSeasons.prototype.openSeriesList = function () {
+            new RouteManager_3["default"]().set("/seriesList");
+            var list = this.model.getInstance("seriesList").getValue("list");
+            this.model.seriesList.scrolPosition.set(0);
+            this.model.seriesList.focusPosition.set(0);
+            var seasonId = this.activeItem.id;
+            list.set(createPrevViewData_2["default"]());
+            HTTP_2.getSeason(seasonId).then(function (data) {
+                data.playlist.forEach(function (item) {
+                    item.poster = data.poster;
+                    item.season_number = data.season_number;
+                    item.serial = data.name;
                 });
-                new RouteManager_3["default"]().set("/video");
+                list.set(data.playlist);
             });
         };
-        return ListControllerChannelSections;
+        return ListControllerSeasons;
     }(ListController_3["default"]));
-    exports["default"] = ListControllerChannelSections;
+    exports["default"] = ListControllerSeasons;
 });
 define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], function (require, exports, AppModel_5, RouteManager_4) {
     "use strict";
@@ -2479,7 +2581,7 @@ define("aspectRatioManager", ["require", "exports"], function (require, exports)
     };
     exports["default"] = _;
 });
-define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerPlayLists", "Play", "ExitManager", "RouteManager", "aspectRatioManager"], function (require, exports, AppModel_6, ListControllerSerials_1, ListControllerVideo_1, ListControllerPlayLists_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1) {
+define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "Play", "ExitManager", "RouteManager", "aspectRatioManager"], function (require, exports, AppModel_6, ListControllerSerials_1, ListControllerVideo_1, ListControllerSeasons_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_6["default"]();
@@ -2487,8 +2589,8 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
     var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
     var instanceModelVideo = model.getInstance("seriesList");
     var listControllerVideo = new ListControllerVideo_1["default"](instanceModelVideo);
-    var instanceModelPlayListsList = model.getInstance("playListsList");
-    var listControllerPlayListsList = new ListControllerPlayLists_1["default"](instanceModelPlayListsList);
+    var instanceModelSeasonList = model.getInstance("seasonList");
+    var listControllerSeasons = new ListControllerSeasons_1["default"](instanceModelSeasonList);
     var exitManager = new ExitManager_1["default"]();
     var routeManager = new RouteManager_5["default"]();
     var _ = {
@@ -2528,37 +2630,28 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                 }
             },
-            "/channelSection": function (code) {
+            "/seasonList": function (code) {
                 switch (code) {
                     case 8:
                         routeManager.back();
                         break;
                     case 27:
-                        routeManager.back();
+                        routeManager.home();
                         break;
                     case 40:
-                        listControllerCS.downFocusPosition();
+                        listControllerSeasons.downFocusPosition();
                         break;
                     case 38:
-                        listControllerCS.upFocusPosition();
+                        listControllerSeasons.upFocusPosition();
                         break;
                     case 39:
-                        listControllerCS.rigthFocusPosition();
+                        listControllerSeasons.rigthFocusPosition();
                         break;
                     case 37:
-                        listControllerCS.leftFocusPosition();
+                        listControllerSeasons.leftFocusPosition();
                         break;
                     case 13:
-                        listControllerCS.onEnter();
-                        break;
-                    case 113:
-                        listControllerCS.onEnter();
-                        break;
-                    case 112:
-                        exitManager.exitReq();
-                        break;
-                    case 114:
-                        routeManager.back();
+                        listControllerSeasons.onEnter();
                         break;
                 }
             },
@@ -2566,24 +2659,6 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                 switch (code) {
                     case 27:
                         routeManager.home();
-                        break;
-                    case 40:
-                        listControllerPlayListsList.downFocusPosition();
-                        break;
-                    case 38:
-                        listControllerPlayListsList.upFocusPosition();
-                        break;
-                    case 39:
-                        listControllerPlayListsList.rigthFocusPosition();
-                        break;
-                    case 37:
-                        listControllerPlayListsList.leftFocusPosition();
-                        break;
-                    case 13:
-                        listControllerPlayListsList.onEnter();
-                        break;
-                    case 113:
-                        listControllerPlayListsList.onEnter();
                         break;
                     case 112:
                         exitManager.exitReq();
@@ -2622,18 +2697,6 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                     case 13:
                         listControllerVideo.onEnter();
-                        break;
-                    case 113:
-                        listControllerVideo.onEnter();
-                        break;
-                    case 114:
-                        routeManager.back();
-                        break;
-                    case 115:
-                        routeManager.home();
-                        break;
-                    case 112:
-                        exitManager.exitReq();
                         break;
                 }
             },
@@ -2767,7 +2830,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager"], function (require, exports, bindSimplePolyfill_1, AppModel_7, PageRouter_1, inputLayer_1, adaptation_1, HTTP_3, aspectRatioManager_2) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_7, PageRouter_1, inputLayer_1, adaptation_1, HTTP_3, aspectRatioManager_2, createPrevViewData_3) {
     "use strict";
     exports.__esModule = true;
     var prodaction = true;
@@ -2784,7 +2847,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
                 stb.SetVideoControl(1);
                 stb.SetVideoState(1);
                 stb.SetTopWin(0);
-                stb.SetVolume(50);
+                stb.SetVolume(100);
                 var stbEvent = {
                     onEvent: function (data) { },
                     event: 0
@@ -2800,6 +2863,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             appContainer.appendChild(pageRouterWrap);
             var model = new AppModel_7["default"]();
             window.model = model;
+            model.serialList.list.set(createPrevViewData_3["default"]());
             HTTP_3.getSerials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });

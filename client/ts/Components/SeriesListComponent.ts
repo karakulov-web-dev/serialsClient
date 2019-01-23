@@ -55,8 +55,10 @@ export default class SeriesListComponent extends ChannelListComponent {
     }
 
     h1.innerHTML = title;
-    img.src = imgSrc;
-
+    
+    if (imgSrc !== 'posterPrevView') {
+      img.src = imgSrc;
+    }
     return wrap;
   }
 }

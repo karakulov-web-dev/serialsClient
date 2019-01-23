@@ -102,7 +102,10 @@ export default class ListComponent extends BaseComponent {
     }
 
     h1.innerHTML = title;
-    img.src = imgSrc;
+
+    if (imgSrc !== 'posterPrevView') {
+      img.src = imgSrc;
+    }
 
     return wrap;
   }

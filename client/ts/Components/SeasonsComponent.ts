@@ -9,7 +9,11 @@ export default class HomeComponent extends BaseComponent {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [HeaderComponent, SeasonListComponent];
+    let compList = [SeasonListComponent];
+
+    new HeaderComponent(this.model.serialList.display.get()()[this.model.serialList.focusPosition.get()].name).render(
+      elem.appendChild(document.createElement("div"))
+    );
 
     compList.forEach(Comp => {
       let wrap = document.createElement("div");

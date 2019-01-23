@@ -11,10 +11,12 @@
  }
  .app_HeaderComponent_breadcrumbs {
   position: absolute;
-  top: 28px;
-  left: 335px;
+  top: 14px;
+  left: 350px;
   font-family: Roboto, Arial, sans-serif;
   font-size: 19px;
   font-weight: bold;
   text-decoration: underline;
- }
+  color: #DDDDDD;
+}
+

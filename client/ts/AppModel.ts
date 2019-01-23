@@ -30,6 +30,8 @@ export default class AppModel extends Model {
         return status;
       });
     });
+    serialList.createValue("modyfyReqSerials", {})
+      
 
     let seasonList = this.createInstance("seasonList");
     seasonList.createValue("list", []);
@@ -106,7 +108,7 @@ export default class AppModel extends Model {
     PlayInstance.createValue("progress", {play:0 , duration: 100})
     PlayInstance.createValue("status", false)
     PlayInstance.createValue("visibleControlBar", false)
-    PlayInstance.createValue("volume", 50)
+    PlayInstance.createValue("volume", 100)
     PlayInstance.createValue("name", "")
     PlayInstance.createValue("timeBar", {
       playSec: 0,
@@ -143,11 +145,51 @@ export default class AppModel extends Model {
     settingMenuInstance.createValue('visible', false)
     settingMenuInstance.createValue('list', [])
     settingMenuInstance.createValue('mainList', [
-      { name: "Качество", active: true, command: "openQualityList" },
-      { name: "Интервал перемотки", command: "openTimeShiftSize" },
+      //{ name: "Качество", active: true, command: "openQualityList" },
+      { name: "Громкость",active: true,  command: "openVolumeList" }
     ])
     settingMenuInstance.createValue('displayType', 'main')
     settingMenuInstance.createValue('qualityList', [])
+    settingMenuInstance.createValue('volumeList', [
+      {
+        name: "100%",
+        active: true,
+        command: "changeVolume"
+      },
+      {
+        name: "80%",
+        active: false,
+        command: "changeVolume"
+      },
+      {
+        name: "60%",
+        active: false,
+        command: "changeVolume"
+      },
+      {
+        name: "50%",
+        active: false,
+        command: "changeVolume"
+      },
+      {
+        name: "30%",
+        active: false,
+        command: "changeVolume"
+      },
+      {
+        name: "20%",
+        active: false,
+        command: "changeVolume"
+      },
+      {
+        name: "0%",
+        active: false,
+        command: "changeVolume"
+      }
+  ])
+
+
+
 
     let ExitMenuInstance = this.createInstance("ExitMenuInstance");
     ExitMenuInstance.createValue("config", {

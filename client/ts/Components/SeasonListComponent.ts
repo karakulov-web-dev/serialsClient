@@ -55,7 +55,13 @@ export default class SeasonListComponent extends ChannelListComponent {
     }
 
     h1.innerHTML = title;
-    img.src = imgSrc;
+
+
+    if (imgSrc !== 'posterPrevView') {
+      img.src = imgSrc;
+    } else {
+      h1.innerHTML = 'Идет Загрузка'
+    }
 
     return wrap;
   }

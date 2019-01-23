@@ -21,8 +21,8 @@ export default class RouteManager {
     public home() {
         this.historyArr = []
         this.route.set("/home")
-        this.model.channels.focusPosition.set(0)
-        this.model.channels.scrolPosition.set(0)
+        this.model.serialList.focusPosition.set(0)
+        this.model.serialList.scrolPosition.set(0)
     }
     private model:any
     private route

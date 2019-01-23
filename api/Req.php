@@ -24,9 +24,10 @@ class Req {
         }           
     }
     function createSelectSql() {
-        $this->sql = "SELECT * FROM serials LIMIT 10 OFFSET 1000";
         $select = "SELECT * ";
         $from = $this->createFromSql();
+        $join = $this->createJoinSql();
+        $on = $this->createOnSql();
         $where = $this->createWhereSql();
         $orderBy = $this->createOrderBySql();
         $limit =  $this->createLimitSql();
@@ -36,6 +37,20 @@ class Req {
     function createFromSql() {
         if ($this->config['from']) {
             return "FROM {$this->config['from']} ";
+        } else {
+            return "";
+        }
+    }
+    function createJoinSql() {
+        if ($this->config['join']) {
+            return "INNER JOIN {$this->config['join']} ";
+        } else {
+            return "";
+        }
+    }
+    function createOnSql() {
+        if ($this->config['on']) {
+            return "ON {$this->config['on']} ";
         } else {
             return "";
         }

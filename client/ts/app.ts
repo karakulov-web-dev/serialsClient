@@ -6,6 +6,7 @@ import {stbObj} from "./interfaceGlobal"
 import adaptation from "./adaptation"
 import {getSerials} from "./HTTP"
 import aspectRatioManager from "./aspectRatioManager"
+import createPrevViewData from "./createPrevViewData"
 
 declare var gSTB:stbObj 
 declare var stb:stbObj 
@@ -25,7 +26,7 @@ class App {
       stb.SetVideoControl(1);
       stb.SetVideoState(1);
       stb.SetTopWin(0);
-      stb.SetVolume(50);
+      stb.SetVolume(100);
       var stbEvent = {
         onEvent: function(data) {},
         event: 0
@@ -43,15 +44,16 @@ class App {
 
     let model:any = new AppModel();
     window.model = model;
+
+    model.serialList.list.set(createPrevViewData())
     getSerials({limit: 50, offset: 0}).then(data => {
-      model.serialList.list.set(data)
+     model.serialList.list.set(data)
     })
 
     inputLayer.init();
 
     let pageRouter = new PageRouter();
     pageRouter.render(appContainer);
-
   }
 }
 
