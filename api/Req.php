@@ -21,7 +21,7 @@ class Req {
         $this->result = array();
         while ($this->row = $this->res->fetch_assoc()) {
             $this->result[] = $this->row;
-        }           
+        }
     }
     function createSelectSql() {
         $select = "SELECT * ";

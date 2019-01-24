@@ -17,9 +17,7 @@ export function get_Serials (config:any):Promise {
 
 
   if (gArrNew && gArrNew.length > 0) {
-    config.join = 'genre'
-    config.on = 'serials.genreHash=genre.genreHash'
-    config.where = gArrNew.join(" AND ")
+    config.where = ` genreString LIKE \'%${gArrNew.join("")}%\' `;
   }
 
   return getSerials(config)
