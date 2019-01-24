@@ -30,7 +30,9 @@ export default class AppModel extends Model {
         return status;
       });
     });
-    serialList.createValue("modyfyReqSerials", {})
+    serialList.createValue("filtersReq", {
+      genre: 'ужасы'
+    })
       
 
     let seasonList = this.createInstance("seasonList");

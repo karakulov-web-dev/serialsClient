@@ -32,7 +32,7 @@ class Req {
         $orderBy = $this->createOrderBySql();
         $limit =  $this->createLimitSql();
         $offset = $this->createOffsetSql();
-        $this->sql = $select . $from . $where . $orderBy . $limit . $offset;
+        $this->sql = $select . $from .$join . $on . $where . $orderBy . $limit . $offset;
     }
     function createFromSql() {
         if ($this->config['from']) {

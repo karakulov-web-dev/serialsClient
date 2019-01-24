@@ -150,7 +150,9 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     return status;
                 });
             });
-            serialList.createValue("modyfyReqSerials", {});
+            serialList.createValue("filtersReq", {
+                genre: 'ужасы'
+            });
             var seasonList = _this.createInstance("seasonList");
             seasonList.createValue("list", []);
             seasonList.createValue("focusPosition", 0);
@@ -1569,6 +1571,19 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple"], function (requ
     "use strict";
     exports.__esModule = true;
     function get_Serials(config) {
+        var filters = window.model.serialList.filtersReq.get();
+        var genre;
+        if (typeof window.model.serialList.filtersReq.get().genre !== 'undefined') {
+            genre = window.model.serialList.filtersReq.get().genre;
+        }
+        else {
+            genre = false;
+        }
+        if (genre) {
+            config.join = 'genre';
+            config.on = 'serials.genreHash=genre.genreHash';
+            config.where = 'ужасы=1';
+        }
         return getSerials(config);
     }
     exports.get_Serials = get_Serials;
