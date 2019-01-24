@@ -40,7 +40,6 @@ export default class HomeComponent extends BaseComponent {
     let btnWrap = document.createElement("div");
     elem.appendChild(btnWrap);
     bottomBtnComp.render(btnWrap);
-
     return elem;
   }
 }

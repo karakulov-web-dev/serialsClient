@@ -7,7 +7,11 @@ export function get_Serials (config:any):Promise {
   let filters = model.serialList.filtersReq.get();
   let genre;
   if (typeof model.serialList.filtersReq.get().genre !== 'undefined') {
-    genre = model.serialList.filtersReq.get().genre
+    if (typeof model.serialList.filtersReq.get().genre[0] !== 'undefined') {
+      genre = model.serialList.filtersReq.get().genre
+    } else {
+      genre = false
+    }
   } else {
     genre = false;
   }

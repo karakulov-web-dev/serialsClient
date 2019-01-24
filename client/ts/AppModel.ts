@@ -11,6 +11,149 @@ export default class AppModel extends Model {
     App.createValue("route", "/home");
 
     let genreManager = this.createInstance("genreManager");
+    genreManager.createValue("buttonsList",[
+      {
+        name: "Применить",
+        focus: true,
+        command: "enter"
+      },
+      {
+        name: "Очистить",
+        command: "clear"
+      },
+      {
+        name: "Назад",
+        command: "back"
+      }
+    ])
+    genreManager.createValue('position',5)
+    genreManager.display = function () {
+      let list = genreManager.getValue('list').get()
+      let position = genreManager.getValue('position').get()
+      let arr = []
+      let i = 0;
+      let ii = 0;
+      list.forEach((
+        item
+      )=> {
+        if (i >= position) {
+          if (ii >=5) {
+            return
+          }
+          arr.push(item)
+          ii++;
+        }
+        i++
+      })
+      return arr
+    }
+    genreManager.createValue("list",[
+      {
+        name: "Discovery&BBC",
+        focus: true,
+        active: false
+      },
+      {
+        name: "анимационные",
+        focus: false,
+        active: false
+      },
+      {
+        name: "аниме",
+        focus: false,
+        active: false
+      },
+      {
+        name: "боевики",
+        focus: false,
+        active: false
+      },
+      {
+        name: "детективы",
+        focus: false,
+        active: false
+      },
+      {
+        name: "документальные",
+        focus: false,
+        active: false
+      },
+      {
+        name: "драмы",
+        focus: false,
+        active: false
+      },
+      {
+        name: "исторические",
+        focus: false,
+        active: false
+      },
+      {
+        name: "комедия",
+        focus: false,
+        active: false
+      },
+      {
+        name: "криминальные",
+        focus: false,
+        active: false
+      },
+      {
+        name: "мелодрамы",
+        focus: false,
+        active: false
+      },
+      {
+        name: "мистические",
+        focus: false,
+        active: false
+      },
+      {
+        name: "отечественные",
+        focus: false,
+        active: false
+      },
+      {
+        name: "приключения",
+        focus: false,
+        active: false
+      },
+      {
+        name: "реалити-шоу",
+        focus: false,
+        active: false
+      },
+      {
+        name: "семейные",
+        focus: false,
+        active: false
+      },
+      {
+        name: "театр",
+        focus: false,
+        active: false
+      },
+      {
+        name: "триллеры",
+        focus: false,
+        active: false
+      },
+      {
+        name: "ужасы",
+        focus: false,
+        active: false
+      },
+      {
+        name: "фантастические",
+        focus: false,
+        active: false
+      },
+      {
+        name: "фэнтези",
+        focus: false,
+        active: false
+      },
+    ])
 
     let serialList = this.createInstance("serialList");
     serialList.createValue("list", []);
@@ -33,7 +176,7 @@ export default class AppModel extends Model {
       });
     });
     serialList.createValue("filtersReq", {
-      genre: ['фантастические']
+      genre: []
     })
       
 

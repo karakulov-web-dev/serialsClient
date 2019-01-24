@@ -131,6 +131,147 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             var App = _this.createInstance("App");
             App.createValue("route", "/home");
             var genreManager = _this.createInstance("genreManager");
+            genreManager.createValue("buttonsList", [
+                {
+                    name: "Применить",
+                    focus: true,
+                    command: "enter"
+                },
+                {
+                    name: "Очистить",
+                    command: "clear"
+                },
+                {
+                    name: "Назад",
+                    command: "back"
+                }
+            ]);
+            genreManager.createValue('position', 5);
+            genreManager.display = function () {
+                var list = genreManager.getValue('list').get();
+                var position = genreManager.getValue('position').get();
+                var arr = [];
+                var i = 0;
+                var ii = 0;
+                list.forEach(function (item) {
+                    if (i >= position) {
+                        if (ii >= 5) {
+                            return;
+                        }
+                        arr.push(item);
+                        ii++;
+                    }
+                    i++;
+                });
+                return arr;
+            };
+            genreManager.createValue("list", [
+                {
+                    name: "Discovery&BBC",
+                    focus: true,
+                    active: false
+                },
+                {
+                    name: "анимационные",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "аниме",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "боевики",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "детективы",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "документальные",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "драмы",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "исторические",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "комедия",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "криминальные",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "мелодрамы",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "мистические",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "отечественные",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "приключения",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "реалити-шоу",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "семейные",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "театр",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "триллеры",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "ужасы",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "фантастические",
+                    focus: false,
+                    active: false
+                },
+                {
+                    name: "фэнтези",
+                    focus: false,
+                    active: false
+                },
+            ]);
             var serialList = _this.createInstance("serialList");
             serialList.createValue("list", []);
             serialList.createValue("focusPosition", 0);
@@ -152,7 +293,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                 });
             });
             serialList.createValue("filtersReq", {
-                genre: ['фантастические']
+                genre: []
             });
             var seasonList = _this.createInstance("seasonList");
             seasonList.createValue("list", []);
@@ -584,6 +725,8 @@ define("Components/GenreSelectComponent", ["require", "exports", "Components/Bas
             var _this = _super.call(this) || this;
             _this.route = _this.model.getInstance('App').getValue('route');
             _this.route.subscribe(_this);
+            _this.genreList = _this.model.getInstance('genreManager').getValue("list");
+            _this.buttonsList = _this.model.getInstance('genreManager').getValue("buttonsList");
             return _this;
         }
         GenreSelectComponent.prototype.create = function () {
@@ -597,12 +740,50 @@ define("Components/GenreSelectComponent", ["require", "exports", "Components/Bas
             return div;
         };
         GenreSelectComponent.prototype.createWin = function () {
+            var _this = this;
+            var buttonList = this.buttonsList.get();
+            var genreList = this.genreList.get();
             var div = document.createElement('div');
             var header = document.createElement('div');
+            var body = document.createElement('div');
+            var list = document.createElement('div');
+            var buttonPanel = document.createElement('div');
             div.className = 'app_home_genreManager_window';
             header.className = 'app_home_genreManager_window_header';
+            body.className = 'app_home_genreManager_window_body';
+            list.className = 'app_home_genreManager_window_list';
+            buttonPanel.className = 'app_home_genreManager_window_buttonPanel';
             header.innerHTML = 'Жанры';
+            buttonList.forEach(function (item) {
+                buttonPanel.appendChild(_this.buttons(item));
+            });
+            genreList.forEach(function (item) {
+                list.appendChild(_this.createGenreElem(item));
+            });
             div.appendChild(header);
+            div.appendChild(body);
+            body.appendChild(list);
+            body.appendChild(buttonPanel);
+            return div;
+        };
+        GenreSelectComponent.prototype.createGenreElem = function (item) {
+            var div = document.createElement('div');
+            div.className = 'app_home_genreManager_window_list_GenreElemWrap';
+            if (item.focus) {
+                div.className = div.className + " focus";
+            }
+            div.innerHTML = "*";
+            return div;
+        };
+        GenreSelectComponent.prototype.buttons = function (item) {
+            var div = document.createElement('div');
+            var p = document.createElement('p');
+            div.className = 'app_home_genreManager_window_buttonPanel_button_wrap';
+            if (item.focus) {
+                div.className = div.className + " active";
+            }
+            div.appendChild(p);
+            p.innerHTML = item.name;
             return div;
         };
         return GenreSelectComponent;
@@ -1610,7 +1791,12 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         var filters = model.serialList.filtersReq.get();
         var genre;
         if (typeof model.serialList.filtersReq.get().genre !== 'undefined') {
-            genre = model.serialList.filtersReq.get().genre;
+            if (typeof model.serialList.filtersReq.get().genre[0] !== 'undefined') {
+                genre = model.serialList.filtersReq.get().genre;
+            }
+            else {
+                genre = false;
+            }
         }
         else {
             genre = false;
