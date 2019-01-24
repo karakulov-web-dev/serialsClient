@@ -69,6 +69,26 @@ var _: inputLayer = {
         break;
       }
     },
+    "/home/genreManager": function(code) {
+      console.log(code)
+      switch (code) {
+        case 39:
+        genreManager.changeFocusRight()
+        break;
+        case 37:
+        genreManager.changeFocusLeft()
+        break;
+        case 38:
+        genreManager.changeFocusTop()
+        break;
+        case 40:
+        genreManager.changeFocusBottom()
+        break
+        case 13:
+        genreManager.submit()
+        break
+      }
+    },
     "/seasonList": function(code) {
       switch (code) {
         case 8:

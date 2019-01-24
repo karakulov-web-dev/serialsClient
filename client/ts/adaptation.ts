@@ -4,7 +4,10 @@ export default function () {
       ".app_ChannelListComponent_wrap_elem { height: 38%; }",
       ".app_ChannelListComponent_card_img  {  height: 77%; }",
       ".app_ChannelListComponent_card_h1   { font-size: 23px; }",
-      ".app_Play_ControlBar_timeShiftSizeBar { right: 230px; }"
+      ".app_Play_ControlBar_timeShiftSizeBar { right: 230px; }",
+      ".app_home_genreManager_window  {    width: 400px;} ",
+      ".app_home_genreManager_window_list_GenreElemWrap {width: 88%} ",
+      ".app_home_genreManager_window_buttonPanel { width: 130px; }"
     ];
     var cssAll = rules.join("\n");
     var head:any = document.getElementsByTagName("head");

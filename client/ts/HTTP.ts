@@ -4,22 +4,22 @@ import AppModel from "./AppModel";
 let model:any = new AppModel();
 
 export function get_Serials (config:any):Promise {
-  let filters = model.serialList.filtersReq.get();
-  let genre;
-  if (typeof model.serialList.filtersReq.get().genre !== 'undefined') {
-    if (typeof model.serialList.filtersReq.get().genre[0] !== 'undefined') {
-      genre = model.serialList.filtersReq.get().genre
-    } else {
-      genre = false
-    }
-  } else {
-    genre = false;
-  }
 
-  if (genre) {
+  let gArr = model.genreManager.list_default.get()
+  let gArrNew = []
+ gArr.forEach(item => {
+    if (item.active) {
+      if (item.name) {
+        gArrNew.push(item.name.replace('&',""))
+      }
+    }
+  })
+
+
+  if (gArrNew && gArrNew.length > 0) {
     config.join = 'genre'
     config.on = 'serials.genreHash=genre.genreHash'
-    config.where = genre.join("AND")
+    config.where = gArrNew.join(" AND ")
   }
 
   return getSerials(config)

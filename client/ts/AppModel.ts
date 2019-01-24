@@ -11,7 +11,9 @@ export default class AppModel extends Model {
     App.createValue("route", "/home");
 
     let genreManager = this.createInstance("genreManager");
-    genreManager.createValue("buttonsList",[
+    genreManager.createValue("focus","list")
+    genreManager.createValue("buttonsList",[])
+    genreManager.createValue("buttonsList_default",[
       {
         name: "Применить",
         focus: true,
@@ -26,10 +28,13 @@ export default class AppModel extends Model {
         command: "back"
       }
     ])
+
+
     genreManager.createValue('position',5)
     genreManager.display = function () {
       let list = genreManager.getValue('list').get()
       let position = genreManager.getValue('position').get()
+      list = JSON.parse( JSON.stringify(list) )
       let arr = []
       let i = 0;
       let ii = 0;
@@ -40,6 +45,9 @@ export default class AppModel extends Model {
           if (ii >=5) {
             return
           }
+          if (ii === 2) {
+            item.focus = true
+          }
           arr.push(item)
           ii++;
         }
@@ -47,10 +55,23 @@ export default class AppModel extends Model {
       })
       return arr
     }
-    genreManager.createValue("list",[
+    genreManager.createValue("list",[])
+    genreManager.createValue("list_default",[
+      {
+        name: "",
+        focus: false,
+        active: false,
+        blank: true
+      },
+      {
+        name: "",
+        focus: false,
+        active: false,
+        blank: true
+      },
       {
         name: "Discovery&BBC",
-        focus: true,
+        focus: false,
         active: false
       },
       {

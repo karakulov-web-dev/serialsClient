@@ -23,7 +23,7 @@ export default class ListControllerSeasons extends ListController {
     let list: any = this.model.getInstance("seriesList").getValue("list")
     this.model.seriesList.scrolPosition.set(0)
     this.model.seriesList.focusPosition.set(0)
-    let seasonId = this.activeItem.id;
+    let seasonId = this.activeItem.idSeasonvar;
     list.set(createPrevViewData())
     getSeason(seasonId).then(data => {
       data.playlist.forEach(item => {

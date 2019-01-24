@@ -131,7 +131,9 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             var App = _this.createInstance("App");
             App.createValue("route", "/home");
             var genreManager = _this.createInstance("genreManager");
-            genreManager.createValue("buttonsList", [
+            genreManager.createValue("focus", "list");
+            genreManager.createValue("buttonsList", []);
+            genreManager.createValue("buttonsList_default", [
                 {
                     name: "Применить",
                     focus: true,
@@ -150,6 +152,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             genreManager.display = function () {
                 var list = genreManager.getValue('list').get();
                 var position = genreManager.getValue('position').get();
+                list = JSON.parse(JSON.stringify(list));
                 var arr = [];
                 var i = 0;
                 var ii = 0;
@@ -158,6 +161,9 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                         if (ii >= 5) {
                             return;
                         }
+                        if (ii === 2) {
+                            item.focus = true;
+                        }
                         arr.push(item);
                         ii++;
                     }
@@ -165,10 +171,23 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                 });
                 return arr;
             };
-            genreManager.createValue("list", [
+            genreManager.createValue("list", []);
+            genreManager.createValue("list_default", [
+                {
+                    name: "",
+                    focus: false,
+                    active: false,
+                    blank: true
+                },
+                {
+                    name: "",
+                    focus: false,
+                    active: false,
+                    blank: true
+                },
                 {
                     name: "Discovery&BBC",
-                    focus: true,
+                    focus: false,
                     active: false
                 },
                 {
@@ -727,6 +746,11 @@ define("Components/GenreSelectComponent", ["require", "exports", "Components/Bas
             _this.route.subscribe(_this);
             _this.genreList = _this.model.getInstance('genreManager').getValue("list");
             _this.buttonsList = _this.model.getInstance('genreManager').getValue("buttonsList");
+            var model = _this.model;
+            model.genreManager.focus.subscribe(_this);
+            model.genreManager.position.subscribe(_this);
+            model.genreManager.list.subscribe(_this);
+            model.genreManager.buttonsList.subscribe(_this);
             return _this;
         }
         GenreSelectComponent.prototype.create = function () {
@@ -742,7 +766,8 @@ define("Components/GenreSelectComponent", ["require", "exports", "Components/Bas
         GenreSelectComponent.prototype.createWin = function () {
             var _this = this;
             var buttonList = this.buttonsList.get();
-            var genreList = this.genreList.get();
+            var model = this.model;
+            var genreList = model.genreManager.display();
             var div = document.createElement('div');
             var header = document.createElement('div');
             var body = document.createElement('div');
@@ -767,20 +792,37 @@ define("Components/GenreSelectComponent", ["require", "exports", "Components/Bas
             return div;
         };
         GenreSelectComponent.prototype.createGenreElem = function (item) {
+            var model = this.model;
             var div = document.createElement('div');
             div.className = 'app_home_genreManager_window_list_GenreElemWrap';
-            if (item.focus) {
-                div.className = div.className + " focus";
+            if (item.blank) {
+                return div;
             }
-            div.innerHTML = "*";
+            var p = document.createElement('p');
+            var icon = document.createElement('div');
+            if (item.focus) {
+                if (model.genreManager.focus.get() === 'list') {
+                    div.className = div.className + " focus";
+                }
+            }
+            div.appendChild(p);
+            div.appendChild(icon);
+            icon.className = 'app_home_genreManager_window_list_GenreElemWrap_checkbox_blank';
+            if (item.active) {
+                icon.className = 'app_home_genreManager_window_list_GenreElemWrap_checkbox_check';
+            }
+            p.innerHTML = item.name;
             return div;
         };
         GenreSelectComponent.prototype.buttons = function (item) {
+            var model = this.model;
             var div = document.createElement('div');
             var p = document.createElement('p');
             div.className = 'app_home_genreManager_window_buttonPanel_button_wrap';
             if (item.focus) {
-                div.className = div.className + " active";
+                if (model.genreManager.focus.get() === 'buttons') {
+                    div.className = div.className + " active";
+                }
             }
             div.appendChild(p);
             p.innerHTML = item.name;
@@ -1788,23 +1830,19 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     exports.__esModule = true;
     var model = new AppModel_4["default"]();
     function get_Serials(config) {
-        var filters = model.serialList.filtersReq.get();
-        var genre;
-        if (typeof model.serialList.filtersReq.get().genre !== 'undefined') {
-            if (typeof model.serialList.filtersReq.get().genre[0] !== 'undefined') {
-                genre = model.serialList.filtersReq.get().genre;
+        var gArr = model.genreManager.list_default.get();
+        var gArrNew = [];
+        gArr.forEach(function (item) {
+            if (item.active) {
+                if (item.name) {
+                    gArrNew.push(item.name.replace('&', ""));
+                }
             }
-            else {
-                genre = false;
-            }
-        }
-        else {
-            genre = false;
-        }
-        if (genre) {
+        });
+        if (gArrNew && gArrNew.length > 0) {
             config.join = 'genre';
             config.on = 'serials.genreHash=genre.genreHash';
-            config.where = genre.join("AND");
+            config.where = gArrNew.join(" AND ");
         }
         return getSerials(config);
     }
@@ -2595,7 +2633,7 @@ define("ListControllerSeasons", ["require", "exports", "ListController", "RouteM
             var list = this.model.getInstance("seriesList").getValue("list");
             this.model.seriesList.scrolPosition.set(0);
             this.model.seriesList.focusPosition.set(0);
-            var seasonId = this.activeItem.id;
+            var seasonId = this.activeItem.idSeasonvar;
             list.set(createPrevViewData_2["default"]());
             HTTP_2.getSeason(seasonId).then(function (data) {
                 data.playlist.forEach(function (item) {
@@ -2822,7 +2860,7 @@ define("aspectRatioManager", ["require", "exports"], function (require, exports)
     };
     exports["default"] = _;
 });
-define("GenreManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_7) {
+define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_7, HTTP_3, createPrevViewData_3) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_7["default"]();
@@ -2830,7 +2868,122 @@ define("GenreManager", ["require", "exports", "AppModel"], function (require, ex
         function GenreManager() {
         }
         GenreManager.prototype.openWindow = function () {
+            model.genreManager.list.set(JSON.parse(JSON.stringify(model.genreManager.list_default.get())));
+            model.genreManager.buttonsList.set(JSON.parse(JSON.stringify(model.genreManager.buttonsList_default.get())));
+            model.genreManager.position.set(10);
             model.App.route.set(model.App.route.get() + "/genreManager");
+            model.genreManager.focus.set('list');
+        };
+        GenreManager.prototype.changeFocusRight = function () {
+            model.genreManager.focus.set('buttons');
+        };
+        GenreManager.prototype.changeFocusLeft = function () {
+            model.genreManager.focus.set('list');
+        };
+        GenreManager.prototype.changeFocusTop = function () {
+            var focus = model.genreManager.focus.get();
+            if (focus === 'list') {
+                this.changeFocusTopList();
+            }
+            else if (focus === 'buttons') {
+                this.changeFocusTopButtons();
+            }
+        };
+        GenreManager.prototype.changeFocusTopList = function () {
+            var position = model.genreManager.position.get();
+            if (position > 0) {
+                model.genreManager.position.set(position - 1);
+            }
+        };
+        GenreManager.prototype.changeFocusBottom = function () {
+            var focus = model.genreManager.focus.get();
+            if (focus === 'list') {
+                this.changeFocusBottomList();
+            }
+            else if (focus === 'buttons') {
+                this.changeFocusBottomButtons();
+            }
+        };
+        GenreManager.prototype.changeFocusBottomList = function () {
+            var position = model.genreManager.position.get();
+            if (position < model.genreManager.list.get().length - 3) {
+                model.genreManager.position.set(position + 1);
+            }
+        };
+        GenreManager.prototype.submit = function () {
+            var focus = model.genreManager.focus.get();
+            if (focus === 'list') {
+                this.submitList();
+            }
+            else if (focus === 'buttons') {
+                this.submitButtons();
+            }
+        };
+        GenreManager.prototype.submitList = function () {
+            var focusItem = model.genreManager.display()[2];
+            var list = model.genreManager.list.get();
+            list.forEach(function (item) {
+                if (item.name === focusItem.name) {
+                    item.active = item.active ? false : true;
+                }
+            });
+            model.genreManager.list.set(list);
+        };
+        GenreManager.prototype.submitButtons = function () {
+            var list = model.genreManager.buttonsList.get();
+            var i = 0;
+            var focusIndex;
+            list.forEach(function (item) {
+                if (item.focus) {
+                    focusIndex = i;
+                }
+                i++;
+            });
+            var active = list[focusIndex];
+            this[active.command]();
+        };
+        GenreManager.prototype.changeFocusButtons = function (diff) {
+            var list = model.genreManager.buttonsList.get();
+            var i = 0;
+            var focusIndex;
+            list.forEach(function (item) {
+                if (item.focus) {
+                    focusIndex = i;
+                    item.focus = false;
+                }
+                i++;
+            });
+            if (typeof list[focusIndex + diff] !== 'undefined') {
+                list[focusIndex + diff].focus = true;
+            }
+            else {
+                list[focusIndex].focus = true;
+            }
+            model.genreManager.buttonsList.set(list);
+        };
+        GenreManager.prototype.changeFocusTopButtons = function () {
+            this.changeFocusButtons(-1);
+        };
+        GenreManager.prototype.changeFocusBottomButtons = function () {
+            this.changeFocusButtons(1);
+        };
+        GenreManager.prototype.back = function () {
+            model.App.route.set('/home');
+        };
+        GenreManager.prototype.clear = function () {
+            var list = model.genreManager.list.get();
+            list.forEach(function (item) {
+                item.active = false;
+            });
+            model.genreManager.list.set(list);
+        };
+        GenreManager.prototype.enter = function () {
+            model.genreManager.list_default.set(JSON.parse(JSON.stringify(model.genreManager.list.get())));
+            model.serialList.list.set(createPrevViewData_3["default"]());
+            HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+                model.serialList.list.set(data);
+            });
+            this.back();
         };
         return GenreManager;
     }());
@@ -2885,6 +3038,26 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                     case 112:
                         genreManager.openWindow();
+                        break;
+                }
+            },
+            "/home/genreManager": function (code) {
+                console.log(code);
+                switch (code) {
+                    case 39:
+                        genreManager.changeFocusRight();
+                        break;
+                    case 37:
+                        genreManager.changeFocusLeft();
+                        break;
+                    case 38:
+                        genreManager.changeFocusTop();
+                        break;
+                    case 40:
+                        genreManager.changeFocusBottom();
+                        break;
+                    case 13:
+                        genreManager.submit();
                         break;
                 }
             },
@@ -3070,7 +3243,10 @@ define("adaptation", ["require", "exports"], function (require, exports) {
                 ".app_ChannelListComponent_wrap_elem { height: 38%; }",
                 ".app_ChannelListComponent_card_img  {  height: 77%; }",
                 ".app_ChannelListComponent_card_h1   { font-size: 23px; }",
-                ".app_Play_ControlBar_timeShiftSizeBar { right: 230px; }"
+                ".app_Play_ControlBar_timeShiftSizeBar { right: 230px; }",
+                ".app_home_genreManager_window  {    width: 400px;} ",
+                ".app_home_genreManager_window_list_GenreElemWrap {width: 88%} ",
+                ".app_home_genreManager_window_buttonPanel { width: 130px; }"
             ];
             var cssAll = rules.join("\n");
             var head = document.getElementsByTagName("head");
@@ -3088,7 +3264,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_9, PageRouter_1, inputLayer_1, adaptation_1, HTTP_3, aspectRatioManager_2, createPrevViewData_3) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_9, PageRouter_1, inputLayer_1, adaptation_1, HTTP_4, aspectRatioManager_2, createPrevViewData_4) {
     "use strict";
     exports.__esModule = true;
     var prodaction = true;
@@ -3121,8 +3297,8 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             appContainer.appendChild(pageRouterWrap);
             var model = new AppModel_9["default"]();
             window.model = model;
-            model.serialList.list.set(createPrevViewData_3["default"]());
-            HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+            model.serialList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
             inputLayer_1["default"].init();
