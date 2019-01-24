@@ -6,6 +6,7 @@ import Play from "./Play";
 import ExitManager from "./ExitManager";
 import RouteManager from "./RouteManager"
 import aspectRatioManager from "./aspectRatioManager"
+import GenreManager from "./GenreManager";
 
 let model = new AppModel();
 
@@ -17,6 +18,8 @@ let listControllerVideo = new ListControllerVideo(instanceModelVideo);
 
 let instanceModelSeasonList = model.getInstance("seasonList");
 let listControllerSeasons = new ListControllerSeasons(instanceModelSeasonList)
+
+let genreManager = new GenreManager()
 
 let exitManager = new ExitManager()
 
@@ -42,7 +45,6 @@ var _: inputLayer = {
   },
   handlers: {
     "/home": function(code) {
-      console.log(code)
       switch (code) {
         case 27:
         exitManager.exitReq()
@@ -62,6 +64,9 @@ var _: inputLayer = {
         case 13:
         listControllerSerials.onEnter();
           break;
+        case 112:
+          genreManager.openWindow();
+        break;
       }
     },
     "/seasonList": function(code) {

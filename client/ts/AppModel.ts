@@ -10,6 +10,8 @@ export default class AppModel extends Model {
     let App = this.createInstance("App");
     App.createValue("route", "/home");
 
+    let genreManager = this.createInstance("genreManager");
+
     let serialList = this.createInstance("serialList");
     serialList.createValue("list", []);
           serialList.createValue("focusPosition", 0);
@@ -209,7 +211,6 @@ export default class AppModel extends Model {
         }
       ]
     })
-
 
     AppModel.cache = this;
   }

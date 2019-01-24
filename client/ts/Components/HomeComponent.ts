@@ -3,13 +3,14 @@ import BaseComponent from "./BaseComponent";
 import HeaderComponent from "./HeaderComponent";
 import SerialListComponent from "./SerialListComponent";
 import BottomButtonComponent from "./BottomButtonComponent";
+import GenreSelectComponent from "./GenreSelectComponent"
 
 export default class HomeComponent extends BaseComponent {
   protected create() {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [HeaderComponent, SerialListComponent];
+    let compList = [HeaderComponent, SerialListComponent, GenreSelectComponent];
 
     compList.forEach(Comp => {
       let wrap = document.createElement("div");
@@ -20,7 +21,7 @@ export default class HomeComponent extends BaseComponent {
 
     let bottomBtnComp = new BottomButtonComponent({
       red: {
-        text: "Фильтр",
+        text: "Жанры",
         visible: true
       },
       green: {
