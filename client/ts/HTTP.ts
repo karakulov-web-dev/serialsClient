@@ -15,7 +15,7 @@ export function get_Serials (config:any):Promise {
   if (genre) {
     config.join = 'genre'
     config.on = 'serials.genreHash=genre.genreHash'
-    config.where = 'ужасы=1'
+    config.where = genre.join("AND")
   }
 
   return getSerials(config)

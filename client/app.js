@@ -151,7 +151,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                 });
             });
             serialList.createValue("filtersReq", {
-                genre: 'ужасы'
+                genre: ['фантастические']
             });
             var seasonList = _this.createInstance("seasonList");
             seasonList.createValue("list", []);
@@ -1583,7 +1583,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         if (genre) {
             config.join = 'genre';
             config.on = 'serials.genreHash=genre.genreHash';
-            config.where = 'ужасы=1';
+            config.where = genre.join("AND");
         }
         return getSerials(config);
     }

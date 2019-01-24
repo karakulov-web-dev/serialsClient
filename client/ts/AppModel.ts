@@ -31,7 +31,7 @@ export default class AppModel extends Model {
       });
     });
     serialList.createValue("filtersReq", {
-      genre: 'ужасы'
+      genre: ['фантастические']
     })
       
 
