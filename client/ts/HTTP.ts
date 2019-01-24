@@ -1,11 +1,13 @@
 import { Promise_simple, Promise } from "./Polyfill/Promise_simple";
+import AppModel from "./AppModel";
 
+let model:any = new AppModel();
 
 export function get_Serials (config:any):Promise {
-  let filters = window.model.serialList.filtersReq.get();
+  let filters = model.serialList.filtersReq.get();
   let genre;
-  if (typeof window.model.serialList.filtersReq.get().genre !== 'undefined') {
-    genre = window.model.serialList.filtersReq.get().genre
+  if (typeof model.serialList.filtersReq.get().genre !== 'undefined') {
+    genre = model.serialList.filtersReq.get().genre
   } else {
     genre = false;
   }
@@ -15,6 +17,7 @@ export function get_Serials (config:any):Promise {
     config.on = 'serials.genreHash=genre.genreHash'
     config.where = 'ужасы=1'
   }
+
   return getSerials(config)
 };
 

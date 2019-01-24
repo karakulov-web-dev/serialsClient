@@ -1567,14 +1567,15 @@ define("Polyfill/Promise_simple", ["require", "exports"], function (require, exp
         }, 0);
     };
 });
-define("HTTP", ["require", "exports", "Polyfill/Promise_simple"], function (require, exports, Promise_simple_1) {
+define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], function (require, exports, Promise_simple_1, AppModel_4) {
     "use strict";
     exports.__esModule = true;
+    var model = new AppModel_4["default"]();
     function get_Serials(config) {
-        var filters = window.model.serialList.filtersReq.get();
+        var filters = model.serialList.filtersReq.get();
         var genre;
-        if (typeof window.model.serialList.filtersReq.get().genre !== 'undefined') {
-            genre = window.model.serialList.filtersReq.get().genre;
+        if (typeof model.serialList.filtersReq.get().genre !== 'undefined') {
+            genre = model.serialList.filtersReq.get().genre;
         }
         else {
             genre = false;
@@ -1747,10 +1748,10 @@ define("interfaceGlobal", ["require", "exports"], function (require, exports) {
     "use strict";
     exports.__esModule = true;
 });
-define("Play", ["require", "exports", "AppModel"], function (require, exports, AppModel_4) {
+define("Play", ["require", "exports", "AppModel"], function (require, exports, AppModel_5) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_4["default"]();
+    var model = new AppModel_5["default"]();
     var Play = model.getInstance("Play");
     var VideoList = model.getInstance("seriesList");
     var App = model.getInstance("App");
@@ -2388,7 +2389,7 @@ define("ListControllerSeasons", ["require", "exports", "ListController", "RouteM
     }(ListController_3["default"]));
     exports["default"] = ListControllerSeasons;
 });
-define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], function (require, exports, AppModel_5, RouteManager_4) {
+define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], function (require, exports, AppModel_6, RouteManager_4) {
     "use strict";
     exports.__esModule = true;
     var routeManager = new RouteManager_4["default"]();
@@ -2397,7 +2398,7 @@ define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], functi
             if (typeof ExitManager.cache !== 'undefined') {
                 return ExitManager.cache;
             }
-            this.model = new AppModel_5["default"]();
+            this.model = new AppModel_6["default"]();
             this.App = this.model.getInstance("App");
             this.route = this.App.getValue("route");
             this.ExitMenuInstance = this.model.getInstance("ExitMenuInstance");
@@ -2600,10 +2601,10 @@ define("aspectRatioManager", ["require", "exports"], function (require, exports)
     };
     exports["default"] = _;
 });
-define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "Play", "ExitManager", "RouteManager", "aspectRatioManager"], function (require, exports, AppModel_6, ListControllerSerials_1, ListControllerVideo_1, ListControllerSeasons_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1) {
+define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "Play", "ExitManager", "RouteManager", "aspectRatioManager"], function (require, exports, AppModel_7, ListControllerSerials_1, ListControllerVideo_1, ListControllerSeasons_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_6["default"]();
+    var model = new AppModel_7["default"]();
     var instanceModel = model.getInstance("serialList");
     var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
     var instanceModelVideo = model.getInstance("seriesList");
@@ -2849,7 +2850,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_7, PageRouter_1, inputLayer_1, adaptation_1, HTTP_3, aspectRatioManager_2, createPrevViewData_3) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_8, PageRouter_1, inputLayer_1, adaptation_1, HTTP_3, aspectRatioManager_2, createPrevViewData_3) {
     "use strict";
     exports.__esModule = true;
     var prodaction = true;
@@ -2880,7 +2881,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             var appContainer = document.getElementById(appContainerSelector);
             var pageRouterWrap = document.createElement("div");
             appContainer.appendChild(pageRouterWrap);
-            var model = new AppModel_7["default"]();
+            var model = new AppModel_8["default"]();
             window.model = model;
             model.serialList.list.set(createPrevViewData_3["default"]());
             HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
