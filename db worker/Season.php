@@ -26,8 +26,11 @@ class Season
         $this->countryString = implode(",",$this->countryString);
         $this->countryHash = md5($this->countryString);
         $this->description = $season->description;
-        $this->imdb = $season->rating->imdb;
-        $this->kinopoisk = $season->rating->kinopoisk;
+
+        if (array_key_exists('rating',$season)) {
+           $this->imdb = $season->rating->imdb->ratio;
+           $this->kinopoisk = $season->rating->kinopoisk->ratio;
+        }
     }
     public function sendDb() {
         $b = $this->checkForDuplicatesDb();
@@ -35,7 +38,7 @@ class Season
             return false;
         }
         global $mysqli;
-        $sql = "INSERT INTO seasons".
+        $sql = "INSERT INTO seasonsAll".
         "(idSeasonvar,poster,poster_small,season_number,name,year,genreString,genreHash,countryHash,".
         "countryString,description,imdb,kinopoisk)".
         " VALUES ".
@@ -45,14 +48,13 @@ class Season
     }
     private function checkForDuplicatesDb() {
         global $mysqli;
-        $sql = "SELECT * FROM seasons WHERE idSeasonvar='$this->id'";
+        $sql = "SELECT * FROM seasonsAll WHERE idSeasonvar='$this->id'";
         $res = $mysqli->query($sql);
         if ($res) {
             $row = $res->fetch_assoc();
         } else {
             return false;
         }
-
         if ($row) {
             return true;
         } else {

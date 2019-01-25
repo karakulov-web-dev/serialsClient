@@ -832,7 +832,82 @@ define("Components/GenreSelectComponent", ["require", "exports", "Components/Bas
     }(BaseComponent_5["default"]));
     exports["default"] = GenreSelectComponent;
 });
-define("Components/HomeComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent"], function (require, exports, BaseComponent_6, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1) {
+define("Components/InfoComponent", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_6) {
+    "use strict";
+    exports.__esModule = true;
+    var InfoComponent = /** @class */ (function (_super) {
+        __extends(InfoComponent, _super);
+        function InfoComponent() {
+            var _this = _super.call(this) || this;
+            _this.route = _this.model.getInstance('App').getValue('route');
+            _this.route.subscribe(_this);
+            var model = _this.model;
+            return _this;
+        }
+        InfoComponent.prototype.create = function () {
+            var div = document.createElement('div');
+            var route = this.route.get();
+            if (this.route.get().split('/')[2] !== 'infoManager') {
+                return div;
+            }
+            div.className = 'app_home_infoManager';
+            div.appendChild(this.createWin());
+            return div;
+        };
+        InfoComponent.prototype.createWin = function () {
+            var model = this.model;
+            var activeSerial = model.serialList.display.get()()[model.serialList.focusPosition.get()];
+            var genreModify = activeSerial.genreString.split(',').join(', ');
+            var div = document.createElement('div');
+            var header = document.createElement('div');
+            var body = document.createElement('div');
+            var box1 = document.createElement("div");
+            var box2 = document.createElement("div");
+            var infoBox = document.createElement('div');
+            var name = document.createElement('div');
+            var country = document.createElement('div');
+            var year = document.createElement('div');
+            var genre = document.createElement('div');
+            var kinopoisk = document.createElement('div');
+            var imdb = document.createElement('div');
+            var img = document.createElement('img');
+            var description = document.createElement('div');
+            div.className = 'app_home_infoManager_window';
+            header.className = 'app_home_infoManager_window_header';
+            body.className = 'app_home_infoManager_window_body';
+            box1.className = 'app_home_infoManager_window_body_box1';
+            infoBox.className = "app_home_infoManager_window_body_box1_infoBox";
+            img.className = "app_home_infoManager_window_body_box1_img";
+            img.src = activeSerial.poster;
+            description.className = 'app_home_infoManager_window_body_box2_description';
+            header.innerHTML = 'Инфо';
+            name.innerHTML = "<span>\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435:</span> " + activeSerial.name;
+            country.innerHTML = "<span>\u0421\u0442\u0440\u0430\u043D\u0430:</span> " + activeSerial.countryString;
+            year.innerHTML = "<span>\u0413\u043E\u0434:</span> " + activeSerial.year;
+            genre.innerHTML = "<span>\u0416\u0430\u043D\u0440\u044B:</span> " + genreModify;
+            kinopoisk.innerHTML = "<span>\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043A\u0438\u043D\u043E\u043F\u043E\u0438\u0441\u043A:</span> " + activeSerial.kinopoisk;
+            imdb.innerHTML = "<span>\u0420\u0435\u0439\u0442\u0438\u043D\u0433 imdb:</span> " + activeSerial.imdb;
+            description.innerHTML = activeSerial.description;
+            div.appendChild(header);
+            div.appendChild(body);
+            body.appendChild(box1);
+            body.appendChild(box2);
+            box1.appendChild(infoBox);
+            box1.appendChild(img);
+            infoBox.appendChild(name);
+            infoBox.appendChild(country);
+            infoBox.appendChild(year);
+            infoBox.appendChild(genre);
+            infoBox.appendChild(kinopoisk);
+            infoBox.appendChild(imdb);
+            box2.appendChild(description);
+            return div;
+        };
+        return InfoComponent;
+    }(BaseComponent_6["default"]));
+    exports["default"] = InfoComponent;
+});
+define("Components/HomeComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent", "Components/InfoComponent"], function (require, exports, BaseComponent_7, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1, InfoComponent_1) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -843,7 +918,7 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [HeaderComponent_1["default"], SerialListComponent_1["default"], GenreSelectComponent_1["default"]];
+            var compList = [HeaderComponent_1["default"], SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"]];
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -874,7 +949,7 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_6["default"]));
+    }(BaseComponent_7["default"]));
     exports["default"] = HomeComponent;
 });
 define("Components/SeasonListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_2) {
@@ -962,7 +1037,7 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
         return (timeString);
     }
 });
-define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_7, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
+define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_8, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1005,7 +1080,7 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_7["default"]));
+    }(BaseComponent_8["default"]));
     exports["default"] = HomeComponent;
 });
 define("Components/SeriesListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_3) {
@@ -1090,7 +1165,7 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
         return (timeString);
     }
 });
-define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_8, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
+define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_9, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1156,10 +1231,10 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_8["default"]));
+    }(BaseComponent_9["default"]));
     exports["default"] = HomeComponent;
 });
-define("Components/LoadingWheel", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_9) {
+define("Components/LoadingWheel", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_10) {
     "use strict";
     exports.__esModule = true;
     var LoadingWheel = /** @class */ (function (_super) {
@@ -1185,10 +1260,10 @@ define("Components/LoadingWheel", ["require", "exports", "Components/BaseCompone
             return div;
         };
         return LoadingWheel;
-    }(BaseComponent_9["default"]));
+    }(BaseComponent_10["default"]));
     exports["default"] = LoadingWheel;
 });
-define("Components/ControlBar", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_10) {
+define("Components/ControlBar", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_11) {
     "use strict";
     exports.__esModule = true;
     var ControlBar = /** @class */ (function (_super) {
@@ -1249,7 +1324,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     exports["default"] = ControlBar;
     var ControlBar_progress_blank = /** @class */ (function (_super) {
         __extends(ControlBar_progress_blank, _super);
@@ -1262,7 +1337,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_progress_blank;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_progress_play = /** @class */ (function (_super) {
         __extends(ControlBar_progress_play, _super);
         function ControlBar_progress_play() {
@@ -1281,7 +1356,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_progress_play;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_playButton = /** @class */ (function (_super) {
         __extends(ControlBar_playButton, _super);
         function ControlBar_playButton() {
@@ -1310,7 +1385,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_playButton;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_settingButton = /** @class */ (function (_super) {
         __extends(ControlBar_settingButton, _super);
         function ControlBar_settingButton() {
@@ -1322,7 +1397,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_settingButton;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_volumeBar = /** @class */ (function (_super) {
         __extends(ControlBar_volumeBar, _super);
         function ControlBar_volumeBar() {
@@ -1361,7 +1436,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_volumeBar;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_nameCurrentVideo = /** @class */ (function (_super) {
         __extends(ControlBar_nameCurrentVideo, _super);
         function ControlBar_nameCurrentVideo() {
@@ -1381,7 +1456,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_nameCurrentVideo;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_timeBar = /** @class */ (function (_super) {
         __extends(ControlBar_timeBar, _super);
         function ControlBar_timeBar() {
@@ -1423,7 +1498,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return timeString;
         };
         return ControlBar_timeBar;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_playSettingMenu = /** @class */ (function (_super) {
         __extends(ControlBar_playSettingMenu, _super);
         function ControlBar_playSettingMenu() {
@@ -1463,7 +1538,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return p;
         };
         return ControlBar_playSettingMenu;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     var ControlBar_timeShiftSizeBar = /** @class */ (function (_super) {
         __extends(ControlBar_timeShiftSizeBar, _super);
         function ControlBar_timeShiftSizeBar() {
@@ -1489,9 +1564,9 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_timeShiftSizeBar;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
 });
-define("Components/PlayComponent", ["require", "exports", "Components/BaseComponent", "Components/LoadingWheel", "Components/ControlBar"], function (require, exports, BaseComponent_11, LoadingWheel_1, ControlBar_1) {
+define("Components/PlayComponent", ["require", "exports", "Components/BaseComponent", "Components/LoadingWheel", "Components/ControlBar"], function (require, exports, BaseComponent_12, LoadingWheel_1, ControlBar_1) {
     "use strict";
     exports.__esModule = true;
     var PlayComponent = /** @class */ (function (_super) {
@@ -1517,7 +1592,7 @@ define("Components/PlayComponent", ["require", "exports", "Components/BaseCompon
             return div;
         };
         return PlayComponent;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     exports["default"] = PlayComponent;
     var PauseIndicator = /** @class */ (function (_super) {
         __extends(PauseIndicator, _super);
@@ -1537,9 +1612,9 @@ define("Components/PlayComponent", ["require", "exports", "Components/BaseCompon
             return div;
         };
         return PauseIndicator;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
 });
-define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_12) {
+define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_13) {
     "use strict";
     exports.__esModule = true;
     var ExitReqComp = /** @class */ (function (_super) {
@@ -1577,10 +1652,10 @@ define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponen
             return div;
         };
         return ExitReqComp;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     exports["default"] = ExitReqComp;
 });
-define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/ExitReqComp"], function (require, exports, BaseComponent_13, HeaderComponent_4, BottomButtonComponent_4, ExitReqComp_1) {
+define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/ExitReqComp"], function (require, exports, BaseComponent_14, HeaderComponent_4, BottomButtonComponent_4, ExitReqComp_1) {
     "use strict";
     exports.__esModule = true;
     var ExitReqPageComp = /** @class */ (function (_super) {
@@ -1617,10 +1692,10 @@ define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComp
             return div;
         };
         return ExitReqPageComp;
-    }(BaseComponent_13["default"]));
+    }(BaseComponent_14["default"]));
     exports["default"] = ExitReqPageComp;
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp"], function (require, exports, BaseComponent_14, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1) {
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp"], function (require, exports, BaseComponent_15, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -1661,7 +1736,7 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             return elem;
         };
         return PageRouter;
-    }(BaseComponent_14["default"]));
+    }(BaseComponent_15["default"]));
     exports["default"] = PageRouter;
 });
 define("ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
@@ -2990,10 +3065,24 @@ define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevVie
     }());
     exports["default"] = GenreManager;
 });
-define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "Play", "ExitManager", "RouteManager", "aspectRatioManager", "GenreManager"], function (require, exports, AppModel_8, ListControllerSerials_1, ListControllerVideo_1, ListControllerSeasons_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1, GenreManager_1) {
+define("InfoManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_8) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_8["default"]();
+    var GenreManager = /** @class */ (function () {
+        function GenreManager() {
+        }
+        GenreManager.prototype.openWindow = function () {
+            model.App.route.set(model.App.route.get() + "/infoManager");
+        };
+        return GenreManager;
+    }());
+    exports["default"] = GenreManager;
+});
+define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "Play", "ExitManager", "RouteManager", "aspectRatioManager", "GenreManager", "InfoManager"], function (require, exports, AppModel_9, ListControllerSerials_1, ListControllerVideo_1, ListControllerSeasons_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1, GenreManager_1, InfoManager_1) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_9["default"]();
     var instanceModel = model.getInstance("serialList");
     var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
     var instanceModelVideo = model.getInstance("seriesList");
@@ -3001,6 +3090,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
     var instanceModelSeasonList = model.getInstance("seasonList");
     var listControllerSeasons = new ListControllerSeasons_1["default"](instanceModelSeasonList);
     var genreManager = new GenreManager_1["default"]();
+    var infoManager = new InfoManager_1["default"]();
     var exitManager = new ExitManager_1["default"]();
     var routeManager = new RouteManager_5["default"]();
     var _ = {
@@ -3039,6 +3129,9 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                     case 112:
                         genreManager.openWindow();
+                        break;
+                    case 113:
+                        infoManager.openWindow();
                         break;
                 }
             },
@@ -3247,7 +3340,10 @@ define("adaptation", ["require", "exports"], function (require, exports) {
                 ".app_Play_ControlBar_timeShiftSizeBar { right: 230px; }",
                 ".app_home_genreManager_window  {    width: 400px;} ",
                 ".app_home_genreManager_window_list_GenreElemWrap {width: 88%} ",
-                ".app_home_genreManager_window_buttonPanel { width: 130px; }"
+                ".app_home_genreManager_window_buttonPanel { width: 130px; }",
+                ".app_home_infoManager_window_body_box2_description {height: 50%;}",
+                ".app_home_infoManager_window { width: 600px; height: 450px;}",
+                ".app_home_infoManager_window_body_box1_infoBox {width: 70%;}"
             ];
             var cssAll = rules.join("\n");
             var head = document.getElementsByTagName("head");
@@ -3265,7 +3361,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_9, PageRouter_1, inputLayer_1, adaptation_1, HTTP_4, aspectRatioManager_2, createPrevViewData_4) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_10, PageRouter_1, inputLayer_1, adaptation_1, HTTP_4, aspectRatioManager_2, createPrevViewData_4) {
     "use strict";
     exports.__esModule = true;
     var prodaction = true;
@@ -3296,7 +3392,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             var appContainer = document.getElementById(appContainerSelector);
             var pageRouterWrap = document.createElement("div");
             appContainer.appendChild(pageRouterWrap);
-            var model = new AppModel_9["default"]();
+            var model = new AppModel_10["default"]();
             window.model = model;
             model.serialList.list.set(createPrevViewData_4["default"]());
             HTTP_4.get_Serials({ limit: 50, offset: 0 }).then(function (data) {

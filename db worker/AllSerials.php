@@ -3,7 +3,8 @@
 $postdata = http_build_query(
     array(
         'key' => '032a4972',
-        'command' => 'getSerialList',
+        'command' => 'getSeasonList',
+        'id' => ''
     )
 );
 

@@ -1,6 +1,6 @@
 <?php
 
-$mysqli = new mysqli("127.0.0.1", "seasonvar", "lolkarakul111", "seasonvar", 3306);
+$mysqli = new mysqli("127.0.0.1", "seasonvar", "jnfKLBY7ZfJq6WZG", "seasonvar", 3306);
 $mysqli->set_charset("utf8");
 
 class Serial
@@ -8,7 +8,7 @@ class Serial
     function __construct($seasonArr)
     {
         global $mysqli;
-        $res = $mysqli->query("SELECT COUNT(*) FROM serials");
+        $res = $mysqli->query("SELECT COUNT(*) FROM serialsAll");
         $row = $res->fetch_assoc();
         $id = ++$row["COUNT(*)"];
         $this->id = $id;
@@ -26,8 +26,20 @@ class Serial
         $this->countryString = implode(",",$this->countryString);
         $this->countryHash = md5($this->countryString);
         $this->description = $seasonArr[0]->description;
-        $this->imdb = $seasonArr[0]->rating->imdb;
-        $this->kinopoisk = $seasonArr[0]->rating->kinopoisk;
+        $vvvv = array_key_exists('rating',$seasonArr[0]);
+        if (array_key_exists('rating',$seasonArr[0])) {
+
+            if (array_key_exists('imdb',$seasonArr[0]->rating)) {
+                $this->imdb = $seasonArr[0]->rating->imdb->ratio;
+            } else {
+                $this->imdb = 0;
+            }
+            if (array_key_exists('kinopoisk',$seasonArr[0]->rating)) {
+                $this->kinopoisk = $seasonArr[0]->rating->kinopoisk->ratio;
+            } else {
+                $this->kinopoisk = 0;
+            }
+        }
         $this->seasonListIdJson = $this->seasonListIdJson($seasonArr);
         $this->seasonListIdJson = json_encode($this->seasonListIdJson);
     }
@@ -44,7 +56,9 @@ class Serial
             return false;
         }
         global $mysqli;
-        $sql = "INSERT INTO serials".
+        print_r($this);
+        echo "\n\n\n";
+        $sql = "INSERT INTO serialsAll".
         "(id,poster,poster_small,seasons_number,name,".
         "year,genreString,genreHash,countryString,countryHash,description,".
         "imdb,kinopoisk,seasonListIdJson)".
@@ -56,10 +70,9 @@ class Serial
     }
     private function checkForDuplicatesDb() {
         global $mysqli;
-        $sql = "SELECT * FROM serials WHERE name='$this->name' AND poster='$this->poster' AND genreHash='$this->genreHash'";
+        $sql = "SELECT * FROM serialsAll WHERE name='$this->name' AND poster='$this->poster' AND genreHash='$this->genreHash'";
         $res = $mysqli->query($sql);
         $row = $res->fetch_assoc();
-        print_r($row);
         if ($row) {
             return true;
         } else {

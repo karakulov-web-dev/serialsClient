@@ -7,6 +7,7 @@ import ExitManager from "./ExitManager";
 import RouteManager from "./RouteManager"
 import aspectRatioManager from "./aspectRatioManager"
 import GenreManager from "./GenreManager";
+import InfoManager from "./InfoManager"
 
 let model = new AppModel();
 
@@ -20,6 +21,8 @@ let instanceModelSeasonList = model.getInstance("seasonList");
 let listControllerSeasons = new ListControllerSeasons(instanceModelSeasonList)
 
 let genreManager = new GenreManager()
+
+let infoManager = new InfoManager()
 
 let exitManager = new ExitManager()
 
@@ -67,6 +70,9 @@ var _: inputLayer = {
         case 112:
           genreManager.openWindow();
         break;
+        case 113:
+        infoManager.openWindow()
+      break;
       }
     },
     "/home/genreManager": function(code) {
