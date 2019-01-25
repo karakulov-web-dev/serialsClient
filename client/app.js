@@ -1835,12 +1835,15 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         gArr.forEach(function (item) {
             if (item.active) {
                 if (item.name) {
-                    gArrNew.push(item.name.replace('&', ""));
+                    var n = item.name.replace('&', "");
+                    gArrNew.push(n);
                 }
             }
         });
         if (gArrNew && gArrNew.length > 0) {
-            config.where = " genreString LIKE '%" + gArrNew.join("") + "%' ";
+            config.join = " genre ";
+            config.on = " serials.genreHash = genre.genreHash ";
+            config.where = " " + gArrNew.join(" AND ") + " ";
         }
         return getSerials(config);
     }

@@ -27,6 +27,9 @@ class Genre {
         $values = array();
 
         foreach ($this->genreArr as $item) {
+            if ($item == "Discovery&BBC") {
+                $item = "DiscoveryBBC";
+            }
             $keys[] = $item;
             $values[] = 1;
         }

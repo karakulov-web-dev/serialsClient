@@ -10,14 +10,16 @@ export function get_Serials (config:any):Promise {
  gArr.forEach(item => {
     if (item.active) {
       if (item.name) {
-        gArrNew.push(item.name.replace('&',""))
+        let n = item.name.replace('&',"")
+        gArrNew.push(n)
       }
     }
   })
 
-
   if (gArrNew && gArrNew.length > 0) {
-    config.where = ` genreString LIKE \'%${gArrNew.join("")}%\' `;
+    config.join = " genre ";
+    config.on = " serials.genreHash = genre.genreHash ";
+    config.where = ` ${gArrNew.join(" AND ")} `;
   }
 
   return getSerials(config)
