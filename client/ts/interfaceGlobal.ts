@@ -14,6 +14,7 @@ export interface stbObj {
   SetSpeed(value: any);
   IsPlaying();
   Stop();
+  ShowVirtualKeyboard()
 }
 
 export interface windowObj {

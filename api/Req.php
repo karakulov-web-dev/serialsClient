@@ -29,10 +29,11 @@ class Req {
         $join = $this->createJoinSql();
         $on = $this->createOnSql();
         $where = $this->createWhereSql();
+        $like = $this->createLikeSql();
         $orderBy = $this->createOrderBySql();
         $limit =  $this->createLimitSql();
         $offset = $this->createOffsetSql();
-        $this->sql = $select . $from .$join . $on . $where . $orderBy . $limit . $offset;
+        $this->sql = $select . $from .$join . $on . $where . $like . $orderBy . $limit . $offset;
     }
     function createFromSql() {
         if ($this->config['from']) {
@@ -58,6 +59,13 @@ class Req {
     function createWhereSql() {
         if ($this->config['where']) {
             return "WHERE {$this->config['where']} ";
+        } else {
+            return "";
+        }
+    }
+    function createLikeSql() {
+        if ($this->config['like']) {
+            return "LIKE {$this->config['like']} ";
         } else {
             return "";
         }

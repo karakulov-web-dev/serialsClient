@@ -11,7 +11,12 @@ export default class GenreManager {
     back() {
         model.App.route.set('/home')
     }
-    scrolBottom() {
-        console.log('scrolBottom')
+    scrollBottom() {
+       var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop
+       document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll + 10;
     }
+    scrollTop() {
+        var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop
+        document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll - 10;
+     }
 }

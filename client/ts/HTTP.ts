@@ -22,6 +22,18 @@ export function get_Serials (config:any):Promise {
     config.where = ` ${gArrNew.join(" AND ")} `;
   }
 
+  let searchQuery = model.searchManager.query.get()
+  if (searchQuery) {
+    if (typeof config.where !== 'undefined') {
+      config.where = config.where + ' AND name'
+      config.like = ` '%${searchQuery}%'`
+    } else {
+      config.where = ` name`;
+      config.like = ` '%${searchQuery}%'`
+    }
+
+  }
+
   return getSerials(config)
 };
 

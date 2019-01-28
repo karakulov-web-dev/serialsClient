@@ -6,6 +6,7 @@ import Play from "./Play";
 import ExitManager from "./ExitManager";
 import RouteManager from "./RouteManager"
 import aspectRatioManager from "./aspectRatioManager"
+import SearchManager from "./SearchManager"
 import GenreManager from "./GenreManager";
 import InfoManager from "./InfoManager"
 
@@ -23,6 +24,8 @@ let listControllerSeasons = new ListControllerSeasons(instanceModelSeasonList)
 let genreManager = new GenreManager()
 
 let infoManager = new InfoManager()
+
+let searchManager = new SearchManager()
 
 let exitManager = new ExitManager()
 
@@ -72,7 +75,10 @@ var _: inputLayer = {
         break;
         case 113:
         infoManager.openWindow()
-      break;
+        break;
+        case 114:
+        searchManager.openWindow()
+        break;
       }
     },
     "/home/genreManager": function(code) {
@@ -105,7 +111,21 @@ var _: inputLayer = {
       infoManager.back() 
       break
       case 40: 
-      infoManager.scrolBottom() 
+      infoManager.scrollBottom() 
+      break
+      case 38:
+      infoManager.scrollTop()
+      break
+    }
+    },
+    "/home/searchManager": function (code) {
+      console.log(code)
+      switch (code) {
+      case 13:
+      searchManager.submit()
+      break
+      case 8:
+      searchManager.back() 
       break
     }
     },
@@ -136,8 +156,8 @@ var _: inputLayer = {
     },
     "/playListsList": function(code) {
       switch (code) {
-        case 27:
-        routeManager.home()
+          case 27:
+          routeManager.home()
           break;
           case 112: 
           exitManager.exitReq()

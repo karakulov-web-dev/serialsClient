@@ -10,6 +10,9 @@ export default class AppModel extends Model {
     let App = this.createInstance("App");
     App.createValue("route", "/home");
 
+    let searchManager = this.createInstance("searchManager");
+    searchManager.createValue("query",'вамп')
+
     let genreManager = this.createInstance("genreManager");
     genreManager.createValue("focus","list")
     genreManager.createValue("buttonsList",[])

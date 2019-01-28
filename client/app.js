@@ -130,6 +130,8 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             }
             var App = _this.createInstance("App");
             App.createValue("route", "/home");
+            var searchManager = _this.createInstance("searchManager");
+            searchManager.createValue("query", 'вамп');
             var genreManager = _this.createInstance("genreManager");
             genreManager.createValue("focus", "list");
             genreManager.createValue("buttonsList", []);
@@ -907,7 +909,52 @@ define("Components/InfoComponent", ["require", "exports", "Components/BaseCompon
     }(BaseComponent_6["default"]));
     exports["default"] = InfoComponent;
 });
-define("Components/HomeComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent", "Components/InfoComponent"], function (require, exports, BaseComponent_7, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1, InfoComponent_1) {
+define("Components/SearchComponent", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_7) {
+    "use strict";
+    exports.__esModule = true;
+    var SearchComponent = /** @class */ (function (_super) {
+        __extends(SearchComponent, _super);
+        function SearchComponent() {
+            var _this = _super.call(this) || this;
+            _this.route = _this.model.getInstance('App').getValue('route');
+            _this.route.subscribe(_this);
+            var model = _this.model;
+            return _this;
+        }
+        SearchComponent.prototype.create = function () {
+            var div = document.createElement('div');
+            var route = this.route.get();
+            if (this.route.get().split('/')[2] !== 'searchManager') {
+                return div;
+            }
+            div.className = 'app_home_infoManager';
+            div.appendChild(this.createWin());
+            return div;
+        };
+        SearchComponent.prototype.createWin = function () {
+            var model = this.model;
+            var div = document.createElement('div');
+            var header = document.createElement('div');
+            var body = document.createElement('div');
+            var app_home_searchManager_search = document.createElement('div');
+            var input = document.createElement('input');
+            div.className = 'app_home_searchManager_window';
+            header.className = 'app_home_searchManager_window_header';
+            body.className = 'app_home_searchManager_window_body';
+            app_home_searchManager_search.className = 'app_home_searchManager_search';
+            input.className = 'app_home_searchManager_search_input';
+            header.innerHTML = 'Поиск';
+            div.appendChild(header);
+            div.appendChild(body);
+            body.appendChild(app_home_searchManager_search);
+            app_home_searchManager_search.appendChild(input);
+            return div;
+        };
+        return SearchComponent;
+    }(BaseComponent_7["default"]));
+    exports["default"] = SearchComponent;
+});
+define("Components/HomeComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent", "Components/InfoComponent", "Components/SearchComponent"], function (require, exports, BaseComponent_8, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1, InfoComponent_1, SearchComponent_1) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -918,7 +965,7 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [HeaderComponent_1["default"], SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"]];
+            var compList = [HeaderComponent_1["default"], SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"], SearchComponent_1["default"]];
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -949,7 +996,7 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_7["default"]));
+    }(BaseComponent_8["default"]));
     exports["default"] = HomeComponent;
 });
 define("Components/SeasonListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_2) {
@@ -1037,7 +1084,7 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
         return (timeString);
     }
 });
-define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_8, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
+define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_9, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1080,7 +1127,7 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_8["default"]));
+    }(BaseComponent_9["default"]));
     exports["default"] = HomeComponent;
 });
 define("Components/SeriesListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_3) {
@@ -1165,7 +1212,7 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
         return (timeString);
     }
 });
-define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_9, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
+define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_10, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1231,10 +1278,10 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_9["default"]));
+    }(BaseComponent_10["default"]));
     exports["default"] = HomeComponent;
 });
-define("Components/LoadingWheel", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_10) {
+define("Components/LoadingWheel", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_11) {
     "use strict";
     exports.__esModule = true;
     var LoadingWheel = /** @class */ (function (_super) {
@@ -1260,10 +1307,10 @@ define("Components/LoadingWheel", ["require", "exports", "Components/BaseCompone
             return div;
         };
         return LoadingWheel;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     exports["default"] = LoadingWheel;
 });
-define("Components/ControlBar", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_11) {
+define("Components/ControlBar", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_12) {
     "use strict";
     exports.__esModule = true;
     var ControlBar = /** @class */ (function (_super) {
@@ -1324,7 +1371,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     exports["default"] = ControlBar;
     var ControlBar_progress_blank = /** @class */ (function (_super) {
         __extends(ControlBar_progress_blank, _super);
@@ -1337,7 +1384,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_progress_blank;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_progress_play = /** @class */ (function (_super) {
         __extends(ControlBar_progress_play, _super);
         function ControlBar_progress_play() {
@@ -1356,7 +1403,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_progress_play;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_playButton = /** @class */ (function (_super) {
         __extends(ControlBar_playButton, _super);
         function ControlBar_playButton() {
@@ -1385,7 +1432,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_playButton;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_settingButton = /** @class */ (function (_super) {
         __extends(ControlBar_settingButton, _super);
         function ControlBar_settingButton() {
@@ -1397,7 +1444,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_settingButton;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_volumeBar = /** @class */ (function (_super) {
         __extends(ControlBar_volumeBar, _super);
         function ControlBar_volumeBar() {
@@ -1436,7 +1483,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_volumeBar;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_nameCurrentVideo = /** @class */ (function (_super) {
         __extends(ControlBar_nameCurrentVideo, _super);
         function ControlBar_nameCurrentVideo() {
@@ -1456,7 +1503,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_nameCurrentVideo;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_timeBar = /** @class */ (function (_super) {
         __extends(ControlBar_timeBar, _super);
         function ControlBar_timeBar() {
@@ -1498,7 +1545,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return timeString;
         };
         return ControlBar_timeBar;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_playSettingMenu = /** @class */ (function (_super) {
         __extends(ControlBar_playSettingMenu, _super);
         function ControlBar_playSettingMenu() {
@@ -1538,7 +1585,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return p;
         };
         return ControlBar_playSettingMenu;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     var ControlBar_timeShiftSizeBar = /** @class */ (function (_super) {
         __extends(ControlBar_timeShiftSizeBar, _super);
         function ControlBar_timeShiftSizeBar() {
@@ -1564,9 +1611,9 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_timeShiftSizeBar;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
 });
-define("Components/PlayComponent", ["require", "exports", "Components/BaseComponent", "Components/LoadingWheel", "Components/ControlBar"], function (require, exports, BaseComponent_12, LoadingWheel_1, ControlBar_1) {
+define("Components/PlayComponent", ["require", "exports", "Components/BaseComponent", "Components/LoadingWheel", "Components/ControlBar"], function (require, exports, BaseComponent_13, LoadingWheel_1, ControlBar_1) {
     "use strict";
     exports.__esModule = true;
     var PlayComponent = /** @class */ (function (_super) {
@@ -1592,7 +1639,7 @@ define("Components/PlayComponent", ["require", "exports", "Components/BaseCompon
             return div;
         };
         return PlayComponent;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     exports["default"] = PlayComponent;
     var PauseIndicator = /** @class */ (function (_super) {
         __extends(PauseIndicator, _super);
@@ -1612,9 +1659,9 @@ define("Components/PlayComponent", ["require", "exports", "Components/BaseCompon
             return div;
         };
         return PauseIndicator;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
 });
-define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_13) {
+define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_14) {
     "use strict";
     exports.__esModule = true;
     var ExitReqComp = /** @class */ (function (_super) {
@@ -1652,10 +1699,10 @@ define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponen
             return div;
         };
         return ExitReqComp;
-    }(BaseComponent_13["default"]));
+    }(BaseComponent_14["default"]));
     exports["default"] = ExitReqComp;
 });
-define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/ExitReqComp"], function (require, exports, BaseComponent_14, HeaderComponent_4, BottomButtonComponent_4, ExitReqComp_1) {
+define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/ExitReqComp"], function (require, exports, BaseComponent_15, HeaderComponent_4, BottomButtonComponent_4, ExitReqComp_1) {
     "use strict";
     exports.__esModule = true;
     var ExitReqPageComp = /** @class */ (function (_super) {
@@ -1692,10 +1739,10 @@ define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComp
             return div;
         };
         return ExitReqPageComp;
-    }(BaseComponent_14["default"]));
+    }(BaseComponent_15["default"]));
     exports["default"] = ExitReqPageComp;
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp"], function (require, exports, BaseComponent_15, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1) {
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp"], function (require, exports, BaseComponent_16, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -1736,7 +1783,7 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             return elem;
         };
         return PageRouter;
-    }(BaseComponent_15["default"]));
+    }(BaseComponent_16["default"]));
     exports["default"] = PageRouter;
 });
 define("ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
@@ -1919,6 +1966,17 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             config.join = " genreAll ";
             config.on = " serialsAll.genreHash = genreAll.genreHash ";
             config.where = " " + gArrNew.join(" AND ") + " ";
+        }
+        var searchQuery = model.searchManager.query.get();
+        if (searchQuery) {
+            if (typeof config.where !== 'undefined') {
+                config.where = config.where + ' AND name';
+                config.like = " '%" + searchQuery + "%'";
+            }
+            else {
+                config.where = " name";
+                config.like = " '%" + searchQuery + "%'";
+            }
         }
         return getSerials(config);
     }
@@ -2936,10 +2994,43 @@ define("aspectRatioManager", ["require", "exports"], function (require, exports)
     };
     exports["default"] = _;
 });
-define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_7, HTTP_3, createPrevViewData_3) {
+define("SearchManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_7, HTTP_3, createPrevViewData_3) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_7["default"]();
+    var SearchManager = /** @class */ (function () {
+        function SearchManager() {
+        }
+        SearchManager.prototype.openWindow = function () {
+            model.App.route.set(model.App.route.get() + "/searchManager");
+            var input = document.querySelector(".app_home_searchManager_search_input");
+            input.focus();
+            try {
+                stb.ShowVirtualKeyboard();
+            }
+            catch (e) {
+                console.log(e);
+            }
+        };
+        SearchManager.prototype.back = function () {
+            model.App.route.set('/home');
+        };
+        SearchManager.prototype.submit = function () {
+            var query = 'запрос';
+            model.serialList.list.set(createPrevViewData_3["default"]());
+            HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+                model.serialList.list.set(data);
+            });
+            model.App.route.set('/home');
+        };
+        return SearchManager;
+    }());
+    exports["default"] = SearchManager;
+});
+define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_8, HTTP_4, createPrevViewData_4) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_8["default"]();
     var GenreManager = /** @class */ (function () {
         function GenreManager() {
         }
@@ -3055,8 +3146,8 @@ define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevVie
         };
         GenreManager.prototype.enter = function () {
             model.genreManager.list_default.set(JSON.parse(JSON.stringify(model.genreManager.list.get())));
-            model.serialList.list.set(createPrevViewData_3["default"]());
-            HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+            model.serialList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
             this.back();
@@ -3065,10 +3156,10 @@ define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevVie
     }());
     exports["default"] = GenreManager;
 });
-define("InfoManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_8) {
+define("InfoManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_9) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_8["default"]();
+    var model = new AppModel_9["default"]();
     var GenreManager = /** @class */ (function () {
         function GenreManager() {
         }
@@ -3078,17 +3169,22 @@ define("InfoManager", ["require", "exports", "AppModel"], function (require, exp
         GenreManager.prototype.back = function () {
             model.App.route.set('/home');
         };
-        GenreManager.prototype.scrolBottom = function () {
-            console.log('scrolBottom');
+        GenreManager.prototype.scrollBottom = function () {
+            var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
+            document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll + 10;
+        };
+        GenreManager.prototype.scrollTop = function () {
+            var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
+            document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll - 10;
         };
         return GenreManager;
     }());
     exports["default"] = GenreManager;
 });
-define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "Play", "ExitManager", "RouteManager", "aspectRatioManager", "GenreManager", "InfoManager"], function (require, exports, AppModel_9, ListControllerSerials_1, ListControllerVideo_1, ListControllerSeasons_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1, GenreManager_1, InfoManager_1) {
+define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "Play", "ExitManager", "RouteManager", "aspectRatioManager", "SearchManager", "GenreManager", "InfoManager"], function (require, exports, AppModel_10, ListControllerSerials_1, ListControllerVideo_1, ListControllerSeasons_1, Play_2, ExitManager_1, RouteManager_5, aspectRatioManager_1, SearchManager_1, GenreManager_1, InfoManager_1) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_9["default"]();
+    var model = new AppModel_10["default"]();
     var instanceModel = model.getInstance("serialList");
     var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
     var instanceModelVideo = model.getInstance("seriesList");
@@ -3097,6 +3193,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
     var listControllerSeasons = new ListControllerSeasons_1["default"](instanceModelSeasonList);
     var genreManager = new GenreManager_1["default"]();
     var infoManager = new InfoManager_1["default"]();
+    var searchManager = new SearchManager_1["default"]();
     var exitManager = new ExitManager_1["default"]();
     var routeManager = new RouteManager_5["default"]();
     var _ = {
@@ -3139,6 +3236,9 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                     case 113:
                         infoManager.openWindow();
                         break;
+                    case 114:
+                        searchManager.openWindow();
+                        break;
                 }
             },
             "/home/genreManager": function (code) {
@@ -3171,7 +3271,21 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         infoManager.back();
                         break;
                     case 40:
-                        infoManager.scrolBottom();
+                        infoManager.scrollBottom();
+                        break;
+                    case 38:
+                        infoManager.scrollTop();
+                        break;
+                }
+            },
+            "/home/searchManager": function (code) {
+                console.log(code);
+                switch (code) {
+                    case 13:
+                        searchManager.submit();
+                        break;
+                    case 8:
+                        searchManager.back();
                         break;
                 }
             },
@@ -3381,7 +3495,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_10, PageRouter_1, inputLayer_1, adaptation_1, HTTP_4, aspectRatioManager_2, createPrevViewData_4) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_11, PageRouter_1, inputLayer_1, adaptation_1, HTTP_5, aspectRatioManager_2, createPrevViewData_5) {
     "use strict";
     exports.__esModule = true;
     var prodaction = true;
@@ -3412,10 +3526,10 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             var appContainer = document.getElementById(appContainerSelector);
             var pageRouterWrap = document.createElement("div");
             appContainer.appendChild(pageRouterWrap);
-            var model = new AppModel_10["default"]();
+            var model = new AppModel_11["default"]();
             window.model = model;
-            model.serialList.list.set(createPrevViewData_4["default"]());
-            HTTP_4.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+            model.serialList.list.set(createPrevViewData_5["default"]());
+            HTTP_5.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
             inputLayer_1["default"].init();
