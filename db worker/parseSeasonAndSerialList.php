@@ -14,12 +14,19 @@ function pushDb($value) {
 $all = file_get_contents('all.json');
 $all = json_decode($all,true);
 
+$block = true;
 foreach ($all as $i) {
     
-    //$a = json_encode($all[$i],JSON_UNESCAPED_UNICODE);
-   // $last_season_id = $all[$i];
-   // echo "{$a} \n\n\n\n";
-    
+
+   if ($i['name'] == 'Тайная история разведки. Соло для одиноких сов') {
+ $block = false;
+ continue;
+}
+if ($block) {
+ continue;
+}
+
+
     $postdata = http_build_query(
         array(
             'key' => '032a4972',
@@ -41,6 +48,9 @@ foreach ($all as $i) {
     
     $context  = stream_context_create($opts);
     $data = json_decode(file_get_contents('http://api.seasonvar.ru/', true, $context));
+    if ($data->error) {
+        continue;
+       }
     pushDb($data);
 }
 

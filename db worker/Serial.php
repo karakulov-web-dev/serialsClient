@@ -6,7 +6,7 @@ $mysqli->set_charset("utf8");
 class Serial
 {
     function __construct($seasonArr)
-    {
+    {  
         global $mysqli;
         $res = $mysqli->query("SELECT COUNT(*) FROM serialsAll");
         $row = $res->fetch_assoc();
@@ -56,8 +56,6 @@ class Serial
             return false;
         }
         global $mysqli;
-        print_r($this);
-        echo "\n\n\n";
         $sql = "INSERT INTO serialsAll".
         "(id,poster,poster_small,seasons_number,name,".
         "year,genreString,genreHash,countryString,countryHash,description,".
@@ -72,7 +70,9 @@ class Serial
         global $mysqli;
         $sql = "SELECT * FROM serialsAll WHERE name='$this->name' AND poster='$this->poster' AND genreHash='$this->genreHash'";
         $res = $mysqli->query($sql);
-        $row = $res->fetch_assoc();
+        if ($res) {
+            $row = $res->fetch_assoc();  
+        }      
         if ($row) {
             return true;
         } else {
