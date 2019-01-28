@@ -10,12 +10,12 @@ background: url("../img/bgBottomButton.png")
 }
 
 .app_home_infoManager_window {
-        width: 500px;
-        height: 400px;
-        margin: 97px auto;
-        background: #fafafa;
-        position: relative;
-        font-family: Roboto, Arial, sans-serif;
+    width: 500px;
+    height: 400px;
+    margin: 97px auto;
+    background: #fafafa;
+    position: relative;
+    font-family: Roboto, Arial, sans-serif;
 }
 .app_home_infoManager_window span {
 font-weight: bold;
@@ -57,7 +57,7 @@ font-weight: bold;
     width: 80%;
 }
 .app_home_infoManager_window_body_box2_description {
-    overflow: scroll;
+    overflow-y: scroll;
     height: 50%;
     position: absolute;
     bottom: 5px;

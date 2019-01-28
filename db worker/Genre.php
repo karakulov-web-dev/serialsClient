@@ -10,7 +10,7 @@ class Genre {
     }
     private function getSerial() {
         global $mysqli;
-        $sql = "SELECT * FROM `serials` WHERE id=$this->id";
+        $sql = "SELECT * FROM `serialsAll` WHERE id=$this->id";
         $res = $mysqli->query($sql);
         $row = $res->fetch_assoc();
         $this->genreHash = $row['genreHash'];
@@ -37,7 +37,7 @@ class Genre {
         $keys = implode(',',$keys);
         $values = implode(',',$values);
 
-        $sql = "INSERT INTO genre".
+        $sql = "INSERT INTO genreAll".
         "(genreHash,{$keys})".
         " VALUES ".
         "('$this->genreHash',{$values})";
@@ -45,7 +45,7 @@ class Genre {
     }
     private function checkForDuplicatesDb() {
         global $mysqli;
-        $sql = "SELECT * FROM genre WHERE genreHash='$this->genreHash'";
+        $sql = "SELECT * FROM genreAll WHERE genreHash='$this->genreHash'";
         $res = $mysqli->query($sql);
         if ($res) {
             $row = $res->fetch_assoc();

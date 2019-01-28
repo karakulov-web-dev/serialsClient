@@ -8,4 +8,10 @@ export default class GenreManager {
     openWindow() {
         model.App.route.set(model.App.route.get() + "/infoManager")
     }
+    back() {
+        model.App.route.set('/home')
+    }
+    scrolBottom() {
+        console.log('scrolBottom')
+    }
 }

@@ -93,7 +93,21 @@ var _: inputLayer = {
         case 13:
         genreManager.submit()
         break
+        case 8: 
+        genreManager.back()
+        break
       }
+    },
+    "/home/infoManager": function (code) {
+      console.log(code)
+      switch (code) {
+      case 8:
+      infoManager.back() 
+      break
+      case 40: 
+      infoManager.scrolBottom() 
+      break
+    }
     },
     "/seasonList": function(code) {
       switch (code) {

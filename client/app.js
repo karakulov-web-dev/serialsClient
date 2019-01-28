@@ -1916,8 +1916,8 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             }
         });
         if (gArrNew && gArrNew.length > 0) {
-            config.join = " genre ";
-            config.on = " serials.genreHash = genre.genreHash ";
+            config.join = " genreAll ";
+            config.on = " serialsAll.genreHash = genreAll.genreHash ";
             config.where = " " + gArrNew.join(" AND ") + " ";
         }
         return getSerials(config);
@@ -1934,7 +1934,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             }
             var data = config;
             data.type = "getData";
-            data.from = "serials";
+            data.from = "serialsAll";
             data.orderBy = "kinopoisk DESC";
             data = JSON.stringify(data);
             var xhr = new XMLHttpRequest();
@@ -1956,7 +1956,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({
                 "type": "getData",
-                "from": "seasons",
+                "from": "seasonsAll",
                 "where": "" + ("idSeasonvar = " + idArr.join(" OR idSeasonvar = "))
             });
             var xhr = new XMLHttpRequest();
@@ -3075,6 +3075,12 @@ define("InfoManager", ["require", "exports", "AppModel"], function (require, exp
         GenreManager.prototype.openWindow = function () {
             model.App.route.set(model.App.route.get() + "/infoManager");
         };
+        GenreManager.prototype.back = function () {
+            model.App.route.set('/home');
+        };
+        GenreManager.prototype.scrolBottom = function () {
+            console.log('scrolBottom');
+        };
         return GenreManager;
     }());
     exports["default"] = GenreManager;
@@ -3152,6 +3158,20 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                     case 13:
                         genreManager.submit();
+                        break;
+                    case 8:
+                        genreManager.back();
+                        break;
+                }
+            },
+            "/home/infoManager": function (code) {
+                console.log(code);
+                switch (code) {
+                    case 8:
+                        infoManager.back();
+                        break;
+                    case 40:
+                        infoManager.scrolBottom();
                         break;
                 }
             },
