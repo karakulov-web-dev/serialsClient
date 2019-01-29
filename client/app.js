@@ -3289,7 +3289,6 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                 }
             },
             "/home/genreManager": function (code) {
-                console.log(code);
                 switch (code) {
                     case 39:
                         genreManager.changeFocusRight();
@@ -3312,7 +3311,6 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                 }
             },
             "/home/infoManager": function (code) {
-                console.log(code);
                 switch (code) {
                     case 8:
                         infoManager.back();
@@ -3326,7 +3324,6 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                 }
             },
             "/home/searchManager": function (code) {
-                console.log(code);
                 switch (code) {
                     case 13:
                         searchManager.submit();
@@ -3384,7 +3381,6 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                 }
             },
             "/seriesList": function (code) {
-                console.log(code);
                 switch (code) {
                     case 112:
                         routeManager.back();

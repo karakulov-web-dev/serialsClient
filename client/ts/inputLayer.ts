@@ -82,7 +82,6 @@ var _: inputLayer = {
       }
     },
     "/home/genreManager": function(code) {
-      console.log(code)
       switch (code) {
         case 39:
         genreManager.changeFocusRight()
@@ -105,7 +104,6 @@ var _: inputLayer = {
       }
     },
     "/home/infoManager": function (code) {
-      console.log(code)
       switch (code) {
       case 8:
       infoManager.back() 
@@ -119,7 +117,6 @@ var _: inputLayer = {
     }
     },
     "/home/searchManager": function (code) {
-      console.log(code)
       switch (code) {
       case 13:
       searchManager.submit()
@@ -177,7 +174,6 @@ var _: inputLayer = {
       }
     },
     "/seriesList": function(code) {
-      console.log(code)
       switch (code) {
         case 112:
         routeManager.back()
