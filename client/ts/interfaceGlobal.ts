@@ -15,6 +15,7 @@ export interface stbObj {
   IsPlaying();
   Stop();
   ShowVirtualKeyboard()
+  HideVirtualKeyboard()
 }
 
 export interface windowObj {

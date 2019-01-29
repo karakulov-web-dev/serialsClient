@@ -11,7 +11,7 @@ export default class AppModel extends Model {
     App.createValue("route", "/home");
 
     let searchManager = this.createInstance("searchManager");
-    searchManager.createValue("query",'вамп')
+    searchManager.createValue("query",false)
 
     let genreManager = this.createInstance("genreManager");
     genreManager.createValue("focus","list")

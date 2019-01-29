@@ -31,7 +31,6 @@ export function get_Serials (config:any):Promise {
       config.where = ` name`;
       config.like = ` '%${searchQuery}%'`
     }
-
   }
 
   return getSerials(config)

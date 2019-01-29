@@ -36,7 +36,12 @@ export default class ListComponent extends BaseComponent {
     if (typeof list[this.focusPosition.get()] !== "undefined") {
       list[this.focusPosition.get()].active = true;
     }
-
+    if (list.length === 0) {
+      let p = document.createElement('p')
+      elem.appendChild(p)
+      p.className = "List_component_elem_not_found"
+      p.innerHTML = 'Ничего не найдено.'
+    }
     list.forEach(item => {
       let itemElem = this.createItem(item);
       if (itemElem) {

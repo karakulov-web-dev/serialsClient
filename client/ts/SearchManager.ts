@@ -23,9 +23,29 @@ export default class SearchManager {
     }
     back() {
         model.App.route.set('/home')
+        try {
+        stb.HideVirtualKeyboard();
+        } catch (e) {
+            console.log(e)
+        }
     }
-    submit() {
-        let query = 'запрос'
+    submit() {   
+
+        let list = model.genreManager.list_default.get()
+        list.forEach(item => {
+            item.active = false;
+        })
+        model.genreManager.list_default.set(list)
+
+        
+        try {
+            stb.HideVirtualKeyboard();
+            } catch (e) {
+                console.log(e)
+            }
+        let elem:any = document.querySelector(".app_home_searchManager_search_input")
+        let query:any = elem.value
+        model.searchManager.query.set(query)
         model.serialList.list.set(createPrevViewData())
         get_Serials({limit: 50, offset: 0}).then(data => {
          model.serialList.list.set(data)

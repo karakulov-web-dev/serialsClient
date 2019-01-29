@@ -114,6 +114,7 @@ export default class GenreManager {
        model.genreManager.list.set(list)
     }
     enter() {
+        model.searchManager.query.set(false)
         model.genreManager.list_default.set( JSON.parse( JSON.stringify( model.genreManager.list.get() ) ) )
         model.serialList.list.set(createPrevViewData())
         get_Serials({limit: 50, offset: 0}).then(data => {

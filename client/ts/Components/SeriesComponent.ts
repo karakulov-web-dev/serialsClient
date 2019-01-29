@@ -52,20 +52,20 @@ export default class HomeComponent extends BaseComponent {
 
     let bottomBtnComp = new BottomButtonComponent({
       red: {
-        text: "Фильтр",
+        text: "Назад",
         visible: true
       },
       green: {
         text: "Инфо",
-        visible: true
+        visible: false
       },
       yellow: {
         text: "Поиск",
-        visible: true
+        visible: false
       },
       blue: {
         text: "Сортировать",
-        visible: true
+        visible: false
       }
     });
     let btnWrap = document.createElement("div");

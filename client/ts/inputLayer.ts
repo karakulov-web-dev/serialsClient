@@ -131,6 +131,9 @@ var _: inputLayer = {
     },
     "/seasonList": function(code) {
       switch (code) {
+        case 112:
+        routeManager.back()
+        break
         case 8:
         routeManager.back()
         break;
@@ -176,6 +179,9 @@ var _: inputLayer = {
     "/seriesList": function(code) {
       console.log(code)
       switch (code) {
+        case 112:
+        routeManager.back()
+        break
         case 8:
         routeManager.back()
         break;

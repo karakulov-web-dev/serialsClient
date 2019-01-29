@@ -131,7 +131,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             var App = _this.createInstance("App");
             App.createValue("route", "/home");
             var searchManager = _this.createInstance("searchManager");
-            searchManager.createValue("query", 'вамп');
+            searchManager.createValue("query", false);
             var genreManager = _this.createInstance("genreManager");
             genreManager.createValue("focus", "list");
             genreManager.createValue("buttonsList", []);
@@ -568,6 +568,12 @@ define("Components/ListComponent", ["require", "exports", "Components/BaseCompon
             if (typeof list[this.focusPosition.get()] !== "undefined") {
                 list[this.focusPosition.get()].active = true;
             }
+            if (list.length === 0) {
+                var p = document.createElement('p');
+                elem.appendChild(p);
+                p.className = "List_component_elem_not_found";
+                p.innerHTML = 'Ничего не найдено.';
+            }
             list.forEach(function (item) {
                 var itemElem = _this.createItem(item);
                 if (itemElem) {
@@ -965,7 +971,28 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [HeaderComponent_1["default"], SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"], SearchComponent_1["default"]];
+            var compList = [SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"], SearchComponent_1["default"]];
+            var title = '';
+            var model = this.model;
+            var listGenre = model.genreManager.list_default.get().filter(function (item) {
+                if (item.active) {
+                    return true;
+                }
+            }).map(function (item) { return item.name; });
+            var query = model.searchManager.query.get();
+            if (listGenre.length !== 0) {
+                title = "\u0416\u0430\u043D\u0440\u044B: " + listGenre.join(', ');
+            }
+            if (query) {
+                title = "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443: " + query;
+            }
+            if (title.length > 55) {
+                title = title.split('');
+                title.length = 52;
+                title = title.join('');
+                title = title + '...';
+            }
+            new HeaderComponent_1["default"](title).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -987,7 +1014,7 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
                 },
                 blue: {
                     text: "Сортировать",
-                    visible: true
+                    visible: false
                 }
             });
             var btnWrap = document.createElement("div");
@@ -1105,20 +1132,20 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
             });
             var bottomBtnComp = new BottomButtonComponent_2["default"]({
                 red: {
-                    text: "Фильтр",
+                    text: "Назад",
                     visible: true
                 },
                 green: {
                     text: "Инфо",
-                    visible: true
+                    visible: false
                 },
                 yellow: {
                     text: "Поиск",
-                    visible: true
+                    visible: false
                 },
                 blue: {
                     text: "Сортировать",
-                    visible: true
+                    visible: false
                 }
             });
             var btnWrap = document.createElement("div");
@@ -1256,20 +1283,20 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
             });
             var bottomBtnComp = new BottomButtonComponent_3["default"]({
                 red: {
-                    text: "Фильтр",
+                    text: "Назад",
                     visible: true
                 },
                 green: {
                     text: "Инфо",
-                    visible: true
+                    visible: false
                 },
                 yellow: {
                     text: "Поиск",
-                    visible: true
+                    visible: false
                 },
                 blue: {
                     text: "Сортировать",
-                    visible: true
+                    visible: false
                 }
             });
             var btnWrap = document.createElement("div");
@@ -3014,9 +3041,28 @@ define("SearchManager", ["require", "exports", "AppModel", "HTTP", "createPrevVi
         };
         SearchManager.prototype.back = function () {
             model.App.route.set('/home');
+            try {
+                stb.HideVirtualKeyboard();
+            }
+            catch (e) {
+                console.log(e);
+            }
         };
         SearchManager.prototype.submit = function () {
-            var query = 'запрос';
+            var list = model.genreManager.list_default.get();
+            list.forEach(function (item) {
+                item.active = false;
+            });
+            model.genreManager.list_default.set(list);
+            try {
+                stb.HideVirtualKeyboard();
+            }
+            catch (e) {
+                console.log(e);
+            }
+            var elem = document.querySelector(".app_home_searchManager_search_input");
+            var query = elem.value;
+            model.searchManager.query.set(query);
             model.serialList.list.set(createPrevViewData_3["default"]());
             HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
@@ -3145,6 +3191,7 @@ define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevVie
             model.genreManager.list.set(list);
         };
         GenreManager.prototype.enter = function () {
+            model.searchManager.query.set(false);
             model.genreManager.list_default.set(JSON.parse(JSON.stringify(model.genreManager.list.get())));
             model.serialList.list.set(createPrevViewData_4["default"]());
             HTTP_4.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
@@ -3291,6 +3338,9 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
             },
             "/seasonList": function (code) {
                 switch (code) {
+                    case 112:
+                        routeManager.back();
+                        break;
                     case 8:
                         routeManager.back();
                         break;
@@ -3336,6 +3386,9 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
             "/seriesList": function (code) {
                 console.log(code);
                 switch (code) {
+                    case 112:
+                        routeManager.back();
+                        break;
                     case 8:
                         routeManager.back();
                         break;

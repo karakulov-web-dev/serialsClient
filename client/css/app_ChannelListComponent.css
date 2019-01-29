@@ -43,3 +43,11 @@
     text-align: center;
 }
 
+.List_component_elem_not_found {
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 18px;
+    margin: 0 auto;
+    margin-top: 7px;
+    width: 90%;
+}
+

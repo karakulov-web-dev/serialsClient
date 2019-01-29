@@ -12,7 +12,38 @@ export default class HomeComponent extends BaseComponent {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [HeaderComponent, SerialListComponent, GenreSelectComponent, InfoComponent, SearchComponent];
+    let compList = [SerialListComponent, GenreSelectComponent, InfoComponent, SearchComponent];
+  
+    let title:any = ''
+    let model:any = this.model
+    let listGenre = model.genreManager.list_default.get().filter(
+      item => {
+        if (item.active) {
+          return true
+        }
+      }
+    ).map(item => item.name)
+    let query = model.searchManager.query.get()
+    
+    
+
+    if (listGenre.length !== 0) {
+      title = `Жанры: ${listGenre.join(', ')}`
+    }
+    if (query) {
+      title = `Поиск по запросу: ${query}`
+    }
+
+    if (title.length > 55) {
+      title = title.split('')
+      title.length = 52;
+      title = title.join('')
+      title = title + '...'
+    }
+
+    new HeaderComponent(title).render(
+      elem.appendChild(document.createElement("div"))
+    );
 
     compList.forEach(Comp => {
       let wrap = document.createElement("div");
@@ -36,7 +67,7 @@ export default class HomeComponent extends BaseComponent {
       },
       blue: {
         text: "Сортировать",
-        visible: true
+        visible: false
       }
     });
     let btnWrap = document.createElement("div");
