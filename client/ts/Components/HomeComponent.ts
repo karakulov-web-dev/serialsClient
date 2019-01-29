@@ -25,8 +25,6 @@ export default class HomeComponent extends BaseComponent {
     ).map(item => item.name)
     let query = model.searchManager.query.get()
     
-    
-
     if (listGenre.length !== 0) {
       title = `Жанры: ${listGenre.join(', ')}`
     }

@@ -25,7 +25,6 @@ export default class PlayComponent extends BaseComponent {
   }
 }
 
-
 class PauseIndicator extends BaseComponent {
   constructor () {
     super()

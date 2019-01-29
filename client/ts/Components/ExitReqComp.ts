@@ -36,7 +36,6 @@ export default class ExitReqComp extends BaseComponent {
                 }(item)) 
             )
         })
-
         return div
     }
     private ExitMenuInstance

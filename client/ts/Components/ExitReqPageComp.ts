@@ -11,7 +11,6 @@ export default class ExitReqPageComp extends BaseComponent {
         new HeaderComponent().render(div.appendChild(document.createElement("div")))
         new ExitReqComp().render(div.appendChild(document.createElement("div")))
 
-
         let bottomBtnComp = new BottomButtonComponent({
             red: {
               text: "Отмена",

@@ -28,7 +28,6 @@ export default class SeasonListComponent extends ChannelListComponent {
     img.className = this.classNameConfig.imgClassName;
     h1.className = this.classNameConfig.h1ClassName;
     
-
     if (item.active) {
       wrap.className = this.classNameConfig.wrapActiveClassName;
     }
@@ -55,7 +54,6 @@ export default class SeasonListComponent extends ChannelListComponent {
     }
 
     h1.innerHTML = title;
-
 
     if (imgSrc !== 'posterPrevView') {
       img.src = imgSrc;

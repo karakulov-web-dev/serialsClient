@@ -32,7 +32,6 @@ export default class SearchComponent extends BaseComponent {
         app_home_searchManager_search.className = 'app_home_searchManager_search'
         input.className = 'app_home_searchManager_search_input';
 
-        
         header.innerHTML = 'Поиск';
         
         div.appendChild(header)

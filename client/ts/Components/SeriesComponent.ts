@@ -11,8 +11,6 @@ export default class HomeComponent extends BaseComponent {
 
     let compList = [SeriesListComponent];
 
-
-    
     let title;
     let seasonListActiveName;
     let season_Number;
