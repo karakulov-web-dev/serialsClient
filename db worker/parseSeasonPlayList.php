@@ -32,7 +32,6 @@ function pushDb($value) {
 
 for($i=0;$i<17999;$i++) {
     
-sleep(1);
 
 $sql = 'SELECT * FROM `seasonsAll` LIMIT 1 OFFSET ' . $i;
 $res = $mysqli->query($sql);
