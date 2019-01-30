@@ -52,6 +52,21 @@ class Req {
             $defender = true;
         }
 
+        $result = stristr($this->sql,"DROP");
+        if ($result) {
+            $defender = true;
+        }
+
+        $result = stristr($this->sql,"ALTER");
+        if ($result) {
+            $defender = true;
+        }
+
+        $result = stristr($this->sql,"CREATE");
+        if ($result) {
+            $defender = true;
+        }
+
         if ($defender) {
             $this->sql = '';
         }
