@@ -2062,7 +2062,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ "season": id });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSeason.php", true);
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/get_Season.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -3526,7 +3526,8 @@ define("adaptation", ["require", "exports"], function (require, exports) {
                 ".app_home_genreManager_window_buttonPanel { width: 130px; }",
                 ".app_home_infoManager_window_body_box2_description {height: 50%;}",
                 ".app_home_infoManager_window { width: 600px; height: 450px;}",
-                ".app_home_infoManager_window_body_box1_infoBox {width: 70%;}"
+                ".app_home_infoManager_window_body_box1_infoBox {width: 70%;}",
+                ".app_home_infoManager_window {font-size: 20px;}"
             ];
             var cssAll = rules.join("\n");
             var head = document.getElementsByTagName("head");

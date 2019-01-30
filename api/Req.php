@@ -34,6 +34,27 @@ class Req {
         $limit =  $this->createLimitSql();
         $offset = $this->createOffsetSql();
         $this->sql = $select . $from .$join . $on . $where . $like . $orderBy . $limit . $offset;
+
+        $defender = 0;
+
+        $result = stristr($this->sql,"INSERT");
+        if ($result) {
+            $defender = true;
+        }
+
+        $result = stristr($this->sql,"UPDATE");
+        if ($result) {
+            $defender = true;
+        }
+
+        $result = stristr($this->sql,"DELETE");
+        if ($result) {
+            $defender = true;
+        }
+
+        if ($defender) {
+            $this->sql = '';
+        }
     }
     function createFromSql() {
         if ($this->config['from']) {
