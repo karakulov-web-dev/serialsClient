@@ -24,6 +24,7 @@ class Req {
         }
     }
     function createSelectSql() {
+        global $mysqli;
         $select = "SELECT * ";
         $from = $this->createFromSql();
         $join = $this->createJoinSql();
@@ -100,8 +101,11 @@ class Req {
         }
     }
     function createLikeSql() {
+        global $mysqli;
         if ($this->config['like']) {
-            return "LIKE {$this->config['like']} ";
+            $string = "{$this->config['like']}";
+            $string = $mysqli->real_escape_string($string);
+            return "LIKE \"{$string}\" ";
         } else {
             return "";
         }

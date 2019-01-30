@@ -26,10 +26,10 @@ export function get_Serials (config:any):Promise {
   if (searchQuery) {
     if (typeof config.where !== 'undefined') {
       config.where = config.where + ' AND name'
-      config.like = ` '%${searchQuery}%'`
+      config.like = `'%${searchQuery}%'`
     } else {
       config.where = ` name`;
-      config.like = ` '%${searchQuery}%'`
+      config.like = `%${searchQuery}%`
     }
   }
 

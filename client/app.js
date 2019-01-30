@@ -1998,11 +1998,11 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         if (searchQuery) {
             if (typeof config.where !== 'undefined') {
                 config.where = config.where + ' AND name';
-                config.like = " '%" + searchQuery + "%'";
+                config.like = "'%" + searchQuery + "%'";
             }
             else {
                 config.where = " name";
-                config.like = " '%" + searchQuery + "%'";
+                config.like = "%" + searchQuery + "%";
             }
         }
         return getSerials(config);
