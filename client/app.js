@@ -129,7 +129,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                 return AppModel.cache;
             }
             var App = _this.createInstance("App");
-            App.createValue("route", "/home");
+            App.createValue("route", "/UpdateLIstPage");
             var searchManager = _this.createInstance("searchManager");
             searchManager.createValue("query", false);
             var genreManager = _this.createInstance("genreManager");
@@ -1044,7 +1044,7 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
         SeasonListComponent.prototype.createItem = function (item) {
             var title;
             var imgSrc;
-            title = item.name + " (" + item.season_number + " сезон)";
+            title = this.createTitle(item);
             imgSrc = item.poster;
             var wrap = document.createElement("div");
             var card = document.createElement("div");
@@ -1060,14 +1060,6 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
             wrap.appendChild(card);
             card.appendChild(img);
             card.appendChild(h1);
-            if (typeof item.contentDetails !== 'undefined') {
-                var duration = document.createElement("div");
-                var dr = item.contentDetails.duration;
-                var timetring = convertISO8601(dr);
-                duration.innerHTML = "" + timetring;
-                duration.className = "app_VideoListComponent_card_duration";
-                card.appendChild(duration);
-            }
             if (title.length > 50) {
                 title = title.split("");
                 title.length = title.length = 90;
@@ -1083,33 +1075,12 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
             }
             return wrap;
         };
+        SeasonListComponent.prototype.createTitle = function (item) {
+            return item.name + " (" + item.season_number + " сезон)";
+        };
         return SeasonListComponent;
     }(ListComponent_2["default"]));
     exports["default"] = SeasonListComponent;
-    function convertISO8601(input) {
-        var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-        var hours = 0, minutes = 0, seconds = 0, totalseconds;
-        if (reptms.test(input)) {
-            var matches = reptms.exec(input);
-            if (matches[1])
-                hours = Number(matches[1]);
-            if (matches[2])
-                minutes = Number(matches[2]);
-            if (matches[3])
-                seconds = Number(matches[3]);
-            hours = hours ? hours + ":" : "";
-            minutes = minutes ? minutes + ":" : "00:";
-            seconds = seconds + "";
-            if (hours) {
-                minutes = minutes.length === 2 ? "0" + minutes : minutes;
-            }
-            if (minutes) {
-                seconds = seconds.length === 1 ? "0" + seconds : seconds;
-            }
-            var timeString = "" + hours + minutes + seconds;
-        }
-        return (timeString);
-    }
 });
 define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_9, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
     "use strict";
@@ -1769,7 +1740,68 @@ define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComp
     }(BaseComponent_15["default"]));
     exports["default"] = ExitReqPageComp;
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp"], function (require, exports, BaseComponent_16, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1) {
+define("Components/UpdateListComponent", ["require", "exports", "Components/SeasonListComponent"], function (require, exports, SeasonListComponent_2) {
+    "use strict";
+    exports.__esModule = true;
+    var UpdateListComponent = /** @class */ (function (_super) {
+        __extends(UpdateListComponent, _super);
+        function UpdateListComponent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        UpdateListComponent.prototype.createTitle = function (item) {
+            return item.name + " (" + item.message + ")";
+        };
+        return UpdateListComponent;
+    }(SeasonListComponent_2["default"]));
+    exports["default"] = UpdateListComponent;
+});
+define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/UpdateListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_16, HeaderComponent_5, UpdateListComponent_1, BottomButtonComponent_5) {
+    "use strict";
+    exports.__esModule = true;
+    var UpdateLIstPageComponent = /** @class */ (function (_super) {
+        __extends(UpdateLIstPageComponent, _super);
+        function UpdateLIstPageComponent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        UpdateLIstPageComponent.prototype.create = function () {
+            var elem = document.createElement("div");
+            elem.className = "app_HomeComponent";
+            var compList = [UpdateListComponent_1["default"]];
+            new HeaderComponent_5["default"]('Обновления').render(elem.appendChild(document.createElement("div")));
+            compList.forEach(function (Comp) {
+                var wrap = document.createElement("div");
+                var comp = new Comp();
+                elem.appendChild(wrap);
+                comp.render(wrap);
+            });
+            var bottomBtnComp = new BottomButtonComponent_5["default"]({
+                red: {
+                    text: "Все сериалы",
+                    visible: true
+                },
+                green: {
+                    text: "Инфо",
+                    visible: true
+                },
+                yellow: {
+                    text: "Поиск",
+                    visible: true
+                },
+                blue: {
+                    text: "Сортировать",
+                    visible: false
+                }
+            });
+            var btnWrap = document.createElement("div");
+            elem.appendChild(btnWrap);
+            bottomBtnComp.render(btnWrap);
+            return elem;
+        };
+        return UpdateLIstPageComponent;
+    }(BaseComponent_16["default"]));
+    exports["default"] = UpdateLIstPageComponent;
+});
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent"], function (require, exports, BaseComponent_17, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -1806,11 +1838,14 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             else if (route === '/exitReq') {
                 page = new ExitReqPageComp_1["default"]();
             }
+            else if (route === '/UpdateLIstPage') {
+                page = new UpdateLIstPageComponent_1["default"]();
+            }
             page.render(elem);
             return elem;
         };
         return PageRouter;
-    }(BaseComponent_16["default"]));
+    }(BaseComponent_17["default"]));
     exports["default"] = PageRouter;
 });
 define("ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {

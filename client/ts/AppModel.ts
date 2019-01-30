@@ -8,7 +8,7 @@ export default class AppModel extends Model {
     }
 
     let App = this.createInstance("App");
-    App.createValue("route", "/home");
+    App.createValue("route", "/UpdateLIstPage");
 
     let searchManager = this.createInstance("searchManager");
     searchManager.createValue("query",false)

@@ -15,7 +15,7 @@ export default class SeasonListComponent extends ChannelListComponent {
     let title
     let imgSrc
 
-      title = item.name + " (" +  item.season_number + " сезон)";
+      title = this.createTitle(item)
       imgSrc = item.poster
  
     let wrap = document.createElement("div");
@@ -36,16 +36,6 @@ export default class SeasonListComponent extends ChannelListComponent {
     card.appendChild(img);
     card.appendChild(h1);
 
-    if (typeof item.contentDetails !== 'undefined') {
-      let duration = document.createElement("div")
-      let dr = item.contentDetails.duration
-      var timetring = convertISO8601(dr)
- 
-      duration.innerHTML = `${timetring}`
-      duration.className = "app_VideoListComponent_card_duration"
-      card.appendChild(duration);
-    }
-
     if (title.length > 50) {
       title = title.split("");
       title.length = title.length = 90;
@@ -63,26 +53,8 @@ export default class SeasonListComponent extends ChannelListComponent {
 
     return wrap;
   }
+  protected createTitle (item) {
+    return item.name + " (" +  item.season_number + " сезон)";
+  }
 }
 
-function convertISO8601(input) {
-    var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-    var hours:any = 0, minutes:any = 0, seconds:any = 0, totalseconds;
-    if (reptms.test(input)) {
-        var matches = reptms.exec(input);
-        if (matches[1]) hours = Number(matches[1]);
-        if (matches[2]) minutes = Number(matches[2]);
-        if (matches[3]) seconds = Number(matches[3]);
-        hours = hours ? hours+":" : ""
-        minutes = minutes ? minutes+":" : "00:"
-        seconds = seconds + ""
-        if (hours) {
-          minutes = minutes.length === 2 ? "0" + minutes : minutes
-        }
-        if (minutes) {
-          seconds = seconds.length === 1 ? "0" + seconds : seconds
-        }
-        var timeString = `${hours}${minutes}${seconds}`
-    }
-    return (timeString);
-  }
