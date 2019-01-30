@@ -107,6 +107,7 @@ export function getSeason(id):Promise {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
+          data.playlist = JSON.parse(data.playlist)
           resolve(data);
         }
       }

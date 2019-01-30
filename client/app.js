@@ -2068,6 +2068,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
                         var data = JSON.parse(xhr.responseText);
+                        data.playlist = JSON.parse(data.playlist);
                         resolve(data);
                     }
                 }
