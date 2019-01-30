@@ -99,7 +99,7 @@ export function getSeason(id):Promise {
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
-      "http://212.77.128.177/karakulov/seasonvar/api/getSeason.php",
+      "http://212.77.128.177/karakulov/seasonvar/api/get_Season.php",
       true
     );
     xhr.send(data);
@@ -113,4 +113,5 @@ export function getSeason(id):Promise {
     };
   });
 }
+
 
