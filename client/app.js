@@ -1781,11 +1781,11 @@ define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/
                 },
                 green: {
                     text: "Инфо",
-                    visible: true
+                    visible: false
                 },
                 yellow: {
                     text: "Поиск",
-                    visible: true
+                    visible: false
                 },
                 blue: {
                     text: "Сортировать",
