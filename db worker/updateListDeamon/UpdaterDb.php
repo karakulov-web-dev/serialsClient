@@ -28,7 +28,7 @@ class UpdaterDb {
         $result = $this->reqTools->reqPostHttp('http://api.seasonvar.ru/', $bodyReq);
         $this->serialUpdateDb($result);
         if ($result[0]) {
-            $serialIdArr[] = $result[0]->id;
+            $this->serialIdArr[] = $result[0]->id;
         }
         foreach ($result as $value) {
             $this->seasonPlayListUpdateDb($value);

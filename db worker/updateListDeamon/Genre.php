@@ -13,7 +13,7 @@ class Genre {
         $sql = "SELECT * FROM `serials` WHERE id=$this->id";
         $res = $mysqli->query($sql);
         $row = $res->fetch_assoc();
-        $this->genreHash = $row['genre'];
+        $this->genreHash = $row['genreHash'];
         $this->genreArr = explode(",",$row['genreString']);
     }
     public function sendDb() {
