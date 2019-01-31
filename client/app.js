@@ -336,6 +336,26 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     return status;
                 });
             });
+            var updateList = _this.createInstance("updateList");
+            updateList.createValue("list", []);
+            updateList.createValue("focusPosition", 0);
+            updateList.createValue("scrolPosition", 0);
+            updateList.createValue("display", function () {
+                var list = updateList.getValue("list");
+                var scrolPosition = updateList.getValue("scrolPosition");
+                list = list.get();
+                scrolPosition = scrolPosition.get();
+                var maxPosition = scrolPosition + 8;
+                var i = 0;
+                return list.filter(function (item) {
+                    var status = false;
+                    if (i >= scrolPosition && i <= maxPosition) {
+                        status = true;
+                    }
+                    i++;
+                    return status;
+                });
+            });
             var seriesList = _this.createInstance("seriesList");
             seriesList.createValue("list", []);
             seriesList.createValue("focusPosition", 0);
@@ -1751,7 +1771,7 @@ define("Components/UpdateListComponent", ["require", "exports", "Components/Seas
     var UpdateListComponent = /** @class */ (function (_super) {
         __extends(UpdateListComponent, _super);
         function UpdateListComponent() {
-            return _super.call(this, "seasonList") || this;
+            return _super.call(this, "updateList") || this;
         }
         UpdateListComponent.prototype.createTitle = function (item) {
             return item.name + " (" + item.message + ")";

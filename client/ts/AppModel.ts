@@ -225,6 +225,27 @@ export default class AppModel extends Model {
       });
     });
 
+    let updateList= this.createInstance("updateList");
+    updateList.createValue("list", []);
+    updateList.createValue("focusPosition", 0);
+    updateList.createValue("scrolPosition", 0);
+    updateList.createValue("display", function() {
+      let list = updateList.getValue("list");
+      let scrolPosition = updateList.getValue("scrolPosition");
+      list = list.get();
+      scrolPosition = scrolPosition.get();
+      let maxPosition = scrolPosition + 8;
+      var i = 0;
+      return list.filter(item => {
+        let status = false;
+        if (i >= scrolPosition && i <= maxPosition) {
+          status = true;
+        }
+        i++;
+        return status;
+      });
+    });
+
     let seriesList = this.createInstance("seriesList");
     seriesList.createValue("list", []);
     seriesList.createValue("focusPosition", 0);
