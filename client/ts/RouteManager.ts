@@ -20,7 +20,7 @@ export default class RouteManager {
     }
     public home() {
         this.historyArr = []
-        this.route.set("/serialList")
+        this.route.set("/UpdateLIstPage")
         this.model.serialList.focusPosition.set(0)
         this.model.serialList.scrolPosition.set(0)
     }

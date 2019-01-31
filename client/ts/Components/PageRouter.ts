@@ -1,5 +1,5 @@
 import BaseComponent from "./BaseComponent";
-import HomeComponent from "./HomeComponent";
+import SerialComponent from "./SerialComponent";
 import SeasonsComponent from "./SeasonsComponent"
 import SeriesComponent from "./SeriesComponent"
 import PlayComponent from "./PlayComponent"
@@ -27,7 +27,7 @@ export default class PageRouter extends BaseComponent {
 
     let page;
     if (route === "/serialList") {
-      page = new HomeComponent();
+      page = new SerialComponent();
     } else if (route === '/seasonList' ) {
       page = new SeasonsComponent();
     } else if (route === '/seriesList') {

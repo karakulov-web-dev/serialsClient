@@ -45,10 +45,11 @@ class App {
     let model:any = new AppModel();
     window.model = model;
 
-    model.serialList.list.set(createPrevViewData())
-    get_Serials({limit: 50, offset: 0}).then(data => {
-     model.serialList.list.set(data)
-    })
+   // model.serialList.list.set(createPrevViewData())
+   // get_Serials({limit: 50, offset: 0}).then(data => {
+   // model.serialList.list.set(data)
+   // })
+
 
     inputLayer.init();
 

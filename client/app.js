@@ -960,15 +960,15 @@ define("Components/SearchComponent", ["require", "exports", "Components/BaseComp
     }(BaseComponent_7["default"]));
     exports["default"] = SearchComponent;
 });
-define("Components/HomeComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent", "Components/InfoComponent", "Components/SearchComponent"], function (require, exports, BaseComponent_8, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1, InfoComponent_1, SearchComponent_1) {
+define("Components/SerialComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent", "Components/InfoComponent", "Components/SearchComponent"], function (require, exports, BaseComponent_8, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1, InfoComponent_1, SearchComponent_1) {
     "use strict";
     exports.__esModule = true;
-    var HomeComponent = /** @class */ (function (_super) {
-        __extends(HomeComponent, _super);
-        function HomeComponent() {
+    var SerialComponent = /** @class */ (function (_super) {
+        __extends(SerialComponent, _super);
+        function SerialComponent() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
-        HomeComponent.prototype.create = function () {
+        SerialComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
             var compList = [SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"], SearchComponent_1["default"]];
@@ -1022,17 +1022,21 @@ define("Components/HomeComponent", ["require", "exports", "Components/BaseCompon
             bottomBtnComp.render(btnWrap);
             return elem;
         };
-        return HomeComponent;
+        return SerialComponent;
     }(BaseComponent_8["default"]));
-    exports["default"] = HomeComponent;
+    exports["default"] = SerialComponent;
 });
 define("Components/SeasonListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_2) {
     "use strict";
     exports.__esModule = true;
     var SeasonListComponent = /** @class */ (function (_super) {
         __extends(SeasonListComponent, _super);
-        function SeasonListComponent() {
-            return _super.call(this, "seasonList", {
+        function SeasonListComponent(instanceName) {
+            var _this = this;
+            if (typeof instanceName === 'undefined') {
+                instanceName = "seasonList";
+            }
+            _this = _super.call(this, instanceName, {
                 elemClassName: "app_ChannelListComponent",
                 wrapClassName: "app_ChannelListComponent_wrap_elem",
                 cardClassName: "app_ChannelListComponent_card",
@@ -1040,6 +1044,7 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
                 imgClassName: "app_ChannelListComponent_card_img",
                 h1ClassName: "app_ChannelListComponent_card_h1"
             }) || this;
+            return _this;
         }
         SeasonListComponent.prototype.createItem = function (item) {
             var title;
@@ -1746,7 +1751,7 @@ define("Components/UpdateListComponent", ["require", "exports", "Components/Seas
     var UpdateListComponent = /** @class */ (function (_super) {
         __extends(UpdateListComponent, _super);
         function UpdateListComponent() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            return _super.call(this, "seasonList") || this;
         }
         UpdateListComponent.prototype.createTitle = function (item) {
             return item.name + " (" + item.message + ")";
@@ -1801,7 +1806,7 @@ define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/
     }(BaseComponent_16["default"]));
     exports["default"] = UpdateLIstPageComponent;
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/HomeComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent"], function (require, exports, BaseComponent_17, HomeComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1) {
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/SerialComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent"], function (require, exports, BaseComponent_17, SerialComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -1824,7 +1829,7 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             route = "/" + route[1];
             var page;
             if (route === "/serialList") {
-                page = new HomeComponent_1["default"]();
+                page = new SerialComponent_1["default"]();
             }
             else if (route === '/seasonList') {
                 page = new SeasonsComponent_1["default"]();
@@ -1982,7 +1987,7 @@ define("RouteManager", ["require", "exports", "AppModel"], function (require, ex
         };
         RouteManager.prototype.home = function () {
             this.historyArr = [];
-            this.route.set("/serialList");
+            this.route.set("/UpdateLIstPage");
             this.model.serialList.focusPosition.set(0);
             this.model.serialList.scrolPosition.set(0);
         };
@@ -3581,7 +3586,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_11, PageRouter_1, inputLayer_1, adaptation_1, HTTP_5, aspectRatioManager_2, createPrevViewData_5) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "aspectRatioManager"], function (require, exports, bindSimplePolyfill_1, AppModel_11, PageRouter_1, inputLayer_1, adaptation_1, aspectRatioManager_2) {
     "use strict";
     exports.__esModule = true;
     var prodaction = true;
@@ -3614,10 +3619,10 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             appContainer.appendChild(pageRouterWrap);
             var model = new AppModel_11["default"]();
             window.model = model;
-            model.serialList.list.set(createPrevViewData_5["default"]());
-            HTTP_5.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
-                model.serialList.list.set(data);
-            });
+            // model.serialList.list.set(createPrevViewData())
+            // get_Serials({limit: 50, offset: 0}).then(data => {
+            // model.serialList.list.set(data)
+            // })
             inputLayer_1["default"].init();
             var pageRouter = new PageRouter_1["default"]();
             pageRouter.render(appContainer);

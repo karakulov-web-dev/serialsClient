@@ -1,8 +1,11 @@
 import ChannelListComponent from "./ListComponent";
 
 export default class SeasonListComponent extends ChannelListComponent {
-  constructor() {
-    super("seasonList", {
+  constructor(instanceName?:string) {
+    if (typeof instanceName === 'undefined') {
+      instanceName = "seasonList"
+    }
+    super(instanceName, {
       elemClassName: "app_ChannelListComponent",
       wrapClassName: "app_ChannelListComponent_wrap_elem",
       cardClassName: "app_ChannelListComponent_card",

@@ -7,7 +7,7 @@ import GenreSelectComponent from "./GenreSelectComponent"
 import InfoComponent from "./InfoComponent"
 import SearchComponent from "./SearchComponent"
 
-export default class HomeComponent extends BaseComponent {
+export default class SerialComponent extends BaseComponent {
   protected create() {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
