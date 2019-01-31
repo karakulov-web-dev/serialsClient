@@ -11,7 +11,7 @@ export default class ListControllerVideo extends ListController {
     this.openVideo();
   }
   public goHome() {
-    new RouteManager().set("/home");
+    new RouteManager().set("/serialList");
   }
   protected infiniteScroll() {
    return false

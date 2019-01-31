@@ -26,7 +26,7 @@ export default class PageRouter extends BaseComponent {
     route = "/" + route[1]
 
     let page;
-    if (route === "/home") {
+    if (route === "/serialList") {
       page = new HomeComponent();
     } else if (route === '/seasonList' ) {
       page = new SeasonsComponent();

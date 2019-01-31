@@ -50,7 +50,7 @@ var _: inputLayer = {
     }
   },
   handlers: {
-    "/home": function(code) {
+    "/serialList": function(code) {
       switch (code) {
         case 27:
         exitManager.exitReq()
@@ -81,7 +81,7 @@ var _: inputLayer = {
         break;
       }
     },
-    "/home/genreManager": function(code) {
+    "/serialList/genreManager": function(code) {
       switch (code) {
         case 39:
         genreManager.changeFocusRight()
@@ -103,7 +103,7 @@ var _: inputLayer = {
         break
       }
     },
-    "/home/infoManager": function (code) {
+    "/serialList/infoManager": function (code) {
       switch (code) {
       case 8:
       infoManager.back() 
@@ -116,7 +116,7 @@ var _: inputLayer = {
       break
     }
     },
-    "/home/searchManager": function (code) {
+    "/serialList/searchManager": function (code) {
       switch (code) {
       case 13:
       searchManager.submit()

@@ -22,7 +22,7 @@ export default class SearchManager {
         }
     }
     back() {
-        model.App.route.set('/home')
+        model.App.route.set('/serialList')
         try {
         stb.HideVirtualKeyboard();
         } catch (e) {
@@ -50,6 +50,6 @@ export default class SearchManager {
         get_Serials({limit: 50, offset: 0}).then(data => {
          model.serialList.list.set(data)
         })
-        model.App.route.set('/home')
+        model.App.route.set('/serialList')
     }
 }

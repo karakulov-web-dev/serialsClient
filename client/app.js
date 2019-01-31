@@ -1823,7 +1823,7 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             route = route.split("/");
             route = "/" + route[1];
             var page;
-            if (route === "/home") {
+            if (route === "/serialList") {
                 page = new HomeComponent_1["default"]();
             }
             else if (route === '/seasonList') {
@@ -1982,7 +1982,7 @@ define("RouteManager", ["require", "exports", "AppModel"], function (require, ex
         };
         RouteManager.prototype.home = function () {
             this.historyArr = [];
-            this.route.set("/home");
+            this.route.set("/serialList");
             this.model.serialList.focusPosition.set(0);
             this.model.serialList.scrolPosition.set(0);
         };
@@ -2754,7 +2754,7 @@ define("ListControllerVideo", ["require", "exports", "ListController", "Play", "
             this.openVideo();
         };
         ListControllerVideo.prototype.goHome = function () {
-            new RouteManager_2["default"]().set("/home");
+            new RouteManager_2["default"]().set("/serialList");
         };
         ListControllerVideo.prototype.infiniteScroll = function () {
             return false;
@@ -3076,7 +3076,7 @@ define("SearchManager", ["require", "exports", "AppModel", "HTTP", "createPrevVi
             }
         };
         SearchManager.prototype.back = function () {
-            model.App.route.set('/home');
+            model.App.route.set('/serialList');
             try {
                 stb.HideVirtualKeyboard();
             }
@@ -3103,7 +3103,7 @@ define("SearchManager", ["require", "exports", "AppModel", "HTTP", "createPrevVi
             HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
-            model.App.route.set('/home');
+            model.App.route.set('/serialList');
         };
         return SearchManager;
     }());
@@ -3217,7 +3217,7 @@ define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevVie
             this.changeFocusButtons(1);
         };
         GenreManager.prototype.back = function () {
-            model.App.route.set('/home');
+            model.App.route.set('/serialList');
         };
         GenreManager.prototype.clear = function () {
             var list = model.genreManager.list.get();
@@ -3250,7 +3250,7 @@ define("InfoManager", ["require", "exports", "AppModel"], function (require, exp
             model.App.route.set(model.App.route.get() + "/infoManager");
         };
         GenreManager.prototype.back = function () {
-            model.App.route.set('/home');
+            model.App.route.set('/serialList');
         };
         GenreManager.prototype.scrollBottom = function () {
             var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
@@ -3293,7 +3293,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
             }
         },
         handlers: {
-            "/home": function (code) {
+            "/serialList": function (code) {
                 switch (code) {
                     case 27:
                         exitManager.exitReq();
@@ -3324,7 +3324,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                 }
             },
-            "/home/genreManager": function (code) {
+            "/serialList/genreManager": function (code) {
                 switch (code) {
                     case 39:
                         genreManager.changeFocusRight();
@@ -3346,7 +3346,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                 }
             },
-            "/home/infoManager": function (code) {
+            "/serialList/infoManager": function (code) {
                 switch (code) {
                     case 8:
                         infoManager.back();
@@ -3359,7 +3359,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         break;
                 }
             },
-            "/home/searchManager": function (code) {
+            "/serialList/searchManager": function (code) {
                 switch (code) {
                     case 13:
                         searchManager.submit();

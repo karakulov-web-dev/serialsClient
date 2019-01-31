@@ -104,7 +104,7 @@ export default class GenreManager {
         this.changeFocusButtons(1)
     }
     back() {
-        model.App.route.set('/home')
+        model.App.route.set('/serialList')
     }
     clear() {
        let list = model.genreManager.list.get()
