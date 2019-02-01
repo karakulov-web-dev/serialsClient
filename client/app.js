@@ -2036,8 +2036,8 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             }
         });
         if (gArrNew && gArrNew.length > 0) {
-            config.join = " genreAll ";
-            config.on = " serialsAll.genreHash = genreAll.genreHash ";
+            config.join = " genre ";
+            config.on = " serials.genreHash = genre.genreHash ";
             config.where = " " + gArrNew.join(" AND ") + " ";
         }
         var searchQuery = model.searchManager.query.get();
@@ -2065,7 +2065,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             }
             var data = config;
             data.type = "getData";
-            data.from = "serialsAll";
+            data.from = "serials";
             data.orderBy = "kinopoisk DESC";
             data = JSON.stringify(data);
             var xhr = new XMLHttpRequest();
@@ -2087,8 +2087,9 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({
                 "type": "getData",
-                "from": "seasonsAll",
-                "where": "" + ("idSeasonvar = " + idArr.join(" OR idSeasonvar = "))
+                "from": "seasons",
+                "where": "" + ("idSeasonvar = " + idArr.join(" OR idSeasonvar = ")),
+                "idArr": idArr
             });
             var xhr = new XMLHttpRequest();
             xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php", true);

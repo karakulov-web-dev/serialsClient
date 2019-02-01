@@ -5,6 +5,11 @@ $content = trim(file_get_contents("php://input"));
 $configReq = json_decode($content, true);
 get_Season($configReq['id']);
 function get_Season($id) {
+
+    if (gettype($id) !== 'integer') {
+        return false;
+    }
+
     global $mysqli;
     $sql = "SELECT *
     FROM `seasons`

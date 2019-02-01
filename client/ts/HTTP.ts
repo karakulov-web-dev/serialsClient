@@ -17,8 +17,8 @@ export function get_Serials (config:any):Promise {
   })
 
   if (gArrNew && gArrNew.length > 0) {
-    config.join = " genreAll ";
-    config.on = " serialsAll.genreHash = genreAll.genreHash ";
+    config.join = " genre ";
+    config.on = " serials.genreHash = genre.genreHash ";
     config.where = ` ${gArrNew.join(" AND ")} `;
   }
 
@@ -47,7 +47,7 @@ export function getSerials (config:any):Promise {
     }
     let data = config;
     data.type = "getData";
-    data.from = "serialsAll";
+    data.from = "serials";
     data.orderBy = "kinopoisk DESC"
     data = JSON.stringify(data);
     var xhr = new XMLHttpRequest();
@@ -72,8 +72,9 @@ export function getSeasons(idArr):Promise {
   return new Promise_simple(function(resolve) {
     var data = JSON.stringify({
       "type": "getData",
-      "from": "seasonsAll",
-      "where": `${"idSeasonvar = " + idArr.join(" OR idSeasonvar = ")}`
+      "from": "seasons",
+      "where": `${"idSeasonvar = " + idArr.join(" OR idSeasonvar = ")}`,
+      "idArr": idArr
     });
     var xhr = new XMLHttpRequest();
     xhr.open(
