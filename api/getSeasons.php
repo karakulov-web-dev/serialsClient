@@ -7,6 +7,7 @@ $body = json_decode($content);
 $newIdArr = array();
 if (gettype($body->idArr) == 'array') {
     foreach ($body->idArr as $item) {
+        $item = (int)$item;
         if (gettype($item) == 'integer') {
             $newIdArr[] = $item;
         }

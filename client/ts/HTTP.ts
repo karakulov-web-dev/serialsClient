@@ -70,16 +70,14 @@ export function getSerials (config:any):Promise {
 
 export function getSeasons(idArr):Promise {
   return new Promise_simple(function(resolve) {
+    idArr = idArr.map(item => +item)
     var data = JSON.stringify({
-      "type": "getData",
-      "from": "seasons",
-      "where": `${"idSeasonvar = " + idArr.join(" OR idSeasonvar = ")}`,
       "idArr": idArr
     });
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
-      "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php",
+      "http://212.77.128.177/karakulov/seasonvar/api/getSeasons.php",
       true
     );
     xhr.send(data);
@@ -96,7 +94,7 @@ export function getSeasons(idArr):Promise {
 
 export function getSeason(id):Promise {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({"id": id});
+    var data = JSON.stringify({"id": +id});
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",

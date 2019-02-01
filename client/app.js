@@ -2085,14 +2085,12 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     ;
     function getSeasons(idArr) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
+            idArr = idArr.map(function (item) { return +item; });
             var data = JSON.stringify({
-                "type": "getData",
-                "from": "seasons",
-                "where": "" + ("idSeasonvar = " + idArr.join(" OR idSeasonvar = ")),
                 "idArr": idArr
             });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php", true);
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSeasons.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2107,7 +2105,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     exports.getSeasons = getSeasons;
     function getSeason(id) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
-            var data = JSON.stringify({ "id": id });
+            var data = JSON.stringify({ "id": +id });
             var xhr = new XMLHttpRequest();
             xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/get_Season.php", true);
             xhr.send(data);
