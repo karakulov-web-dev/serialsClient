@@ -9,19 +9,19 @@ export default class ListControllerSerials extends ListController {
     this.defineActiveItem();
     this.openSerial();
   }
-  private defineActiveItem() {
+  protected defineActiveItem() {
     let focusPosition = this.focusPosition.get();
     let display = this.display.get()();
     this.activeItem = display[focusPosition];
   }
-  private openSerial() {
+  protected openSerial() {
     if (this.activeItem.seasons_number > 1) {
       this.openSeasonList()
     } else {
       this.openSeriesList()
     }
   }
-  private openSeriesList() {
+  protected openSeriesList() {
     new RouteManager().set("/seriesList");
     let list: any = this.model.getInstance("seriesList").getValue("list")
     this.model.seriesList.scrolPosition.set(0)
@@ -56,7 +56,7 @@ export default class ListControllerSerials extends ListController {
       this.addContent()
     }
   }
-  private addContent () {
+  protected addContent () {
     let length = this.model.serialList.list.get().length
     let currentList = this.model.serialList.list.get()
     get_Serials({limit: 50, offset: length}).then(data => {

@@ -2,6 +2,7 @@ import AppModel from "./AppModel";
 import ListControllerSerials from "./ListControllerSerials";
 import ListControllerVideo from "./ListControllerVideo";
 import ListControllerSeasons from "./ListControllerSeasons";
+import ListControllerUpdatesList from "./ListControllerUpdatesList";
 import Play from "./Play";
 import ExitManager from "./ExitManager";
 import RouteManager from "./RouteManager"
@@ -20,6 +21,9 @@ let listControllerVideo = new ListControllerVideo(instanceModelVideo);
 
 let instanceModelSeasonList = model.getInstance("seasonList");
 let listControllerSeasons = new ListControllerSeasons(instanceModelSeasonList)
+
+let instanceModelUpdatesList = model.getInstance("updateList");
+let listControllerUpdatesList = new ListControllerUpdatesList(instanceModelUpdatesList );
 
 let genreManager = new GenreManager()
 
@@ -125,6 +129,37 @@ var _: inputLayer = {
       searchManager.back() 
       break
     }
+    },
+    "/UpdateLIstPage": function(code) {
+      switch (code) {
+        case 27:
+      exitManager.exitReq()
+          break;
+        case 40:
+        listControllerUpdatesList.downFocusPosition();
+          break;
+        case 38:
+        listControllerUpdatesList.upFocusPosition();
+          break;
+        case 39:
+        listControllerUpdatesList.rigthFocusPosition();
+          break;
+        case 37:
+        listControllerUpdatesList.leftFocusPosition();
+          break;
+        case 13:
+        listControllerUpdatesList.onEnter();
+          break;
+        case 112:
+        //  genreManager.openWindow();
+        break;
+        case 113:
+      //  infoManager.openWindow()
+        break;
+        case 114:
+      //  searchManager.openWindow()
+        break;
+      }
     },
     "/seasonList": function(code) {
       switch (code) {

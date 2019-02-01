@@ -4,7 +4,7 @@ import PageRouter from "./Components/PageRouter";
 import inputLayer from "./inputLayer";
 import {stbObj} from "./interfaceGlobal"
 import adaptation from "./adaptation"
-import {get_Serials} from "./HTTP"
+import {getUpdateList} from "./HTTP"
 import aspectRatioManager from "./aspectRatioManager"
 import createPrevViewData from "./createPrevViewData"
 
@@ -45,10 +45,10 @@ class App {
     let model:any = new AppModel();
     window.model = model;
 
-   // model.serialList.list.set(createPrevViewData())
-   // get_Serials({limit: 50, offset: 0}).then(data => {
-   // model.serialList.list.set(data)
-   // })
+    model.updateList.list.set(createPrevViewData())
+    getUpdateList({offset: 0}).then(data => {
+    model.updateList.list.set(data)
+    })
 
 
     inputLayer.init();
