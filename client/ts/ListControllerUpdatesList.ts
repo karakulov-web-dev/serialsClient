@@ -42,7 +42,7 @@ export default class ListControllerUpdatesList extends ListControllerSerials {
   public openSerialList() {
     new RouteManager().set("/serialList");
     this.model.serialList.list.set(createPrevViewData())
-    get_Serials({limit:50, offset: 0}).then(data => {
+    get_Serials({offset: 0}).then(data => {
       this.model.serialList.list.set(data)
     })
   }

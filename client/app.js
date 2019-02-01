@@ -2025,6 +2025,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     exports.__esModule = true;
     var model = new AppModel_4["default"]();
     function get_Serials(config) {
+        console.log(config);
         var gArr = model.genreManager.list_default.get();
         var gArrNew = [];
         gArr.forEach(function (item) {
@@ -2036,7 +2037,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             }
         });
         if (gArrNew && gArrNew.length > 0) {
-            config.join = " genre ";
+            config.genre = gArrNew;
             config.on = " serials.genreHash = genre.genreHash ";
             config.where = " " + gArrNew.join(" AND ") + " ";
         }
@@ -2057,19 +2058,10 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     ;
     function getSerials(config) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
-            if (typeof config.limit === 'undefined') {
-                config.limit = 10;
-            }
-            if (typeof config.offset === 'undefined') {
-                config.offset = 0;
-            }
             var data = config;
-            data.type = "getData";
-            data.from = "serials";
-            data.orderBy = "kinopoisk DESC";
             data = JSON.stringify(data);
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php", true);
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSerials.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2219,7 +2211,7 @@ define("ListControllerSerials", ["require", "exports", "ListController", "RouteM
             var _this = this;
             var length = this.model.serialList.list.get().length;
             var currentList = this.model.serialList.list.get();
-            HTTP_1.get_Serials({ limit: 50, offset: length }).then(function (data) {
+            HTTP_1.get_Serials({ offset: length }).then(function (data) {
                 currentList = currentList.concat(data);
                 _this.model.serialList.list.set(currentList);
             });
@@ -2922,7 +2914,7 @@ define("ListControllerUpdatesList", ["require", "exports", "ListControllerSerial
             var _this = this;
             new RouteManager_4["default"]().set("/serialList");
             this.model.serialList.list.set(createPrevViewData_3["default"]());
-            HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+            HTTP_3.get_Serials({ offset: 0 }).then(function (data) {
                 _this.model.serialList.list.set(data);
             });
         };
@@ -3185,7 +3177,7 @@ define("SearchManager", ["require", "exports", "AppModel", "HTTP", "createPrevVi
             var query = elem.value;
             model.searchManager.query.set(query);
             model.serialList.list.set(createPrevViewData_4["default"]());
-            HTTP_4.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+            HTTP_4.get_Serials({ offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
             model.App.route.set('/serialList');
@@ -3315,7 +3307,7 @@ define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevVie
             model.searchManager.query.set(false);
             model.genreManager.list_default.set(JSON.parse(JSON.stringify(model.genreManager.list.get())));
             model.serialList.list.set(createPrevViewData_5["default"]());
-            HTTP_5.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+            HTTP_5.get_Serials({ offset: 0 }).then(function (data) {
                 model.serialList.list.set(data);
             });
             this.back();

@@ -4,7 +4,7 @@ import AppModel from "./AppModel";
 let model:any = new AppModel();
 
 export function get_Serials (config:any):Promise {
-
+  console.log(config);
   let gArr = model.genreManager.list_default.get()
   let gArrNew = []
  gArr.forEach(item => {
@@ -17,7 +17,7 @@ export function get_Serials (config:any):Promise {
   })
 
   if (gArrNew && gArrNew.length > 0) {
-    config.join = " genre ";
+    config.genre = gArrNew
     config.on = " serials.genreHash = genre.genreHash ";
     config.where = ` ${gArrNew.join(" AND ")} `;
   }
@@ -39,21 +39,12 @@ export function get_Serials (config:any):Promise {
 
 export function getSerials (config:any):Promise {
   return new Promise_simple(function(resolve) {
-    if (typeof config.limit === 'undefined') {
-      config.limit = 10;
-    }
-    if (typeof config.offset === 'undefined') {
-      config.offset = 0;
-    }
     let data = config;
-    data.type = "getData";
-    data.from = "serials";
-    data.orderBy = "kinopoisk DESC"
     data = JSON.stringify(data);
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
-      "http://212.77.128.177/karakulov/seasonvar/api/seasonvar.php",
+      "http://212.77.128.177/karakulov/seasonvar/api/getSerials.php",
       true
     );
     xhr.send(data);

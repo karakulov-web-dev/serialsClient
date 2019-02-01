@@ -47,7 +47,7 @@ export default class SearchManager {
         let query:any = elem.value
         model.searchManager.query.set(query)
         model.serialList.list.set(createPrevViewData())
-        get_Serials({limit: 50, offset: 0}).then(data => {
+        get_Serials({offset: 0}).then(data => {
          model.serialList.list.set(data)
         })
         model.App.route.set('/serialList')
