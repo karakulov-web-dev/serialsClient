@@ -2912,6 +2912,14 @@ define("ListControllerUpdatesList", ["require", "exports", "ListControllerSerial
                 this.addContent();
             }
         };
+        ListControllerUpdatesList.prototype.openSerialList = function () {
+            var _this = this;
+            new RouteManager_4["default"]().set("/serialList");
+            this.model.serialList.list.set(createPrevViewData_3["default"]());
+            HTTP_3.get_Serials({ limit: 50, offset: 0 }).then(function (data) {
+                _this.model.serialList.list.set(data);
+            });
+        };
         return ListControllerUpdatesList;
     }(ListControllerSerials_1["default"]));
     exports["default"] = ListControllerUpdatesList;
@@ -3368,8 +3376,11 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
         handlers: {
             "/serialList": function (code) {
                 switch (code) {
+                    case 8:
+                        routeManager.back();
+                        break;
                     case 27:
-                        exitManager.exitReq();
+                        routeManager.home();
                         break;
                     case 40:
                         listControllerSerials.downFocusPosition();
@@ -3463,7 +3474,7 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         listControllerUpdatesList.onEnter();
                         break;
                     case 112:
-                        //  genreManager.openWindow();
+                        listControllerUpdatesList.openSerialList();
                         break;
                     case 113:
                         //  infoManager.openWindow()

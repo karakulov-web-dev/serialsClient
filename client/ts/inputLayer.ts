@@ -56,9 +56,12 @@ var _: inputLayer = {
   handlers: {
     "/serialList": function(code) {
       switch (code) {
+        case 8: 
+        routeManager.back()
+        break
         case 27:
-        exitManager.exitReq()
-          break;
+        routeManager.home()
+        break;
         case 40:
         listControllerSerials.downFocusPosition();
           break;
@@ -132,8 +135,8 @@ var _: inputLayer = {
     },
     "/UpdateLIstPage": function(code) {
       switch (code) {
-        case 27:
-      exitManager.exitReq()
+          case 27:
+        exitManager.exitReq()
           break;
         case 40:
         listControllerUpdatesList.downFocusPosition();
@@ -151,7 +154,7 @@ var _: inputLayer = {
         listControllerUpdatesList.onEnter();
           break;
         case 112:
-        //  genreManager.openWindow();
+        listControllerUpdatesList.openSerialList();
         break;
         case 113:
       //  infoManager.openWindow()
