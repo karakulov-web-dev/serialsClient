@@ -19,8 +19,15 @@ if (gettype($body->genre) == 'array') {
 }
 $genre = implode(" AND ",$genreArr);
 
+if (gettype($body->searchQuery) == 'string') {
+    $searchQuery = $mysqli->real_escape_string($body->searchQuery);
+}
+
+
 if ($genre) {
     $where = "WHERE $genre";
+} else if ($searchQuery) {
+    $where = "WHERE name LIKE '%{$searchQuery}%'";
 } else {
     $where = "";
 }
