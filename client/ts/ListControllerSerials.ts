@@ -64,5 +64,5 @@ export default class ListControllerSerials extends ListController {
       this.model.serialList.list.set(currentList)
     })
   }
-  private activeItem;
+  protected activeItem;
 }

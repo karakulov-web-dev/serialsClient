@@ -29,8 +29,13 @@ export default class HomeComponent extends BaseComponent {
 
     let serialList = this.model.getInstance('serialList').getValue('display').get()()
     let serialFocusPosition = this.model.getInstance('serialList').getValue('focusPosition').get()
-    serialAtiveName = serialList[serialFocusPosition].name;
 
+    if (typeof serialList[serialFocusPosition] !== 'undefined') {
+      serialAtiveName = serialList[serialFocusPosition].name;
+    } {
+      serialAtiveName = '';
+    }
+    
     if (seasonListActiveName && seasonListActiveName === serialAtiveName) {
       title = seasonListActiveName + ' (' + season_Number + " сезон)";
     } else {
