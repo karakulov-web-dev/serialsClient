@@ -2174,6 +2174,7 @@ define("ListControllerSerials", ["require", "exports", "ListController", "RouteM
             }
         };
         ListControllerSerials.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name);
             new RouteManager_1["default"]().set("/seriesList");
             var list = this.model.getInstance("seriesList").getValue("list");
             this.model.seriesList.scrolPosition.set(0);
@@ -2847,6 +2848,7 @@ define("ListControllerSeasons", ["require", "exports", "ListController", "RouteM
             this.openSeriesList();
         };
         ListControllerSeasons.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name + " (" + this.activeItem.season_number + " \u0441\u0435\u0437\u043E\u043D)");
             new RouteManager_3["default"]().set("/seriesList");
             var list = this.model.getInstance("seriesList").getValue("list");
             this.model.seriesList.scrolPosition.set(0);
@@ -2878,6 +2880,7 @@ define("ListControllerUpdatesList", ["require", "exports", "ListControllerSerial
             this.openSeriesList();
         };
         ListControllerUpdatesList.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name);
             new RouteManager_4["default"]().set("/seriesList");
             var list = this.model.getInstance("seriesList").getValue("list");
             this.model.seriesList.scrolPosition.set(0);

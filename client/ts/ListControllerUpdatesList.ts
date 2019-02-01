@@ -8,6 +8,7 @@ export default class ListControllerUpdatesList extends ListControllerSerials {
       this.openSeriesList()
   }
   protected openSeriesList() {
+    this.model.seriesList.title.set(this.activeItem.name)
     new RouteManager().set("/seriesList");
     let list: any = this.model.getInstance("seriesList").getValue("list")
     this.model.seriesList.scrolPosition.set(0)
