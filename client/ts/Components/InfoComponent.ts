@@ -19,7 +19,15 @@ export default class InfoComponent extends BaseComponent {
     }
     protected createWin() {
         let model:any = this.model
-        let activeSerial = model.serialList.display.get()()[model.serialList.focusPosition.get()]
+
+        let route = model.App.route.get();
+        let activeSerial;
+        if (route === "/UpdateLIstPage/infoManager") {
+            activeSerial = model.updateList.display.get()()[model.updateList.focusPosition.get()]
+        } else if (route === "/serialList/infoManager") {
+            activeSerial = model.serialList.display.get()()[model.serialList.focusPosition.get()]
+        }
+
         let genreModify = activeSerial.genreString.split(',').join(', ')
 
         let div = document.createElement('div');

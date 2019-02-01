@@ -3,13 +3,14 @@ import BaseComponent from "./BaseComponent";
 import HeaderComponent from "./HeaderComponent";
 import UpdateListComponent from "./UpdateListComponent";
 import BottomButtonComponent from "./BottomButtonComponent";
+import InfoComponent from "./InfoComponent"
 
 export default class UpdateLIstPageComponent extends BaseComponent {
   protected create() {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [UpdateListComponent];
+    let compList = [UpdateListComponent, InfoComponent];
   
     new HeaderComponent('Обновления').render(
       elem.appendChild(document.createElement("div"))
@@ -29,7 +30,7 @@ export default class UpdateLIstPageComponent extends BaseComponent {
       },
       green: {
         text: "Инфо",
-        visible: false
+        visible: true
       },
       yellow: {
         text: "Поиск",

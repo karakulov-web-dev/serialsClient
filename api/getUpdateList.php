@@ -12,7 +12,7 @@ if ($body->offset) {
 } 
 
 $reqTools = new ReqTools();
-$sql = "SELECT * FROM `updateList` LIMIT 50 OFFSET $offset";
+$sql = "SELECT * FROM `updateList` JOIN `seasons` ON `updateList`.idSeasonvar = `seasons`.idSeasonvar LIMIT 50 OFFSET $offset";
 $result = $reqTools->reqDb($sql);
 
 echo json_encode($result,JSON_UNESCAPED_UNICODE);

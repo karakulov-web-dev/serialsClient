@@ -885,7 +885,14 @@ define("Components/InfoComponent", ["require", "exports", "Components/BaseCompon
         };
         InfoComponent.prototype.createWin = function () {
             var model = this.model;
-            var activeSerial = model.serialList.display.get()()[model.serialList.focusPosition.get()];
+            var route = model.App.route.get();
+            var activeSerial;
+            if (route === "/UpdateLIstPage/infoManager") {
+                activeSerial = model.updateList.display.get()()[model.updateList.focusPosition.get()];
+            }
+            else if (route === "/serialList/infoManager") {
+                activeSerial = model.serialList.display.get()()[model.serialList.focusPosition.get()];
+            }
             var genreModify = activeSerial.genreString.split(',').join(', ');
             var div = document.createElement('div');
             var header = document.createElement('div');
@@ -1759,7 +1766,7 @@ define("Components/UpdateListComponent", ["require", "exports", "Components/Seas
     }(SeasonListComponent_2["default"]));
     exports["default"] = UpdateListComponent;
 });
-define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/UpdateListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_16, HeaderComponent_5, UpdateListComponent_1, BottomButtonComponent_5) {
+define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/UpdateListComponent", "Components/BottomButtonComponent", "Components/InfoComponent"], function (require, exports, BaseComponent_16, HeaderComponent_5, UpdateListComponent_1, BottomButtonComponent_5, InfoComponent_2) {
     "use strict";
     exports.__esModule = true;
     var UpdateLIstPageComponent = /** @class */ (function (_super) {
@@ -1770,7 +1777,7 @@ define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/
         UpdateLIstPageComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [UpdateListComponent_1["default"]];
+            var compList = [UpdateListComponent_1["default"], InfoComponent_2["default"]];
             new HeaderComponent_5["default"]('Обновления').render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
@@ -1785,7 +1792,7 @@ define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/
                 },
                 green: {
                     text: "Инфо",
-                    visible: false
+                    visible: true
                 },
                 yellow: {
                     text: "Поиск",
@@ -3329,7 +3336,13 @@ define("InfoManager", ["require", "exports", "AppModel"], function (require, exp
             model.App.route.set(model.App.route.get() + "/infoManager");
         };
         GenreManager.prototype.back = function () {
-            model.App.route.set('/serialList');
+            var route = model.App.route.get();
+            if (route === "/UpdateLIstPage/infoManager") {
+                model.App.route.set('/UpdateLIstPage');
+            }
+            else if (route === "/serialList/infoManager") {
+                model.App.route.set('/serialList');
+            }
         };
         GenreManager.prototype.scrollBottom = function () {
             var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
@@ -3477,10 +3490,23 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials",
                         listControllerUpdatesList.openSerialList();
                         break;
                     case 113:
-                        //  infoManager.openWindow()
+                        infoManager.openWindow();
                         break;
                     case 114:
                         //  searchManager.openWindow()
+                        break;
+                }
+            },
+            "/UpdateLIstPage/infoManager": function (code) {
+                switch (code) {
+                    case 8:
+                        infoManager.back();
+                        break;
+                    case 40:
+                        infoManager.scrollBottom();
+                        break;
+                    case 38:
+                        infoManager.scrollTop();
                         break;
                 }
             },

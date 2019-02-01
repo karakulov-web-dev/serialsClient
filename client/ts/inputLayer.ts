@@ -157,13 +157,26 @@ var _: inputLayer = {
         listControllerUpdatesList.openSerialList();
         break;
         case 113:
-      //  infoManager.openWindow()
+        infoManager.openWindow()
         break;
         case 114:
       //  searchManager.openWindow()
         break;
       }
     },
+    "/UpdateLIstPage/infoManager": function (code) {
+      switch (code) {
+      case 8:
+      infoManager.back() 
+      break
+      case 40: 
+      infoManager.scrollBottom() 
+      break
+      case 38:
+      infoManager.scrollTop()
+      break
+    }
+  },
     "/seasonList": function(code) {
       switch (code) {
         case 112:
@@ -173,8 +186,8 @@ var _: inputLayer = {
         routeManager.back()
         break;
         case 27:
-          routeManager.home()
-          break;
+        routeManager.home()
+        break;
         case 40:
         listControllerSeasons.downFocusPosition();
           break;

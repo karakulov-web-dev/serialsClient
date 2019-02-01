@@ -9,7 +9,12 @@ export default class GenreManager {
         model.App.route.set(model.App.route.get() + "/infoManager")
     }
     back() {
-        model.App.route.set('/serialList')
+        let route = model.App.route.get();
+        if (route === "/UpdateLIstPage/infoManager") {
+            model.App.route.set('/UpdateLIstPage')
+        } else if (route === "/serialList/infoManager") {
+            model.App.route.set('/serialList')
+        }
     }
     scrollBottom() {
        var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop
