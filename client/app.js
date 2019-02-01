@@ -2145,7 +2145,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ "season": id });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSeason.php", true);
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
