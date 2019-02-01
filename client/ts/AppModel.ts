@@ -248,6 +248,7 @@ export default class AppModel extends Model {
 
     let seriesList = this.createInstance("seriesList");
     seriesList.createValue("list", []);
+    seriesList.createValue("title", 'title');
     seriesList.createValue("focusPosition", 0);
     seriesList.createValue("scrolPosition", 0);
     seriesList.createValue("display", function() {

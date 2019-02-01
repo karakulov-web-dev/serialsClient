@@ -95,33 +95,11 @@ export function getSeasons(idArr):Promise {
 
 export function getSeason(id):Promise {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({"season": id});
+    var data = JSON.stringify({"id": id});
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
       "http://212.77.128.177/karakulov/seasonvar/api/get_Season.php",
-      true
-    );
-    xhr.send(data);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
-          data.playlist = JSON.parse(data.playlist)
-          resolve(data);
-        }
-      }
-    };
-  });
-}
-
-export function get_Season(id):Promise {
-  return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({"season": id});
-    var xhr = new XMLHttpRequest();
-    xhr.open(
-      "post",
-      "http://212.77.128.177/karakulov/seasonvar/api/",
       true
     );
     xhr.send(data);

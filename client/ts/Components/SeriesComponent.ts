@@ -11,38 +11,9 @@ export default class HomeComponent extends BaseComponent {
 
     let compList = [SeriesListComponent];
 
-    let title;
-    let seasonListActiveName;
-    let season_Number;
-    let serialAtiveName;
+    let model:any = this.model;
 
-    let seasonList = this.model.getInstance('seasonList').getValue('display').get()()
-    let seasonFocusPosition = this.model.getInstance('seasonList').getValue('focusPosition').get()
-
-    if (typeof seasonList[seasonFocusPosition] !== 'undefined') {
-      seasonListActiveName = seasonList[seasonFocusPosition].name
-      season_Number = seasonList[seasonFocusPosition].season_number
-    } else {
-      seasonListActiveName = false;
-      season_Number = null;
-    }
-
-    let serialList = this.model.getInstance('serialList').getValue('display').get()()
-    let serialFocusPosition = this.model.getInstance('serialList').getValue('focusPosition').get()
-
-    if (typeof serialList[serialFocusPosition] !== 'undefined') {
-      serialAtiveName = serialList[serialFocusPosition].name;
-    } {
-      serialAtiveName = '';
-    }
-    
-    if (seasonListActiveName && seasonListActiveName === serialAtiveName) {
-      title = seasonListActiveName + ' (' + season_Number + " сезон)";
-    } else {
-      title = serialAtiveName;
-    }
-
-    new HeaderComponent(title).render(
+    new HeaderComponent(model.seriesList.title.get()).render(
       elem.appendChild(document.createElement("div"))
     );
 

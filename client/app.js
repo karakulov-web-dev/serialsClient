@@ -358,6 +358,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             });
             var seriesList = _this.createInstance("seriesList");
             seriesList.createValue("list", []);
+            seriesList.createValue("title", 'title');
             seriesList.createValue("focusPosition", 0);
             seriesList.createValue("scrolPosition", 0);
             seriesList.createValue("display", function () {
@@ -1247,35 +1248,8 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
             var compList = [SeriesListComponent_1["default"]];
-            var title;
-            var seasonListActiveName;
-            var season_Number;
-            var serialAtiveName;
-            var seasonList = this.model.getInstance('seasonList').getValue('display').get()();
-            var seasonFocusPosition = this.model.getInstance('seasonList').getValue('focusPosition').get();
-            if (typeof seasonList[seasonFocusPosition] !== 'undefined') {
-                seasonListActiveName = seasonList[seasonFocusPosition].name;
-                season_Number = seasonList[seasonFocusPosition].season_number;
-            }
-            else {
-                seasonListActiveName = false;
-                season_Number = null;
-            }
-            var serialList = this.model.getInstance('serialList').getValue('display').get()();
-            var serialFocusPosition = this.model.getInstance('serialList').getValue('focusPosition').get();
-            if (typeof serialList[serialFocusPosition] !== 'undefined') {
-                serialAtiveName = serialList[serialFocusPosition].name;
-            }
-            {
-                serialAtiveName = '';
-            }
-            if (seasonListActiveName && seasonListActiveName === serialAtiveName) {
-                title = seasonListActiveName + ' (' + season_Number + " сезон)";
-            }
-            else {
-                title = serialAtiveName;
-            }
-            new HeaderComponent_3["default"](title).render(elem.appendChild(document.createElement("div")));
+            var model = this.model;
+            new HeaderComponent_3["default"](model.seriesList.title.get()).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -2125,7 +2099,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     exports.getSeasons = getSeasons;
     function getSeason(id) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
-            var data = JSON.stringify({ "season": id });
+            var data = JSON.stringify({ "id": id });
             var xhr = new XMLHttpRequest();
             xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/get_Season.php", true);
             xhr.send(data);
@@ -2141,24 +2115,6 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         });
     }
     exports.getSeason = getSeason;
-    function get_Season(id) {
-        return new Promise_simple_1.Promise_simple(function (resolve) {
-            var data = JSON.stringify({ "season": id });
-            var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/", true);
-            xhr.send(data);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        var data = JSON.parse(xhr.responseText);
-                        data.playlist = JSON.parse(data.playlist);
-                        resolve(data);
-                    }
-                }
-            };
-        });
-    }
-    exports.get_Season = get_Season;
     function getUpdateList(offset) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ "offset": offset });
