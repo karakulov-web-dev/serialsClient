@@ -16,6 +16,7 @@ export interface stbObj {
   Stop();
   ShowVirtualKeyboard()
   HideVirtualKeyboard()
+  RDir(string:string);
 }
 
 export interface windowObj {

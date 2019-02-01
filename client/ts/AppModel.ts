@@ -9,6 +9,7 @@ export default class AppModel extends Model {
 
     let App = this.createInstance("App");
     App.createValue("route", "/UpdateLIstPage");
+    App.createValue("userMac", false);
 
     let searchManager = this.createInstance("searchManager");
     searchManager.createValue("query",false)

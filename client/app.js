@@ -130,6 +130,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             }
             var App = _this.createInstance("App");
             App.createValue("route", "/UpdateLIstPage");
+            App.createValue("userMac", false);
             var searchManager = _this.createInstance("searchManager");
             searchManager.createValue("query", false);
             var genreManager = _this.createInstance("genreManager");
@@ -3714,6 +3715,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
         App.main = function (appContainerSelector) {
             bindSimplePolyfill_1["default"]();
             adaptation_1["default"]();
+            var mac;
             try {
                 netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
                 stb = gSTB;
@@ -3726,9 +3728,13 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
                     onEvent: function (data) { },
                     event: 0
                 };
+                mac = stb.RDir("MACAddress");
             }
             catch (e) {
                 console.log(e);
+            }
+            if (typeof mac === 'undefined') {
+                mac = 'testMac';
             }
             aspectRatioManager_2["default"].mount("aspect");
             aspectRatioManager_2["default"].init();
@@ -3737,6 +3743,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             appContainer.appendChild(pageRouterWrap);
             var model = new AppModel_11["default"]();
             window.model = model;
+            model.App.userMac.set(mac);
             model.updateList.list.set(createPrevViewData_6["default"]());
             HTTP_6.getUpdateList({ offset: 0 }).then(function (data) {
                 model.updateList.list.set(data);

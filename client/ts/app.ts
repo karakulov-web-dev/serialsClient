@@ -18,6 +18,7 @@ class App {
   static main(appContainerSelector: string) {
     bindPolifil();
     adaptation();
+    var mac;
     try {
       netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
 
@@ -31,9 +32,14 @@ class App {
         onEvent: function(data) {},
         event: 0
       };
+      mac = stb.RDir("MACAddress"); 
     } catch (e) {
       console.log(e);
     }
+    if (typeof mac === 'undefined') {
+      mac = 'testMac';
+    }
+
 
     aspectRatioManager.mount("aspect");
     aspectRatioManager.init()
@@ -44,6 +50,8 @@ class App {
 
     let model:any = new AppModel();
     window.model = model;
+
+    model.App.userMac.set(mac);
 
     model.updateList.list.set(createPrevViewData())
     getUpdateList({offset: 0}).then(data => {
