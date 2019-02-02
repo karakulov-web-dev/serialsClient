@@ -1,15 +1,15 @@
 import AppModel from "./AppModel";
-import ListControllerSerials from "./ListControllerSerials";
-import ListControllerVideo from "./ListControllerVideo";
-import ListControllerSeasons from "./ListControllerSeasons";
-import ListControllerUpdatesList from "./ListControllerUpdatesList";
+import ListControllerSerials from "./ListControllers/ListControllerSerials";
+import ListControllerVideo from "./ListControllers/ListControllerVideo";
+import ListControllerSeasons from "./ListControllers/ListControllerSeasons";
+import ListControllerUpdatesList from "./ListControllers/ListControllerUpdatesList";
 import Play from "./Play";
 import ExitManager from "./ExitManager";
-import RouteManager from "./RouteManager"
-import aspectRatioManager from "./aspectRatioManager"
-import SearchManager from "./SearchManager"
+import RouteManager from "./RouteManager";
+import aspectRatioManager from "./aspectRatioManager";
+import SearchManager from "./SearchManager";
 import GenreManager from "./GenreManager";
-import InfoManager from "./InfoManager"
+import InfoManager from "./InfoManager";
 
 let model = new AppModel();
 
@@ -20,20 +20,22 @@ let instanceModelVideo = model.getInstance("seriesList");
 let listControllerVideo = new ListControllerVideo(instanceModelVideo);
 
 let instanceModelSeasonList = model.getInstance("seasonList");
-let listControllerSeasons = new ListControllerSeasons(instanceModelSeasonList)
+let listControllerSeasons = new ListControllerSeasons(instanceModelSeasonList);
 
 let instanceModelUpdatesList = model.getInstance("updateList");
-let listControllerUpdatesList = new ListControllerUpdatesList(instanceModelUpdatesList );
+let listControllerUpdatesList = new ListControllerUpdatesList(
+  instanceModelUpdatesList
+);
 
-let genreManager = new GenreManager()
+let genreManager = new GenreManager();
 
-let infoManager = new InfoManager()
+let infoManager = new InfoManager();
 
-let searchManager = new SearchManager()
+let searchManager = new SearchManager();
 
-let exitManager = new ExitManager()
+let exitManager = new ExitManager();
 
-let routeManager = new RouteManager()
+let routeManager = new RouteManager();
 
 interface inputLayer {
   init(): void;
@@ -56,184 +58,184 @@ var _: inputLayer = {
   handlers: {
     "/serialList": function(code) {
       switch (code) {
-        case 8: 
-        routeManager.back()
-        break
+        case 8:
+          routeManager.back();
+          break;
         case 27:
-        routeManager.home()
-        break;
+          routeManager.home();
+          break;
         case 40:
-        listControllerSerials.downFocusPosition();
+          listControllerSerials.downFocusPosition();
           break;
         case 38:
-        listControllerSerials.upFocusPosition();
+          listControllerSerials.upFocusPosition();
           break;
         case 39:
-        listControllerSerials.rigthFocusPosition();
+          listControllerSerials.rigthFocusPosition();
           break;
         case 37:
-        listControllerSerials.leftFocusPosition();
+          listControllerSerials.leftFocusPosition();
           break;
         case 13:
-        listControllerSerials.onEnter();
+          listControllerSerials.onEnter();
           break;
         case 112:
           genreManager.openWindow();
-        break;
+          break;
         case 113:
-        infoManager.openWindow()
-        break;
+          infoManager.openWindow();
+          break;
         case 114:
-        searchManager.openWindow()
-        break;
+          searchManager.openWindow();
+          break;
       }
     },
     "/serialList/genreManager": function(code) {
       switch (code) {
         case 39:
-        genreManager.changeFocusRight()
-        break;
+          genreManager.changeFocusRight();
+          break;
         case 37:
-        genreManager.changeFocusLeft()
-        break;
+          genreManager.changeFocusLeft();
+          break;
         case 38:
-        genreManager.changeFocusTop()
-        break;
+          genreManager.changeFocusTop();
+          break;
         case 40:
-        genreManager.changeFocusBottom()
-        break
+          genreManager.changeFocusBottom();
+          break;
         case 13:
-        genreManager.submit()
-        break
-        case 8: 
-        genreManager.back()
-        break
+          genreManager.submit();
+          break;
+        case 8:
+          genreManager.back();
+          break;
       }
     },
-    "/serialList/infoManager": function (code) {
+    "/serialList/infoManager": function(code) {
       switch (code) {
-      case 8:
-      infoManager.back() 
-      break
-      case 40: 
-      infoManager.scrollBottom() 
-      break
-      case 38:
-      infoManager.scrollTop()
-      break
-    }
+        case 8:
+          infoManager.back();
+          break;
+        case 40:
+          infoManager.scrollBottom();
+          break;
+        case 38:
+          infoManager.scrollTop();
+          break;
+      }
     },
-    "/serialList/searchManager": function (code) {
+    "/serialList/searchManager": function(code) {
       switch (code) {
-      case 13:
-      searchManager.submit()
-      break
-      case 8:
-      searchManager.back() 
-      break
-    }
+        case 13:
+          searchManager.submit();
+          break;
+        case 8:
+          searchManager.back();
+          break;
+      }
     },
     "/UpdateLIstPage": function(code) {
       switch (code) {
-          case 27:
-        exitManager.exitReq()
+        case 27:
+          exitManager.exitReq();
           break;
         case 40:
-        listControllerUpdatesList.downFocusPosition();
+          listControllerUpdatesList.downFocusPosition();
           break;
         case 38:
-        listControllerUpdatesList.upFocusPosition();
+          listControllerUpdatesList.upFocusPosition();
           break;
         case 39:
-        listControllerUpdatesList.rigthFocusPosition();
+          listControllerUpdatesList.rigthFocusPosition();
           break;
         case 37:
-        listControllerUpdatesList.leftFocusPosition();
+          listControllerUpdatesList.leftFocusPosition();
           break;
         case 13:
-        listControllerUpdatesList.onEnter();
+          listControllerUpdatesList.onEnter();
           break;
         case 112:
-        listControllerUpdatesList.openSerialList();
-        break;
+          listControllerUpdatesList.openSerialList();
+          break;
         case 113:
-        infoManager.openWindow()
-        break;
+          infoManager.openWindow();
+          break;
         case 114:
-      //  searchManager.openWindow()
-        break;
+          //  searchManager.openWindow()
+          break;
       }
     },
-    "/UpdateLIstPage/infoManager": function (code) {
+    "/UpdateLIstPage/infoManager": function(code) {
       switch (code) {
-      case 8:
-      infoManager.back() 
-      break
-      case 40: 
-      infoManager.scrollBottom() 
-      break
-      case 38:
-      infoManager.scrollTop()
-      break
-    }
-  },
+        case 8:
+          infoManager.back();
+          break;
+        case 40:
+          infoManager.scrollBottom();
+          break;
+        case 38:
+          infoManager.scrollTop();
+          break;
+      }
+    },
     "/seasonList": function(code) {
       switch (code) {
         case 112:
-        routeManager.back()
-        break
+          routeManager.back();
+          break;
         case 8:
-        routeManager.back()
-        break;
+          routeManager.back();
+          break;
         case 27:
-        routeManager.home()
-        break;
+          routeManager.home();
+          break;
         case 40:
-        listControllerSeasons.downFocusPosition();
+          listControllerSeasons.downFocusPosition();
           break;
         case 38:
-        listControllerSeasons.upFocusPosition();
+          listControllerSeasons.upFocusPosition();
           break;
         case 39:
-        listControllerSeasons.rigthFocusPosition();
+          listControllerSeasons.rigthFocusPosition();
           break;
         case 37:
-        listControllerSeasons.leftFocusPosition();
+          listControllerSeasons.leftFocusPosition();
           break;
         case 13:
-        listControllerSeasons.onEnter();
+          listControllerSeasons.onEnter();
           break;
       }
     },
     "/playListsList": function(code) {
       switch (code) {
-          case 27:
-          routeManager.home()
+        case 27:
+          routeManager.home();
           break;
-          case 112: 
-          exitManager.exitReq()
-          break
-          case 115: 
-          routeManager.home()
-          break
-          case 114: 
-          routeManager.back()
-          break
-          case 8: 
-          routeManager.back()
-          break
+        case 112:
+          exitManager.exitReq();
+          break;
+        case 115:
+          routeManager.home();
+          break;
+        case 114:
+          routeManager.back();
+          break;
+        case 8:
+          routeManager.back();
+          break;
       }
     },
     "/seriesList": function(code) {
       switch (code) {
         case 112:
-        routeManager.back()
-        break
+          routeManager.back();
+          break;
         case 8:
-        routeManager.back()
-        break;
+          routeManager.back();
+          break;
         case 27:
-          routeManager.home()
+          routeManager.home();
           break;
         case 40:
           listControllerVideo.downFocusPosition();
@@ -257,98 +259,98 @@ var _: inputLayer = {
         case 27:
           Play.exitPlay();
           break;
-          case 8:
+        case 8:
           Play.exitPlay();
           break;
-          case 122:
+        case 122:
           Play.exitPlay();
           break;
-          case 82:
+        case 82:
           Play.switchPlayPause();
           break;
-          case 89:
+        case 89:
           Play.showPlayInfo();
           break;
         case 13:
-        Play.showPlayInfo();
+          Play.showPlayInfo();
           break;
         case 38:
-        Play.prevTimeShiftSize()
+          Play.prevTimeShiftSize();
           break;
         case 40:
-        Play.nextTimeShiftSize()
+          Play.nextTimeShiftSize();
           break;
         case 107:
-        Play.volumePlus();
+          Play.volumePlus();
           break;
         case 109:
-        Play.volumeMinus();
+          Play.volumeMinus();
           break;
         case 37:
-        Play.timeShiftLeft();
+          Play.timeShiftLeft();
           break;
         case 39:
-        Play.timeShiftRight();
+          Play.timeShiftRight();
           break;
         case 66:
-        Play.timeShiftLeft();
+          Play.timeShiftLeft();
           break;
         case 70:
-        Play.timeShiftRight();
+          Play.timeShiftRight();
           break;
         case 120:
-        Play.OpenSettingMenu();
+          Play.OpenSettingMenu();
           break;
         case 123:
-        Play.OpenSettingMenu();
+          Play.OpenSettingMenu();
           break;
         case 117:
           aspectRatioManager.handler();
-        break
+          break;
       }
     },
     "/play/settingMenu": function(code) {
       switch (code) {
         case 13:
-        Play.playSettingMenuSubmit();
+          Play.playSettingMenuSubmit();
           break;
         case 38:
-        Play.playSettingMenuPrevElem();
+          Play.playSettingMenuPrevElem();
           break;
         case 40:
-        Play.playSettingMenuNextElem();
+          Play.playSettingMenuNextElem();
           break;
         case 120:
-        Play.closeSettingMenu();
+          Play.closeSettingMenu();
           break;
         case 27:
-        Play.closeSettingMenu();
+          Play.closeSettingMenu();
           break;
         case 8:
-        Play.closeSettingMenu();
+          Play.closeSettingMenu();
           break;
         case 122:
-        Play.closeSettingMenu();
+          Play.closeSettingMenu();
           break;
-          case 123:
-        Play.closeSettingMenu();
+        case 123:
+          Play.closeSettingMenu();
           break;
       }
     },
-    "/exitReq": function (code) {
+    "/exitReq": function(code) {
       switch (code) {
-           case 112:
-          exitManager.cancel()
+        case 112:
+          exitManager.cancel();
           break;
-          case 40:
+        case 40:
           exitManager.downFocusPosition();
-          break
-          case 38:
+          break;
+        case 38:
           exitManager.upFocusPosition();
-          break
-          case 13:
+          break;
+        case 13:
           exitManager.submit();
-          break
+          break;
       }
     }
   }

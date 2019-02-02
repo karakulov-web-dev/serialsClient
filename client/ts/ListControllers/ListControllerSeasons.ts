@@ -1,9 +1,9 @@
 import ListController from "./ListController";
-import RouteManager from "./RouteManager"
-import {getSeason} from "./HTTP"
-import createPrevViewData from "./createPrevViewData"
+import RouteManager from "../RouteManager";
+import { getSeason } from "../HTTP";
+import createPrevViewData from "../createPrevViewData";
 
-new RouteManager().set
+new RouteManager().set;
 
 export default class ListControllerSeasons extends ListController {
   public onEnter() {
@@ -16,24 +16,26 @@ export default class ListControllerSeasons extends ListController {
     this.activeItem = display[focusPosition];
   }
   private openSeason() {
-      this.openSeriesList()
+    this.openSeriesList();
   }
   private openSeriesList() {
-    this.model.seriesList.title.set(`${this.activeItem.name} (${this.activeItem.season_number} сезон)`)
+    this.model.seriesList.title.set(
+      `${this.activeItem.name} (${this.activeItem.season_number} сезон)`
+    );
     new RouteManager().set("/seriesList");
-    let list: any = this.model.getInstance("seriesList").getValue("list")
-    this.model.seriesList.scrolPosition.set(0)
-    this.model.seriesList.focusPosition.set(0)
+    let list: any = this.model.getInstance("seriesList").getValue("list");
+    this.model.seriesList.scrolPosition.set(0);
+    this.model.seriesList.focusPosition.set(0);
     let seasonId = this.activeItem.idSeasonvar;
-    list.set(createPrevViewData())
+    list.set(createPrevViewData());
     getSeason(seasonId).then(data => {
       data.playlist.forEach(item => {
         item.poster = data.poster;
         item.season_number = data.season_number;
-        item.serial = data.name
-      })
-      list.set(data.playlist)
-    })
+        item.serial = data.name;
+      });
+      list.set(data.playlist);
+    });
   }
   private activeItem;
 }

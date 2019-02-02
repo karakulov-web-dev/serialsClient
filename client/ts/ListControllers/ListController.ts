@@ -1,4 +1,4 @@
-import AppModel from "./AppModel";
+import AppModel from "../AppModel";
 
 export default class ListController {
   constructor(instanceModel) {
@@ -9,14 +9,17 @@ export default class ListController {
     this.display = this.instanceModel.getValue("display");
     this.list = this.instanceModel.getValue("list");
   }
-  public rigthFocusPosition() {     
+  public rigthFocusPosition() {
     var scrolPosition = this.scrolPosition.get();
     var activePosition = this.focusPosition.get();
     if (activePosition < 5) {
-      if (typeof this.display.get()()[activePosition + 1] !== 'undefined') {
+      if (typeof this.display.get()()[activePosition + 1] !== "undefined") {
         this.focusPosition.set(activePosition + 1);
       }
-    } else if (activePosition === 5 && activePosition !== this.display.get()().length - 1 )  {
+    } else if (
+      activePosition === 5 &&
+      activePosition !== this.display.get()().length - 1
+    ) {
       this.scrolPosition.set(scrolPosition + 6);
       this.focusPosition.set(0);
     }
@@ -37,7 +40,7 @@ export default class ListController {
       return;
     }
     this.focusPosition.set(activePosition - 1);
-  };
+  }
   public upFocusPosition() {
     var length = this.list.get().length;
     var scrolPosition = this.scrolPosition.get();
@@ -57,7 +60,7 @@ export default class ListController {
       return;
     }
     this.focusPosition.set(activePosition - 3);
-  };
+  }
   public downFocusPosition() {
     var length = this.list.get().length;
     var scrolPosition = this.scrolPosition.get();
@@ -75,10 +78,10 @@ export default class ListController {
         this.scrolPosition.set(maxScrolPosition);
       } else {
         this.scrolPosition.set(newScrolPosition);
-        if (typeof this.display.get()()[activePosition -3] !== 'undefined') {
-        this.focusPosition.set(activePosition - 3);
+        if (typeof this.display.get()()[activePosition - 3] !== "undefined") {
+          this.focusPosition.set(activePosition - 3);
         } else {
-          this.focusPosition.set(this.display.get()().length - 1)
+          this.focusPosition.set(this.display.get()().length - 1);
         }
       }
       if (this.display.get()().length > 5) {
@@ -86,19 +89,15 @@ export default class ListController {
       }
       return;
     }
-    if (typeof this.display.get()()[activePosition + 3] !== 'undefined') {
+    if (typeof this.display.get()()[activePosition + 3] !== "undefined") {
       this.focusPosition.set(activePosition + 3);
     }
     if (this.display.get()().length > 5) {
       this.infiniteScroll();
     }
-  };
-  protected infiniteScroll () {
- 
   }
-  public onEnter() {
-
-  }
+  protected infiniteScroll() {}
+  public onEnter() {}
   protected instanceModel;
   protected focusPosition;
   protected scrolPosition;

@@ -1860,7 +1860,7 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
     }(BaseComponent_17["default"]));
     exports["default"] = PageRouter;
 });
-define("ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
+define("ListControllers/ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
     "use strict";
     exports.__esModule = true;
     var ListController = /** @class */ (function () {
@@ -1876,11 +1876,12 @@ define("ListController", ["require", "exports", "AppModel"], function (require, 
             var scrolPosition = this.scrolPosition.get();
             var activePosition = this.focusPosition.get();
             if (activePosition < 5) {
-                if (typeof this.display.get()()[activePosition + 1] !== 'undefined') {
+                if (typeof this.display.get()()[activePosition + 1] !== "undefined") {
                     this.focusPosition.set(activePosition + 1);
                 }
             }
-            else if (activePosition === 5 && activePosition !== this.display.get()().length - 1) {
+            else if (activePosition === 5 &&
+                activePosition !== this.display.get()().length - 1) {
                 this.scrolPosition.set(scrolPosition + 6);
                 this.focusPosition.set(0);
             }
@@ -1902,7 +1903,6 @@ define("ListController", ["require", "exports", "AppModel"], function (require, 
             }
             this.focusPosition.set(activePosition - 1);
         };
-        ;
         ListController.prototype.upFocusPosition = function () {
             var length = this.list.get().length;
             var scrolPosition = this.scrolPosition.get();
@@ -1924,7 +1924,6 @@ define("ListController", ["require", "exports", "AppModel"], function (require, 
             }
             this.focusPosition.set(activePosition - 3);
         };
-        ;
         ListController.prototype.downFocusPosition = function () {
             var length = this.list.get().length;
             var scrolPosition = this.scrolPosition.get();
@@ -1943,7 +1942,7 @@ define("ListController", ["require", "exports", "AppModel"], function (require, 
                 }
                 else {
                     this.scrolPosition.set(newScrolPosition);
-                    if (typeof this.display.get()()[activePosition - 3] !== 'undefined') {
+                    if (typeof this.display.get()()[activePosition - 3] !== "undefined") {
                         this.focusPosition.set(activePosition - 3);
                     }
                     else {
@@ -1955,18 +1954,15 @@ define("ListController", ["require", "exports", "AppModel"], function (require, 
                 }
                 return;
             }
-            if (typeof this.display.get()()[activePosition + 3] !== 'undefined') {
+            if (typeof this.display.get()()[activePosition + 3] !== "undefined") {
                 this.focusPosition.set(activePosition + 3);
             }
             if (this.display.get()().length > 5) {
                 this.infiniteScroll();
             }
         };
-        ;
-        ListController.prototype.infiniteScroll = function () {
-        };
-        ListController.prototype.onEnter = function () {
-        };
+        ListController.prototype.infiniteScroll = function () { };
+        ListController.prototype.onEnter = function () { };
         return ListController;
     }());
     exports["default"] = ListController;
@@ -2138,7 +2134,7 @@ define("createPrevViewData", ["require", "exports"], function (require, exports)
     }
     exports["default"] = createPrevViewData;
 });
-define("ListControllerSerials", ["require", "exports", "ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_1, RouteManager_1, HTTP_1, createPrevViewData_1) {
+define("ListControllers/ListControllerSerials", ["require", "exports", "ListControllers/ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_1, RouteManager_1, HTTP_1, createPrevViewData_1) {
     "use strict";
     exports.__esModule = true;
     var ListControllerSerials = /** @class */ (function (_super) {
@@ -2753,7 +2749,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
     };
     exports["default"] = _;
 });
-define("ListControllerVideo", ["require", "exports", "ListController", "Play", "RouteManager"], function (require, exports, ListController_2, Play_1, RouteManager_2) {
+define("ListControllers/ListControllerVideo", ["require", "exports", "ListControllers/ListController", "Play", "RouteManager"], function (require, exports, ListController_2, Play_1, RouteManager_2) {
     "use strict";
     exports.__esModule = true;
     var ListControllerVideo = /** @class */ (function (_super) {
@@ -2816,7 +2812,7 @@ define("ListControllerVideo", ["require", "exports", "ListController", "Play", "
     }(ListController_2["default"]));
     exports["default"] = ListControllerVideo;
 });
-define("ListControllerSeasons", ["require", "exports", "ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_3, RouteManager_3, HTTP_2, createPrevViewData_2) {
+define("ListControllers/ListControllerSeasons", ["require", "exports", "ListControllers/ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_3, RouteManager_3, HTTP_2, createPrevViewData_2) {
     "use strict";
     exports.__esModule = true;
     new RouteManager_3["default"]().set;
@@ -2858,7 +2854,7 @@ define("ListControllerSeasons", ["require", "exports", "ListController", "RouteM
     }(ListController_3["default"]));
     exports["default"] = ListControllerSeasons;
 });
-define("ListControllerUpdatesList", ["require", "exports", "ListControllerSerials", "HTTP", "RouteManager", "createPrevViewData"], function (require, exports, ListControllerSerials_1, HTTP_3, RouteManager_4, createPrevViewData_3) {
+define("ListControllers/ListControllerUpdatesList", ["require", "exports", "ListControllers/ListControllerSerials", "HTTP", "RouteManager", "createPrevViewData"], function (require, exports, ListControllerSerials_1, HTTP_3, RouteManager_4, createPrevViewData_3) {
     "use strict";
     exports.__esModule = true;
     var ListControllerUpdatesList = /** @class */ (function (_super) {
@@ -3339,7 +3335,7 @@ define("InfoManager", ["require", "exports", "AppModel"], function (require, exp
     }());
     exports["default"] = GenreManager;
 });
-define("inputLayer", ["require", "exports", "AppModel", "ListControllerSerials", "ListControllerVideo", "ListControllerSeasons", "ListControllerUpdatesList", "Play", "ExitManager", "RouteManager", "aspectRatioManager", "SearchManager", "GenreManager", "InfoManager"], function (require, exports, AppModel_10, ListControllerSerials_2, ListControllerVideo_1, ListControllerSeasons_1, ListControllerUpdatesList_1, Play_2, ExitManager_1, RouteManager_6, aspectRatioManager_1, SearchManager_1, GenreManager_1, InfoManager_1) {
+define("inputLayer", ["require", "exports", "AppModel", "ListControllers/ListControllerSerials", "ListControllers/ListControllerVideo", "ListControllers/ListControllerSeasons", "ListControllers/ListControllerUpdatesList", "Play", "ExitManager", "RouteManager", "aspectRatioManager", "SearchManager", "GenreManager", "InfoManager"], function (require, exports, AppModel_10, ListControllerSerials_2, ListControllerVideo_1, ListControllerSeasons_1, ListControllerUpdatesList_1, Play_2, ExitManager_1, RouteManager_6, aspectRatioManager_1, SearchManager_1, GenreManager_1, InfoManager_1) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_10["default"]();
