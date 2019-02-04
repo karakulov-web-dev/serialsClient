@@ -2185,6 +2185,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         var time = +new Date();
         item.time = time;
         item.userMac = model.App.userMac.get();
+        console.log(item.seasonId);
         item.seasonId = Number(item.seasonId);
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify(item);
@@ -2219,6 +2220,23 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         });
     }
     exports.getHistory = getHistory;
+    function clearHistory() {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({ userMac: model.App.userMac.get() });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/clearHistory.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        //var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.clearHistory = clearHistory;
 });
 define("createPrevViewData", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2274,6 +2292,8 @@ define("ListControllers/ListControllerSerials", ["require", "exports", "ListCont
                     item.poster = data.poster;
                     item.season_number = data.season_number;
                     item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
                 });
                 list.set(data.playlist);
             });
@@ -3796,6 +3816,10 @@ define("ListControllers/ListControllerHistory", ["require", "exports", "ListCont
                 list.set(data.playlist);
             });
         };
+        ListControllerHistory.prototype.clear = function () {
+            this.model.historyList.list.set([]);
+            HTTP_7.clearHistory();
+        };
         return ListControllerHistory;
     }(ListController_4["default"]));
     exports["default"] = ListControllerHistory;
@@ -3829,6 +3853,9 @@ define("inputLayer/historyListInput", ["require", "exports", "RouteManager", "Ap
                 break;
             case 13:
                 listControllerHistory.onEnter();
+                break;
+            case 112:
+                listControllerHistory.clear();
                 break;
         }
     }

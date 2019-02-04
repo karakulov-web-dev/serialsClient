@@ -1,11 +1,7 @@
 import ListController from "./ListController";
-import { stbObj } from "../interfaceGlobal";
 import RouteManager from "../RouteManager";
 import createPrevViewData from "../createPrevViewData";
-import { pushHistory,getSeason } from "../HTTP";
-import Play from "../Play";
-
-declare var stb: stbObj;
+import { getSeason,clearHistory } from "../HTTP";
 
 export default class ListControllerHistory extends ListController {
     public onEnter() {
@@ -38,6 +34,10 @@ export default class ListControllerHistory extends ListController {
           });
           list.set(data.playlist);
         });
+      }
+      public clear() {
+        this.model.historyList.list.set([])
+        clearHistory()
       }
       private activeItem
 }

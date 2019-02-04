@@ -30,6 +30,9 @@ export function historyList(code) {
       break;
     case 13:
     listControllerHistory.onEnter();
-      break;
+    break;
+    case 112:
+    listControllerHistory.clear();
+    break;
   }
 }
