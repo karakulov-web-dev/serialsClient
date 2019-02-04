@@ -1042,8 +1042,8 @@ define("Components/SerialComponent", ["require", "exports", "Components/BaseComp
                     visible: true
                 },
                 blue: {
-                    text: "Сортировать",
-                    visible: false
+                    text: "В избранное",
+                    visible: true
                 }
             });
             var btnWrap = document.createElement("div");
@@ -2185,7 +2185,6 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         var time = +new Date();
         item.time = time;
         item.userMac = model.App.userMac.get();
-        console.log(item.seasonId);
         item.seasonId = Number(item.seasonId);
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify(item);

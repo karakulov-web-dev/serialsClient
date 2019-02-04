@@ -37,8 +37,8 @@ if (!$error) {
     $sql = "SELECT COUNT(*) FROM `history` WHERE userMac='$userMac'";
     $result = $reqTools->reqDb($sql);
     $count = $result[0]['COUNT(*)'];
-    if ($count > 4) {
-        $dif = $count - 4;
+    if ($count > 49) {
+        $dif = $count - 49;
     } else {
         $dif = 0;
     }

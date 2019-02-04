@@ -64,8 +64,8 @@ export default class SerialComponent extends BaseComponent {
         visible: true
       },
       blue: {
-        text: "Сортировать",
-        visible: false
+        text: "В избранное",
+        visible: true
       }
     });
     let btnWrap = document.createElement("div");
