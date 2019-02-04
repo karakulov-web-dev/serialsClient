@@ -1796,12 +1796,12 @@ define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/
                     visible: true
                 },
                 yellow: {
-                    text: "Поиск",
-                    visible: false
+                    text: "История",
+                    visible: true
                 },
                 blue: {
-                    text: "Сортировать",
-                    visible: false
+                    text: "Избранное",
+                    visible: true
                 }
             });
             var btnWrap = document.createElement("div");
@@ -2022,7 +2022,6 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     exports.__esModule = true;
     var model = new AppModel_4["default"]();
     function get_Serials(config) {
-        console.log(config);
         var gArr = model.genreManager.list_default.get();
         var gArrNew = [];
         gArr.forEach(function (item) {
@@ -2131,7 +2130,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        var data = JSON.parse(xhr.responseText);
+                        //var data = JSON.parse(xhr.responseText);
                         resolve(data);
                     }
                 }

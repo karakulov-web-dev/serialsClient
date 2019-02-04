@@ -4,7 +4,6 @@ import AppModel from "./AppModel";
 let model:any = new AppModel();
 
 export function get_Serials (config:any):Promise {
-  console.log(config);
   let gArr = model.genreManager.list_default.get()
   let gArrNew = []
  gArr.forEach(item => {
@@ -136,7 +135,7 @@ export function pushHistory(item) {
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
-          var data = JSON.parse(xhr.responseText);
+          //var data = JSON.parse(xhr.responseText);
           resolve(data);
         }
       }

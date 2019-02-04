@@ -33,12 +33,12 @@ export default class UpdateLIstPageComponent extends BaseComponent {
         visible: true
       },
       yellow: {
-        text: "Поиск",
-        visible: false
+        text: "История",
+        visible: true
       },
       blue: {
-        text: "Сортировать",
-        visible: false
+        text: "Избранное",
+        visible: true
       }
     });
     let btnWrap = document.createElement("div");
