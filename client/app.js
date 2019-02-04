@@ -2119,6 +2119,10 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     }
     exports.getUpdateList = getUpdateList;
     function pushHistory(item) {
+        var time = +new Date();
+        item.time = time;
+        item.userMac = model.App.userMac.get();
+        item.seasonId = Number(item.seasonId);
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify(item);
             var xhr = new XMLHttpRequest();

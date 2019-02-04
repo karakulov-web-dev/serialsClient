@@ -120,6 +120,10 @@ export function getUpdateList(offset) {
 
 
 export function pushHistory(item) {
+  let time = +new Date();
+  item.time = time;
+  item.userMac = model.App.userMac.get();
+  item.seasonId = Number(item.seasonId);
   return new Promise_simple(function(resolve) {
     var data = JSON.stringify(item);
     var xhr = new XMLHttpRequest();
