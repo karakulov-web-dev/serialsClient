@@ -29,7 +29,7 @@ if (gettype($body->userMac) == 'string') {
 }
 
 if ($error) {
-    echo "{error:$error}";
+    echo "{\"error\":\"{$error}\"}";
 }
 
 if (!$error) {

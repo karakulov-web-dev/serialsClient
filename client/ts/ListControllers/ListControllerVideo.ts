@@ -2,6 +2,7 @@ import ListController from "./ListController";
 import Play from "../Play";
 import { stbObj } from "../interfaceGlobal";
 import RouteManager from "../RouteManager";
+import { pushHistory } from "../HTTP";
 
 declare var stb: stbObj;
 
@@ -32,6 +33,8 @@ export default class ListControllerVideo extends ListController {
     if (typeof qualityArr[0].url === "undefined") {
       throw new Error("qualityArr undefined");
     }
+
+    pushHistory(display[activePosition])
 
     Play.playControlInterfaceInit();
     var newQualityArr = [];

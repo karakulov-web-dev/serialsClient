@@ -119,3 +119,24 @@ export function getUpdateList(offset) {
 }
 
 
+export function pushHistory(item) {
+  return new Promise_simple(function(resolve) {
+    var data = JSON.stringify(item);
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+      "post",
+      "http://212.77.128.177/karakulov/seasonvar/api/pushHistory.php",
+      true
+    );
+    xhr.send(data);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          resolve(data);
+        }
+      }
+    };
+  });
+}
+
