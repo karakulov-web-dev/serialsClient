@@ -39,7 +39,6 @@ class App {
       mac = 'testMac';
     }
 
-
     aspectRatioManager.mount("aspect");
     aspectRatioManager.init()
 
@@ -56,7 +55,6 @@ class App {
     getUpdateList({offset: 0}).then(data => {
     model.updateList.list.set(data)
     })
-
 
     inputLayer.init();
 
