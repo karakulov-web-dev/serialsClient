@@ -2846,6 +2846,8 @@ define("ListControllers/ListControllerSeasons", ["require", "exports", "ListCont
                     item.poster = data.poster;
                     item.season_number = data.season_number;
                     item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
                 });
                 list.set(data.playlist);
             });
@@ -2877,6 +2879,8 @@ define("ListControllers/ListControllerUpdatesList", ["require", "exports", "List
                     item.poster = data.poster;
                     item.season_number = data.season_number;
                     item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
                 });
                 list.set(data.playlist);
             });

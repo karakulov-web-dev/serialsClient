@@ -33,6 +33,9 @@ export default class ListControllerSeasons extends ListController {
         item.poster = data.poster;
         item.season_number = data.season_number;
         item.serial = data.name;
+
+        item.seriesName = `${data.name} (${item.name})`;
+        item.seasonId = data.idSeasonvar;
       });
       list.set(data.playlist);
     });
