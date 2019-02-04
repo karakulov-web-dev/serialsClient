@@ -3,7 +3,6 @@ import RouteManager from "../RouteManager";
 import { getSeason } from "../HTTP";
 import createPrevViewData from "../createPrevViewData";
 
-new RouteManager().set;
 
 export default class ListControllerSeasons extends ListController {
   public onEnter() {
@@ -33,7 +32,7 @@ export default class ListControllerSeasons extends ListController {
         item.poster = data.poster;
         item.season_number = data.season_number;
         item.serial = data.name;
-
+        
         item.seriesName = `${data.name} (${item.name})`;
         item.seasonId = data.idSeasonvar;
       });

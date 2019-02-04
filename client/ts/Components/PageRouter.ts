@@ -5,6 +5,7 @@ import SeriesComponent from "./SeriesComponent"
 import PlayComponent from "./PlayComponent"
 import ExitReqPageComp from "./ExitReqPageComp"
 import UpdateLIstPageComponent from "./UpdateLIstPageComponent";
+import HistoryPageComponent from "./HistoryPageComponent"
 
 export default class PageRouter extends BaseComponent {
   constructor() {
@@ -38,6 +39,8 @@ export default class PageRouter extends BaseComponent {
       page = new ExitReqPageComp()
     }  else if (route === '/UpdateLIstPage') {
       page = new UpdateLIstPageComponent()
+    } else if (route === '/historyList') {
+      page = new HistoryPageComponent()
     }
     
     page.render(elem);

@@ -16,7 +16,10 @@ if ($error) {
 
 if (!$error) {
     $reqTools = new ReqTools();
-    $sql = "SELECT * FROM `history` WHERE userMac='$userMac'";
+    $sql = "SELECT * 
+    FROM  `history` 
+    JOIN  `seasons` ON  `history`.seasonId =  `seasons`.idSeasonvar
+    WHERE userMac =  '$userMac' ORDER BY TIME DESC ";
     $result = $reqTools->reqDb($sql);
     echo json_encode($result,JSON_UNESCAPED_UNICODE);
 }

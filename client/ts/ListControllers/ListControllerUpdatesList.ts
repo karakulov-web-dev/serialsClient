@@ -1,5 +1,5 @@
 import ListControllerSerials from "./ListControllerSerials";
-import { getUpdateList, getSeason, get_Serials } from "../HTTP";
+import { getUpdateList, getSeason, get_Serials, getHistory} from "../HTTP";
 import RouteManager from "../RouteManager";
 import createPrevViewData from "../createPrevViewData";
 
@@ -48,6 +48,13 @@ export default class ListControllerUpdatesList extends ListControllerSerials {
     this.model.serialList.list.set(createPrevViewData());
     get_Serials({ offset: 0 }).then(data => {
       this.model.serialList.list.set(data);
+    });
+  }
+  public openHistoryList() {
+    new RouteManager().set("/historyList");
+    this.model.historyList.list.set(createPrevViewData());
+    getHistory().then(data => {
+      this.model.historyList.list.set(data);
     });
   }
 }

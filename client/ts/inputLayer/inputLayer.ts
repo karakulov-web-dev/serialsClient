@@ -25,6 +25,8 @@ import {
   playSettingMenu
 } from "./playInput"
 
+import {historyList} from "./historyListInput";
+
 import {exitReq} from "./exitReqInput"
  
 let model = new AppModel();
@@ -58,7 +60,8 @@ var _: inputLayer = {
     "/seriesList": seriesList,
     "/play": play,
     "/play/settingMenu": playSettingMenu,
-    "/exitReq": exitReq
+    "/exitReq": exitReq,
+    "/historyList": historyList
   }
 };
 

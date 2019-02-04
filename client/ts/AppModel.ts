@@ -247,6 +247,27 @@ export default class AppModel extends Model {
       });
     });
 
+    let historyList = this.createInstance("historyList");
+    historyList.createValue("list", []);
+    historyList.createValue("focusPosition", 0);
+    historyList.createValue("scrolPosition", 0);
+    historyList.createValue("display", function() {
+      let list = historyList.getValue("list");
+      let scrolPosition = historyList.getValue("scrolPosition");
+      list = list.get();
+      scrolPosition = scrolPosition.get();
+      let maxPosition = scrolPosition + 8;
+      var i = 0;
+      return list.filter(item => {
+        let status = false;
+        if (i >= scrolPosition && i <= maxPosition) {
+          status = true;
+        }
+        i++;
+        return status;
+      });
+    });
+
     let seriesList = this.createInstance("seriesList");
     seriesList.createValue("list", []);
     seriesList.createValue("title", 'title');
@@ -308,32 +329,6 @@ export default class AppModel extends Model {
       playSec: 0,
       durationSec: 0
     })
-
-
-
-
-
-    let playListsList = this.createInstance("playListsList");
-    playListsList.createValue("list", []);
-    playListsList.createValue("focusPosition", 0);
-    playListsList.createValue("scrolPosition", 0);
-    playListsList.createValue("display", function() {
-      let list = playListsList.getValue("list");
-      let scrolPosition = playListsList.getValue("scrolPosition");
-      list = list.get();
-      scrolPosition = scrolPosition.get();
-      let maxPosition = scrolPosition + 8;
-      var i = 0;
-      return list.filter(item => {
-        let status = false;
-        if (i >= scrolPosition && i <= maxPosition) {
-          status = true;
-        }
-        i++;
-        return status;
-      });
-    });
-
 
     let settingMenuInstance = PlayInstance.createInstance("settingMenu")
     settingMenuInstance.createValue('visible', false)

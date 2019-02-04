@@ -11,7 +11,6 @@ let infoManager = new InfoManager();
 
 let exitManager = new ExitManager();
 
-
 export function UpdateLIstPage(code) {
     switch (code) {
       case 27:
@@ -39,7 +38,7 @@ export function UpdateLIstPage(code) {
         infoManager.openWindow();
         break;
       case 114:
-        //  searchManager.openWindow()
+      listControllerUpdatesList.openHistoryList();
         break;
     }
   }

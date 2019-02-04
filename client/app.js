@@ -357,6 +357,26 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     return status;
                 });
             });
+            var historyList = _this.createInstance("historyList");
+            historyList.createValue("list", []);
+            historyList.createValue("focusPosition", 0);
+            historyList.createValue("scrolPosition", 0);
+            historyList.createValue("display", function () {
+                var list = historyList.getValue("list");
+                var scrolPosition = historyList.getValue("scrolPosition");
+                list = list.get();
+                scrolPosition = scrolPosition.get();
+                var maxPosition = scrolPosition + 8;
+                var i = 0;
+                return list.filter(function (item) {
+                    var status = false;
+                    if (i >= scrolPosition && i <= maxPosition) {
+                        status = true;
+                    }
+                    i++;
+                    return status;
+                });
+            });
             var seriesList = _this.createInstance("seriesList");
             seriesList.createValue("list", []);
             seriesList.createValue("title", 'title');
@@ -415,26 +435,6 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             PlayInstance.createValue("timeBar", {
                 playSec: 0,
                 durationSec: 0
-            });
-            var playListsList = _this.createInstance("playListsList");
-            playListsList.createValue("list", []);
-            playListsList.createValue("focusPosition", 0);
-            playListsList.createValue("scrolPosition", 0);
-            playListsList.createValue("display", function () {
-                var list = playListsList.getValue("list");
-                var scrolPosition = playListsList.getValue("scrolPosition");
-                list = list.get();
-                scrolPosition = scrolPosition.get();
-                var maxPosition = scrolPosition + 8;
-                var i = 0;
-                return list.filter(function (item) {
-                    var status = false;
-                    if (i >= scrolPosition && i <= maxPosition) {
-                        status = true;
-                    }
-                    i++;
-                    return status;
-                });
             });
             var settingMenuInstance = PlayInstance.createInstance("settingMenu");
             settingMenuInstance.createValue('visible', false);
@@ -1813,7 +1813,68 @@ define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/
     }(BaseComponent_16["default"]));
     exports["default"] = UpdateLIstPageComponent;
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/SerialComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent"], function (require, exports, BaseComponent_17, SerialComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1) {
+define("Components/HistotyListComponent", ["require", "exports", "Components/SeasonListComponent"], function (require, exports, SeasonListComponent_3) {
+    "use strict";
+    exports.__esModule = true;
+    var HistotyListComponent = /** @class */ (function (_super) {
+        __extends(HistotyListComponent, _super);
+        function HistotyListComponent() {
+            return _super.call(this, "historyList") || this;
+        }
+        HistotyListComponent.prototype.createTitle = function (item) {
+            return "" + item.seriesName;
+        };
+        return HistotyListComponent;
+    }(SeasonListComponent_3["default"]));
+    exports["default"] = HistotyListComponent;
+});
+define("Components/HistoryPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/HistotyListComponent"], function (require, exports, BaseComponent_17, HeaderComponent_6, BottomButtonComponent_6, HistotyListComponent_1) {
+    "use strict";
+    exports.__esModule = true;
+    var UpdateLIstPageComponent = /** @class */ (function (_super) {
+        __extends(UpdateLIstPageComponent, _super);
+        function UpdateLIstPageComponent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        UpdateLIstPageComponent.prototype.create = function () {
+            var elem = document.createElement("div");
+            elem.className = "app_HomeComponent";
+            var compList = [HistotyListComponent_1["default"]];
+            new HeaderComponent_6["default"]('История просмотров').render(elem.appendChild(document.createElement("div")));
+            compList.forEach(function (Comp) {
+                var wrap = document.createElement("div");
+                var comp = new Comp();
+                elem.appendChild(wrap);
+                comp.render(wrap);
+            });
+            var bottomBtnComp = new BottomButtonComponent_6["default"]({
+                red: {
+                    text: "Очистить",
+                    visible: true
+                },
+                green: {
+                    text: "Откр. Сериал",
+                    visible: false
+                },
+                yellow: {
+                    text: "Откр. Сезон",
+                    visible: false
+                },
+                blue: {
+                    text: "Очистить",
+                    visible: false
+                }
+            });
+            var btnWrap = document.createElement("div");
+            elem.appendChild(btnWrap);
+            bottomBtnComp.render(btnWrap);
+            return elem;
+        };
+        return UpdateLIstPageComponent;
+    }(BaseComponent_17["default"]));
+    exports["default"] = UpdateLIstPageComponent;
+});
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/SerialComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent", "Components/HistoryPageComponent"], function (require, exports, BaseComponent_18, SerialComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1, HistoryPageComponent_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -1853,11 +1914,14 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             else if (route === '/UpdateLIstPage') {
                 page = new UpdateLIstPageComponent_1["default"]();
             }
+            else if (route === '/historyList') {
+                page = new HistoryPageComponent_1["default"]();
+            }
             page.render(elem);
             return elem;
         };
         return PageRouter;
-    }(BaseComponent_17["default"]));
+    }(BaseComponent_18["default"]));
     exports["default"] = PageRouter;
 });
 define("RouteManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
@@ -2138,6 +2202,23 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         });
     }
     exports.pushHistory = pushHistory;
+    function getHistory() {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({ userMac: model.App.userMac.get() });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getHistory.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.getHistory = getHistory;
 });
 define("createPrevViewData", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2593,6 +2674,14 @@ define("ListControllers/ListControllerUpdatesList", ["require", "exports", "List
                 _this.model.serialList.list.set(data);
             });
         };
+        ListControllerUpdatesList.prototype.openHistoryList = function () {
+            var _this = this;
+            new RouteManager_3["default"]().set("/historyList");
+            this.model.historyList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.getHistory().then(function (data) {
+                _this.model.historyList.list.set(data);
+            });
+        };
         return ListControllerUpdatesList;
     }(ListControllerSerials_2["default"]));
     exports["default"] = ListControllerUpdatesList;
@@ -2710,7 +2799,7 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
                 infoManager.openWindow();
                 break;
             case 114:
-                //  searchManager.openWindow()
+                listControllerUpdatesList.openHistoryList();
                 break;
         }
     }
@@ -2733,7 +2822,6 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
 define("ListControllers/ListControllerSeasons", ["require", "exports", "ListControllers/ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_2, RouteManager_5, HTTP_5, createPrevViewData_5) {
     "use strict";
     exports.__esModule = true;
-    new RouteManager_5["default"]().set;
     var ListControllerSeasons = /** @class */ (function (_super) {
         __extends(ListControllerSeasons, _super);
         function ListControllerSeasons() {
@@ -3672,6 +3760,80 @@ define("inputLayer/playInput", ["require", "exports", "Play", "aspectRatioManage
     }
     exports.playSettingMenu = playSettingMenu;
 });
+define("ListControllers/ListControllerHistory", ["require", "exports", "ListControllers/ListController", "RouteManager", "createPrevViewData", "HTTP"], function (require, exports, ListController_4, RouteManager_9, createPrevViewData_6, HTTP_7) {
+    "use strict";
+    exports.__esModule = true;
+    var ListControllerHistory = /** @class */ (function (_super) {
+        __extends(ListControllerHistory, _super);
+        function ListControllerHistory() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ListControllerHistory.prototype.onEnter = function () {
+            this.defineActiveItem();
+            this.openSeriesList();
+        };
+        ListControllerHistory.prototype.defineActiveItem = function () {
+            var focusPosition = this.focusPosition.get();
+            var display = this.display.get()();
+            this.activeItem = display[focusPosition];
+        };
+        ListControllerHistory.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name + " (" + this.activeItem.season_number + " \u0441\u0435\u0437\u043E\u043D)");
+            new RouteManager_9["default"]().set("/seriesList");
+            var list = this.model.getInstance("seriesList").getValue("list");
+            this.model.seriesList.scrolPosition.set(0);
+            this.model.seriesList.focusPosition.set(0);
+            var seasonId = this.activeItem.idSeasonvar;
+            list.set(createPrevViewData_6["default"]());
+            HTTP_7.getSeason(seasonId).then(function (data) {
+                data.playlist.forEach(function (item) {
+                    item.poster = data.poster;
+                    item.season_number = data.season_number;
+                    item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
+                });
+                list.set(data.playlist);
+            });
+        };
+        return ListControllerHistory;
+    }(ListController_4["default"]));
+    exports["default"] = ListControllerHistory;
+});
+define("inputLayer/historyListInput", ["require", "exports", "RouteManager", "AppModel", "ListControllers/ListControllerHistory"], function (require, exports, RouteManager_10, AppModel_14, ListControllerHistory_1) {
+    "use strict";
+    exports.__esModule = true;
+    var routeManager = new RouteManager_10["default"]();
+    var model = new AppModel_14["default"]();
+    var instanceModelHistory = model.getInstance("historyList");
+    var listControllerHistory = new ListControllerHistory_1["default"](instanceModelHistory);
+    function historyList(code) {
+        switch (code) {
+            case 8:
+                routeManager.back();
+                break;
+            case 27:
+                routeManager.home();
+                break;
+            case 40:
+                listControllerHistory.downFocusPosition();
+                break;
+            case 38:
+                listControllerHistory.upFocusPosition();
+                break;
+            case 39:
+                listControllerHistory.rigthFocusPosition();
+                break;
+            case 37:
+                listControllerHistory.leftFocusPosition();
+                break;
+            case 13:
+                listControllerHistory.onEnter();
+                break;
+        }
+    }
+    exports.historyList = historyList;
+});
 define("inputLayer/exitReqInput", ["require", "exports", "ExitManager"], function (require, exports, ExitManager_2) {
     "use strict";
     exports.__esModule = true;
@@ -3694,10 +3856,10 @@ define("inputLayer/exitReqInput", ["require", "exports", "ExitManager"], functio
     }
     exports.exitReq = exitReq;
 });
-define("inputLayer/inputLayer", ["require", "exports", "AppModel", "inputLayer/serialListInput", "inputLayer/updateListPage", "inputLayer/seasonListInput", "inputLayer/seriesListInput", "inputLayer/playInput", "inputLayer/exitReqInput"], function (require, exports, AppModel_14, serialListInput_1, updateListPage_1, seasonListInput_1, seriesListInput_1, playInput_1, exitReqInput_1) {
+define("inputLayer/inputLayer", ["require", "exports", "AppModel", "inputLayer/serialListInput", "inputLayer/updateListPage", "inputLayer/seasonListInput", "inputLayer/seriesListInput", "inputLayer/playInput", "inputLayer/historyListInput", "inputLayer/exitReqInput"], function (require, exports, AppModel_15, serialListInput_1, updateListPage_1, seasonListInput_1, seriesListInput_1, playInput_1, historyListInput_1, exitReqInput_1) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_14["default"]();
+    var model = new AppModel_15["default"]();
     var _ = {
         init: function init() {
             document.onkeydown = function (event) {
@@ -3722,7 +3884,8 @@ define("inputLayer/inputLayer", ["require", "exports", "AppModel", "inputLayer/s
             "/seriesList": seriesListInput_1.seriesList,
             "/play": playInput_1.play,
             "/play/settingMenu": playInput_1.playSettingMenu,
-            "/exitReq": exitReqInput_1.exitReq
+            "/exitReq": exitReqInput_1.exitReq,
+            "/historyList": historyListInput_1.historyList
         }
     };
     exports["default"] = _;
@@ -3761,7 +3924,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_15, PageRouter_1, inputLayer_1, adaptation_1, HTTP_7, aspectRatioManager_2, createPrevViewData_6) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_16, PageRouter_1, inputLayer_1, adaptation_1, HTTP_8, aspectRatioManager_2, createPrevViewData_7) {
     "use strict";
     exports.__esModule = true;
     var App = /** @class */ (function () {
@@ -3796,11 +3959,11 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             var appContainer = document.getElementById(appContainerSelector);
             var pageRouterWrap = document.createElement("div");
             appContainer.appendChild(pageRouterWrap);
-            var model = new AppModel_15["default"]();
+            var model = new AppModel_16["default"]();
             window.model = model;
             model.App.userMac.set(mac);
-            model.updateList.list.set(createPrevViewData_6["default"]());
-            HTTP_7.getUpdateList({ offset: 0 }).then(function (data) {
+            model.updateList.list.set(createPrevViewData_7["default"]());
+            HTTP_8.getUpdateList({ offset: 0 }).then(function (data) {
                 model.updateList.list.set(data);
             });
             inputLayer_1["default"].init();
