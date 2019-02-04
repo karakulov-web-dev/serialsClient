@@ -10,8 +10,8 @@ if (gettype($body->time) == "double") {
     $error = 'Req typeError';
 }
 
-if (gettype($body->seriesNumber) == "integer") {
-    $seriesNumber = $body->seriesNumber;
+if (gettype($body->seriesName) == "string") {
+    $seriesName = $mysqli->real_escape_string($body->seriesName);
 } else {
     $error = 'Req typeError';
 }
