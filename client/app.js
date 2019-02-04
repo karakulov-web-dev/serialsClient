@@ -1860,12 +1860,43 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
     }(BaseComponent_17["default"]));
     exports["default"] = PageRouter;
 });
-define("ListControllers/ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
+define("RouteManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
+    "use strict";
+    exports.__esModule = true;
+    var RouteManager = /** @class */ (function () {
+        function RouteManager() {
+            this.historyArr = [];
+            if (typeof RouteManager.cache !== 'undefined') {
+                return RouteManager.cache;
+            }
+            this.model = new AppModel_2["default"]();
+            this.route = this.model.getInstance("App").getValue("route");
+            RouteManager.cache = this;
+        }
+        RouteManager.prototype.set = function (route) {
+            this.historyArr.push(this.route.get());
+            this.route.set(route);
+        };
+        RouteManager.prototype.back = function () {
+            var backLocation = this.historyArr.pop();
+            this.route.set(backLocation);
+        };
+        RouteManager.prototype.home = function () {
+            this.historyArr = [];
+            this.route.set("/UpdateLIstPage");
+            this.model.serialList.focusPosition.set(0);
+            this.model.serialList.scrolPosition.set(0);
+        };
+        return RouteManager;
+    }());
+    exports["default"] = RouteManager;
+});
+define("ListControllers/ListController", ["require", "exports", "AppModel"], function (require, exports, AppModel_3) {
     "use strict";
     exports.__esModule = true;
     var ListController = /** @class */ (function () {
         function ListController(instanceModel) {
-            this.model = new AppModel_2["default"]();
+            this.model = new AppModel_3["default"]();
             this.instanceModel = instanceModel;
             this.focusPosition = this.instanceModel.getValue("focusPosition");
             this.scrolPosition = this.instanceModel.getValue("scrolPosition");
@@ -1966,37 +1997,6 @@ define("ListControllers/ListController", ["require", "exports", "AppModel"], fun
         return ListController;
     }());
     exports["default"] = ListController;
-});
-define("RouteManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_3) {
-    "use strict";
-    exports.__esModule = true;
-    var RouteManager = /** @class */ (function () {
-        function RouteManager() {
-            this.historyArr = [];
-            if (typeof RouteManager.cache !== 'undefined') {
-                return RouteManager.cache;
-            }
-            this.model = new AppModel_3["default"]();
-            this.route = this.model.getInstance("App").getValue("route");
-            RouteManager.cache = this;
-        }
-        RouteManager.prototype.set = function (route) {
-            this.historyArr.push(this.route.get());
-            this.route.set(route);
-        };
-        RouteManager.prototype.back = function () {
-            var backLocation = this.historyArr.pop();
-            this.route.set(backLocation);
-        };
-        RouteManager.prototype.home = function () {
-            this.historyArr = [];
-            this.route.set("/UpdateLIstPage");
-            this.model.serialList.focusPosition.set(0);
-            this.model.serialList.scrolPosition.set(0);
-        };
-        return RouteManager;
-    }());
-    exports["default"] = RouteManager;
 });
 define("Polyfill/Promise_simple", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2232,10 +2232,589 @@ define("interfaceGlobal", ["require", "exports"], function (require, exports) {
     "use strict";
     exports.__esModule = true;
 });
-define("Play", ["require", "exports", "AppModel"], function (require, exports, AppModel_5) {
+define("SearchManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_5, HTTP_2, createPrevViewData_2) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_5["default"]();
+    var SearchManager = /** @class */ (function () {
+        function SearchManager() {
+        }
+        SearchManager.prototype.openWindow = function () {
+            model.App.route.set(model.App.route.get() + "/searchManager");
+            var input = document.querySelector(".app_home_searchManager_search_input");
+            input.focus();
+            try {
+                stb.ShowVirtualKeyboard();
+            }
+            catch (e) {
+                console.log(e);
+            }
+        };
+        SearchManager.prototype.back = function () {
+            model.App.route.set('/serialList');
+            try {
+                stb.HideVirtualKeyboard();
+            }
+            catch (e) {
+                console.log(e);
+            }
+        };
+        SearchManager.prototype.submit = function () {
+            var list = model.genreManager.list_default.get();
+            list.forEach(function (item) {
+                item.active = false;
+            });
+            model.genreManager.list_default.set(list);
+            try {
+                stb.HideVirtualKeyboard();
+            }
+            catch (e) {
+                console.log(e);
+            }
+            var elem = document.querySelector(".app_home_searchManager_search_input");
+            var query = elem.value;
+            model.searchManager.query.set(query);
+            model.serialList.list.set(createPrevViewData_2["default"]());
+            HTTP_2.get_Serials({ offset: 0 }).then(function (data) {
+                model.serialList.list.set(data);
+            });
+            model.App.route.set('/serialList');
+        };
+        return SearchManager;
+    }());
+    exports["default"] = SearchManager;
+});
+define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_6, HTTP_3, createPrevViewData_3) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_6["default"]();
+    var GenreManager = /** @class */ (function () {
+        function GenreManager() {
+        }
+        GenreManager.prototype.openWindow = function () {
+            model.genreManager.list.set(JSON.parse(JSON.stringify(model.genreManager.list_default.get())));
+            model.genreManager.buttonsList.set(JSON.parse(JSON.stringify(model.genreManager.buttonsList_default.get())));
+            model.genreManager.position.set(10);
+            model.App.route.set(model.App.route.get() + "/genreManager");
+            model.genreManager.focus.set('list');
+        };
+        GenreManager.prototype.changeFocusRight = function () {
+            model.genreManager.focus.set('buttons');
+        };
+        GenreManager.prototype.changeFocusLeft = function () {
+            model.genreManager.focus.set('list');
+        };
+        GenreManager.prototype.changeFocusTop = function () {
+            var focus = model.genreManager.focus.get();
+            if (focus === 'list') {
+                this.changeFocusTopList();
+            }
+            else if (focus === 'buttons') {
+                this.changeFocusTopButtons();
+            }
+        };
+        GenreManager.prototype.changeFocusTopList = function () {
+            var position = model.genreManager.position.get();
+            if (position > 0) {
+                model.genreManager.position.set(position - 1);
+            }
+        };
+        GenreManager.prototype.changeFocusBottom = function () {
+            var focus = model.genreManager.focus.get();
+            if (focus === 'list') {
+                this.changeFocusBottomList();
+            }
+            else if (focus === 'buttons') {
+                this.changeFocusBottomButtons();
+            }
+        };
+        GenreManager.prototype.changeFocusBottomList = function () {
+            var position = model.genreManager.position.get();
+            if (position < model.genreManager.list.get().length - 3) {
+                model.genreManager.position.set(position + 1);
+            }
+        };
+        GenreManager.prototype.submit = function () {
+            var focus = model.genreManager.focus.get();
+            if (focus === 'list') {
+                this.submitList();
+            }
+            else if (focus === 'buttons') {
+                this.submitButtons();
+            }
+        };
+        GenreManager.prototype.submitList = function () {
+            var focusItem = model.genreManager.display()[2];
+            var list = model.genreManager.list.get();
+            list.forEach(function (item) {
+                if (item.name === focusItem.name) {
+                    item.active = item.active ? false : true;
+                }
+            });
+            model.genreManager.list.set(list);
+        };
+        GenreManager.prototype.submitButtons = function () {
+            var list = model.genreManager.buttonsList.get();
+            var i = 0;
+            var focusIndex;
+            list.forEach(function (item) {
+                if (item.focus) {
+                    focusIndex = i;
+                }
+                i++;
+            });
+            var active = list[focusIndex];
+            this[active.command]();
+        };
+        GenreManager.prototype.changeFocusButtons = function (diff) {
+            var list = model.genreManager.buttonsList.get();
+            var i = 0;
+            var focusIndex;
+            list.forEach(function (item) {
+                if (item.focus) {
+                    focusIndex = i;
+                    item.focus = false;
+                }
+                i++;
+            });
+            if (typeof list[focusIndex + diff] !== 'undefined') {
+                list[focusIndex + diff].focus = true;
+            }
+            else {
+                list[focusIndex].focus = true;
+            }
+            model.genreManager.buttonsList.set(list);
+        };
+        GenreManager.prototype.changeFocusTopButtons = function () {
+            this.changeFocusButtons(-1);
+        };
+        GenreManager.prototype.changeFocusBottomButtons = function () {
+            this.changeFocusButtons(1);
+        };
+        GenreManager.prototype.back = function () {
+            model.App.route.set('/serialList');
+        };
+        GenreManager.prototype.clear = function () {
+            var list = model.genreManager.list.get();
+            list.forEach(function (item) {
+                item.active = false;
+            });
+            model.genreManager.list.set(list);
+        };
+        GenreManager.prototype.enter = function () {
+            model.searchManager.query.set(false);
+            model.genreManager.list_default.set(JSON.parse(JSON.stringify(model.genreManager.list.get())));
+            model.serialList.list.set(createPrevViewData_3["default"]());
+            HTTP_3.get_Serials({ offset: 0 }).then(function (data) {
+                model.serialList.list.set(data);
+            });
+            this.back();
+        };
+        return GenreManager;
+    }());
+    exports["default"] = GenreManager;
+});
+define("InfoManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_7) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_7["default"]();
+    var GenreManager = /** @class */ (function () {
+        function GenreManager() {
+        }
+        GenreManager.prototype.openWindow = function () {
+            model.App.route.set(model.App.route.get() + "/infoManager");
+        };
+        GenreManager.prototype.back = function () {
+            var route = model.App.route.get();
+            if (route === "/UpdateLIstPage/infoManager") {
+                model.App.route.set('/UpdateLIstPage');
+            }
+            else if (route === "/serialList/infoManager") {
+                model.App.route.set('/serialList');
+            }
+        };
+        GenreManager.prototype.scrollBottom = function () {
+            var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
+            document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll + 10;
+        };
+        GenreManager.prototype.scrollTop = function () {
+            var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
+            document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll - 10;
+        };
+        return GenreManager;
+    }());
+    exports["default"] = GenreManager;
+});
+define("inputLayer/serialListInput", ["require", "exports", "RouteManager", "ListControllers/ListControllerSerials", "AppModel", "SearchManager", "GenreManager", "InfoManager"], function (require, exports, RouteManager_2, ListControllerSerials_1, AppModel_8, SearchManager_1, GenreManager_1, InfoManager_1) {
+    "use strict";
+    exports.__esModule = true;
+    var genreManager = new GenreManager_1["default"]();
+    var infoManager = new InfoManager_1["default"]();
+    var searchManager = new SearchManager_1["default"]();
+    var model = new AppModel_8["default"]();
+    var instanceModel = model.getInstance("serialList");
+    var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
+    var routeManager = new RouteManager_2["default"]();
+    function serialList(code) {
+        switch (code) {
+            case 8:
+                routeManager.back();
+                break;
+            case 27:
+                routeManager.home();
+                break;
+            case 40:
+                listControllerSerials.downFocusPosition();
+                break;
+            case 38:
+                listControllerSerials.upFocusPosition();
+                break;
+            case 39:
+                listControllerSerials.rigthFocusPosition();
+                break;
+            case 37:
+                listControllerSerials.leftFocusPosition();
+                break;
+            case 13:
+                listControllerSerials.onEnter();
+                break;
+            case 112:
+                genreManager.openWindow();
+                break;
+            case 113:
+                infoManager.openWindow();
+                break;
+            case 114:
+                searchManager.openWindow();
+                break;
+        }
+    }
+    exports.serialList = serialList;
+    function serialListGenreManager(code) {
+        switch (code) {
+            case 39:
+                genreManager.changeFocusRight();
+                break;
+            case 37:
+                genreManager.changeFocusLeft();
+                break;
+            case 38:
+                genreManager.changeFocusTop();
+                break;
+            case 40:
+                genreManager.changeFocusBottom();
+                break;
+            case 13:
+                genreManager.submit();
+                break;
+            case 8:
+                genreManager.back();
+                break;
+        }
+    }
+    exports.serialListGenreManager = serialListGenreManager;
+    function serialListInfoManager(code) {
+        switch (code) {
+            case 8:
+                infoManager.back();
+                break;
+            case 40:
+                infoManager.scrollBottom();
+                break;
+            case 38:
+                infoManager.scrollTop();
+                break;
+        }
+    }
+    exports.serialListInfoManager = serialListInfoManager;
+    function serialListSearchManager(code) {
+        switch (code) {
+            case 13:
+                searchManager.submit();
+                break;
+            case 8:
+                searchManager.back();
+                break;
+        }
+    }
+    exports.serialListSearchManager = serialListSearchManager;
+});
+define("ListControllers/ListControllerUpdatesList", ["require", "exports", "ListControllers/ListControllerSerials", "HTTP", "RouteManager", "createPrevViewData"], function (require, exports, ListControllerSerials_2, HTTP_4, RouteManager_3, createPrevViewData_4) {
+    "use strict";
+    exports.__esModule = true;
+    var ListControllerUpdatesList = /** @class */ (function (_super) {
+        __extends(ListControllerUpdatesList, _super);
+        function ListControllerUpdatesList() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ListControllerUpdatesList.prototype.openSerial = function () {
+            this.openSeriesList();
+        };
+        ListControllerUpdatesList.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name);
+            new RouteManager_3["default"]().set("/seriesList");
+            var list = this.model.getInstance("seriesList").getValue("list");
+            this.model.seriesList.scrolPosition.set(0);
+            this.model.seriesList.focusPosition.set(0);
+            list.set(createPrevViewData_4["default"]());
+            HTTP_4.getSeason(this.activeItem.idSeasonvar).then(function (data) {
+                data.playlist.forEach(function (item) {
+                    item.poster = data.poster;
+                    item.season_number = data.season_number;
+                    item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
+                });
+                list.set(data.playlist);
+            });
+        };
+        ListControllerUpdatesList.prototype.addContent = function () {
+            var _this = this;
+            var length = this.model.updateList.list.get().length;
+            var currentList = this.model.updateList.list.get();
+            HTTP_4.getUpdateList(length).then(function (data) {
+                currentList = currentList.concat(data);
+                _this.model.updateList.list.set(currentList);
+            });
+        };
+        ListControllerUpdatesList.prototype.infiniteScroll = function () {
+            var length = this.model.updateList.list.get().length;
+            var scrolPosition = this.model.updateList.scrolPosition.get();
+            var dif = length - scrolPosition;
+            if (dif < 20) {
+                this.addContent();
+            }
+        };
+        ListControllerUpdatesList.prototype.openSerialList = function () {
+            var _this = this;
+            new RouteManager_3["default"]().set("/serialList");
+            this.model.serialList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.get_Serials({ offset: 0 }).then(function (data) {
+                _this.model.serialList.list.set(data);
+            });
+        };
+        return ListControllerUpdatesList;
+    }(ListControllerSerials_2["default"]));
+    exports["default"] = ListControllerUpdatesList;
+});
+define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], function (require, exports, AppModel_9, RouteManager_4) {
+    "use strict";
+    exports.__esModule = true;
+    var routeManager = new RouteManager_4["default"]();
+    var ExitManager = /** @class */ (function () {
+        function ExitManager() {
+            if (typeof ExitManager.cache !== 'undefined') {
+                return ExitManager.cache;
+            }
+            this.model = new AppModel_9["default"]();
+            this.App = this.model.getInstance("App");
+            this.route = this.App.getValue("route");
+            this.ExitMenuInstance = this.model.getInstance("ExitMenuInstance");
+            this.exitReqConfig = this.ExitMenuInstance.getValue("config");
+            ExitManager.cache = this;
+        }
+        ExitManager.prototype.exitReq = function () {
+            this.oldRoute = this.route.get();
+            this.exitReqConfig.set({
+                text: "Вы дейстивтельно хотите выйти?",
+                list: [
+                    {
+                        name: "Да",
+                        command: "exit",
+                        active: true
+                    },
+                    {
+                        name: "Отмена",
+                        command: "cancel",
+                        active: false
+                    }
+                ]
+            });
+            routeManager.set("/exitReq");
+        };
+        ExitManager.prototype.exit = function () {
+            stb.SetVideoState(1);
+            var back_location = decodeURIComponent(window.location.search.match(/\?referrer\=.*/));
+            back_location = back_location.replace(/\?referrer\=/, '');
+            window.location = back_location;
+        };
+        ExitManager.prototype.cancel = function () {
+            routeManager.back();
+        };
+        ExitManager.prototype.downFocusPosition = function () {
+            var config = this.exitReqConfig.get();
+            var list = config.list;
+            list[0].active = false;
+            list[1].active = true;
+            this.exitReqConfig.set(config);
+        };
+        ExitManager.prototype.upFocusPosition = function () {
+            var config = this.exitReqConfig.get();
+            var list = config.list;
+            list[0].active = true;
+            list[1].active = false;
+            this.exitReqConfig.set(config);
+        };
+        ExitManager.prototype.submit = function () {
+            var config = this.exitReqConfig.get();
+            var list = config.list;
+            var command;
+            list.forEach(function (item) {
+                if (item.active) {
+                    command = item.command;
+                }
+            });
+            if (command === 'exit') {
+                this.exit();
+            }
+            else if (command === 'cancel') {
+                this.cancel();
+            }
+        };
+        return ExitManager;
+    }());
+    exports["default"] = ExitManager;
+});
+define("inputLayer/updateListPage", ["require", "exports", "ListControllers/ListControllerUpdatesList", "AppModel", "ExitManager", "InfoManager"], function (require, exports, ListControllerUpdatesList_1, AppModel_10, ExitManager_1, InfoManager_2) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_10["default"]();
+    var instanceModelUpdatesList = model.getInstance("updateList");
+    var listControllerUpdatesList = new ListControllerUpdatesList_1["default"](instanceModelUpdatesList);
+    var infoManager = new InfoManager_2["default"]();
+    var exitManager = new ExitManager_1["default"]();
+    function UpdateLIstPage(code) {
+        switch (code) {
+            case 27:
+                exitManager.exitReq();
+                break;
+            case 40:
+                listControllerUpdatesList.downFocusPosition();
+                break;
+            case 38:
+                listControllerUpdatesList.upFocusPosition();
+                break;
+            case 39:
+                listControllerUpdatesList.rigthFocusPosition();
+                break;
+            case 37:
+                listControllerUpdatesList.leftFocusPosition();
+                break;
+            case 13:
+                listControllerUpdatesList.onEnter();
+                break;
+            case 112:
+                listControllerUpdatesList.openSerialList();
+                break;
+            case 113:
+                infoManager.openWindow();
+                break;
+            case 114:
+                //  searchManager.openWindow()
+                break;
+        }
+    }
+    exports.UpdateLIstPage = UpdateLIstPage;
+    function UpdateLIstPageInfoManager(code) {
+        switch (code) {
+            case 8:
+                infoManager.back();
+                break;
+            case 40:
+                infoManager.scrollBottom();
+                break;
+            case 38:
+                infoManager.scrollTop();
+                break;
+        }
+    }
+    exports.UpdateLIstPageInfoManager = UpdateLIstPageInfoManager;
+});
+define("ListControllers/ListControllerSeasons", ["require", "exports", "ListControllers/ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_2, RouteManager_5, HTTP_5, createPrevViewData_5) {
+    "use strict";
+    exports.__esModule = true;
+    new RouteManager_5["default"]().set;
+    var ListControllerSeasons = /** @class */ (function (_super) {
+        __extends(ListControllerSeasons, _super);
+        function ListControllerSeasons() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ListControllerSeasons.prototype.onEnter = function () {
+            this.defineActiveItem();
+            this.openSeason();
+        };
+        ListControllerSeasons.prototype.defineActiveItem = function () {
+            var focusPosition = this.focusPosition.get();
+            var display = this.display.get()();
+            this.activeItem = display[focusPosition];
+        };
+        ListControllerSeasons.prototype.openSeason = function () {
+            this.openSeriesList();
+        };
+        ListControllerSeasons.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name + " (" + this.activeItem.season_number + " \u0441\u0435\u0437\u043E\u043D)");
+            new RouteManager_5["default"]().set("/seriesList");
+            var list = this.model.getInstance("seriesList").getValue("list");
+            this.model.seriesList.scrolPosition.set(0);
+            this.model.seriesList.focusPosition.set(0);
+            var seasonId = this.activeItem.idSeasonvar;
+            list.set(createPrevViewData_5["default"]());
+            HTTP_5.getSeason(seasonId).then(function (data) {
+                data.playlist.forEach(function (item) {
+                    item.poster = data.poster;
+                    item.season_number = data.season_number;
+                    item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
+                });
+                list.set(data.playlist);
+            });
+        };
+        return ListControllerSeasons;
+    }(ListController_2["default"]));
+    exports["default"] = ListControllerSeasons;
+});
+define("inputLayer/seasonListInput", ["require", "exports", "AppModel", "RouteManager", "ListControllers/ListControllerSeasons"], function (require, exports, AppModel_11, RouteManager_6, ListControllerSeasons_1) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_11["default"]();
+    var instanceModelSeasonList = model.getInstance("seasonList");
+    var listControllerSeasons = new ListControllerSeasons_1["default"](instanceModelSeasonList);
+    var routeManager = new RouteManager_6["default"]();
+    function seasonList(code) {
+        switch (code) {
+            case 112:
+                routeManager.back();
+                break;
+            case 8:
+                routeManager.back();
+                break;
+            case 27:
+                routeManager.home();
+                break;
+            case 40:
+                listControllerSeasons.downFocusPosition();
+                break;
+            case 38:
+                listControllerSeasons.upFocusPosition();
+                break;
+            case 39:
+                listControllerSeasons.rigthFocusPosition();
+                break;
+            case 37:
+                listControllerSeasons.leftFocusPosition();
+                break;
+            case 13:
+                listControllerSeasons.onEnter();
+                break;
+        }
+    }
+    exports.seasonList = seasonList;
+});
+define("Play", ["require", "exports", "AppModel"], function (require, exports, AppModel_12) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_12["default"]();
     var Play = model.getInstance("Play");
     var VideoList = model.getInstance("seriesList");
     var App = model.getInstance("App");
@@ -2769,7 +3348,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
     };
     exports["default"] = _;
 });
-define("ListControllers/ListControllerVideo", ["require", "exports", "ListControllers/ListController", "Play", "RouteManager", "HTTP"], function (require, exports, ListController_2, Play_1, RouteManager_2, HTTP_2) {
+define("ListControllers/ListControllerVideo", ["require", "exports", "ListControllers/ListController", "Play", "RouteManager", "HTTP"], function (require, exports, ListController_3, Play_1, RouteManager_7, HTTP_6) {
     "use strict";
     exports.__esModule = true;
     var ListControllerVideo = /** @class */ (function (_super) {
@@ -2782,7 +3361,7 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             this.openVideo();
         };
         ListControllerVideo.prototype.goHome = function () {
-            new RouteManager_2["default"]().set("/serialList");
+            new RouteManager_7["default"]().set("/serialList");
         };
         ListControllerVideo.prototype.infiniteScroll = function () {
             return false;
@@ -2804,7 +3383,7 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             if (typeof qualityArr[0].url === "undefined") {
                 throw new Error("qualityArr undefined");
             }
-            HTTP_2.pushHistory(display[activePosition]);
+            HTTP_6.pushHistory(display[activePosition]);
             Play_1["default"].playControlInterfaceInit();
             var newQualityArr = [];
             qualityArr.forEach(function (item) {
@@ -2830,188 +3409,45 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             }
         };
         return ListControllerVideo;
-    }(ListController_2["default"]));
+    }(ListController_3["default"]));
     exports["default"] = ListControllerVideo;
 });
-define("ListControllers/ListControllerSeasons", ["require", "exports", "ListControllers/ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_3, RouteManager_3, HTTP_3, createPrevViewData_2) {
+define("inputLayer/seriesListInput", ["require", "exports", "AppModel", "ListControllers/ListControllerVideo", "RouteManager"], function (require, exports, AppModel_13, ListControllerVideo_1, RouteManager_8) {
     "use strict";
     exports.__esModule = true;
-    new RouteManager_3["default"]().set;
-    var ListControllerSeasons = /** @class */ (function (_super) {
-        __extends(ListControllerSeasons, _super);
-        function ListControllerSeasons() {
-            return _super !== null && _super.apply(this, arguments) || this;
+    var model = new AppModel_13["default"]();
+    var routeManager = new RouteManager_8["default"]();
+    var instanceModelVideo = model.getInstance("seriesList");
+    var listControllerVideo = new ListControllerVideo_1["default"](instanceModelVideo);
+    function seriesList(code) {
+        switch (code) {
+            case 112:
+                routeManager.back();
+                break;
+            case 8:
+                routeManager.back();
+                break;
+            case 27:
+                routeManager.home();
+                break;
+            case 40:
+                listControllerVideo.downFocusPosition();
+                break;
+            case 38:
+                listControllerVideo.upFocusPosition();
+                break;
+            case 39:
+                listControllerVideo.rigthFocusPosition();
+                break;
+            case 37:
+                listControllerVideo.leftFocusPosition();
+                break;
+            case 13:
+                listControllerVideo.onEnter();
+                break;
         }
-        ListControllerSeasons.prototype.onEnter = function () {
-            this.defineActiveItem();
-            this.openSeason();
-        };
-        ListControllerSeasons.prototype.defineActiveItem = function () {
-            var focusPosition = this.focusPosition.get();
-            var display = this.display.get()();
-            this.activeItem = display[focusPosition];
-        };
-        ListControllerSeasons.prototype.openSeason = function () {
-            this.openSeriesList();
-        };
-        ListControllerSeasons.prototype.openSeriesList = function () {
-            this.model.seriesList.title.set(this.activeItem.name + " (" + this.activeItem.season_number + " \u0441\u0435\u0437\u043E\u043D)");
-            new RouteManager_3["default"]().set("/seriesList");
-            var list = this.model.getInstance("seriesList").getValue("list");
-            this.model.seriesList.scrolPosition.set(0);
-            this.model.seriesList.focusPosition.set(0);
-            var seasonId = this.activeItem.idSeasonvar;
-            list.set(createPrevViewData_2["default"]());
-            HTTP_3.getSeason(seasonId).then(function (data) {
-                data.playlist.forEach(function (item) {
-                    item.poster = data.poster;
-                    item.season_number = data.season_number;
-                    item.serial = data.name;
-                    item.seriesName = data.name + " (" + item.name + ")";
-                    item.seasonId = data.idSeasonvar;
-                });
-                list.set(data.playlist);
-            });
-        };
-        return ListControllerSeasons;
-    }(ListController_3["default"]));
-    exports["default"] = ListControllerSeasons;
-});
-define("ListControllers/ListControllerUpdatesList", ["require", "exports", "ListControllers/ListControllerSerials", "HTTP", "RouteManager", "createPrevViewData"], function (require, exports, ListControllerSerials_1, HTTP_4, RouteManager_4, createPrevViewData_3) {
-    "use strict";
-    exports.__esModule = true;
-    var ListControllerUpdatesList = /** @class */ (function (_super) {
-        __extends(ListControllerUpdatesList, _super);
-        function ListControllerUpdatesList() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        ListControllerUpdatesList.prototype.openSerial = function () {
-            this.openSeriesList();
-        };
-        ListControllerUpdatesList.prototype.openSeriesList = function () {
-            this.model.seriesList.title.set(this.activeItem.name);
-            new RouteManager_4["default"]().set("/seriesList");
-            var list = this.model.getInstance("seriesList").getValue("list");
-            this.model.seriesList.scrolPosition.set(0);
-            this.model.seriesList.focusPosition.set(0);
-            list.set(createPrevViewData_3["default"]());
-            HTTP_4.getSeason(this.activeItem.idSeasonvar).then(function (data) {
-                data.playlist.forEach(function (item) {
-                    item.poster = data.poster;
-                    item.season_number = data.season_number;
-                    item.serial = data.name;
-                    item.seriesName = data.name + " (" + item.name + ")";
-                    item.seasonId = data.idSeasonvar;
-                });
-                list.set(data.playlist);
-            });
-        };
-        ListControllerUpdatesList.prototype.addContent = function () {
-            var _this = this;
-            var length = this.model.updateList.list.get().length;
-            var currentList = this.model.updateList.list.get();
-            HTTP_4.getUpdateList(length).then(function (data) {
-                currentList = currentList.concat(data);
-                _this.model.updateList.list.set(currentList);
-            });
-        };
-        ListControllerUpdatesList.prototype.infiniteScroll = function () {
-            var length = this.model.updateList.list.get().length;
-            var scrolPosition = this.model.updateList.scrolPosition.get();
-            var dif = length - scrolPosition;
-            if (dif < 20) {
-                this.addContent();
-            }
-        };
-        ListControllerUpdatesList.prototype.openSerialList = function () {
-            var _this = this;
-            new RouteManager_4["default"]().set("/serialList");
-            this.model.serialList.list.set(createPrevViewData_3["default"]());
-            HTTP_4.get_Serials({ offset: 0 }).then(function (data) {
-                _this.model.serialList.list.set(data);
-            });
-        };
-        return ListControllerUpdatesList;
-    }(ListControllerSerials_1["default"]));
-    exports["default"] = ListControllerUpdatesList;
-});
-define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], function (require, exports, AppModel_6, RouteManager_5) {
-    "use strict";
-    exports.__esModule = true;
-    var routeManager = new RouteManager_5["default"]();
-    var ExitManager = /** @class */ (function () {
-        function ExitManager() {
-            if (typeof ExitManager.cache !== 'undefined') {
-                return ExitManager.cache;
-            }
-            this.model = new AppModel_6["default"]();
-            this.App = this.model.getInstance("App");
-            this.route = this.App.getValue("route");
-            this.ExitMenuInstance = this.model.getInstance("ExitMenuInstance");
-            this.exitReqConfig = this.ExitMenuInstance.getValue("config");
-            ExitManager.cache = this;
-        }
-        ExitManager.prototype.exitReq = function () {
-            this.oldRoute = this.route.get();
-            this.exitReqConfig.set({
-                text: "Вы дейстивтельно хотите выйти?",
-                list: [
-                    {
-                        name: "Да",
-                        command: "exit",
-                        active: true
-                    },
-                    {
-                        name: "Отмена",
-                        command: "cancel",
-                        active: false
-                    }
-                ]
-            });
-            routeManager.set("/exitReq");
-        };
-        ExitManager.prototype.exit = function () {
-            stb.SetVideoState(1);
-            var back_location = decodeURIComponent(window.location.search.match(/\?referrer\=.*/));
-            back_location = back_location.replace(/\?referrer\=/, '');
-            window.location = back_location;
-        };
-        ExitManager.prototype.cancel = function () {
-            routeManager.back();
-        };
-        ExitManager.prototype.downFocusPosition = function () {
-            var config = this.exitReqConfig.get();
-            var list = config.list;
-            list[0].active = false;
-            list[1].active = true;
-            this.exitReqConfig.set(config);
-        };
-        ExitManager.prototype.upFocusPosition = function () {
-            var config = this.exitReqConfig.get();
-            var list = config.list;
-            list[0].active = true;
-            list[1].active = false;
-            this.exitReqConfig.set(config);
-        };
-        ExitManager.prototype.submit = function () {
-            var config = this.exitReqConfig.get();
-            var list = config.list;
-            var command;
-            list.forEach(function (item) {
-                if (item.active) {
-                    command = item.command;
-                }
-            });
-            if (command === 'exit') {
-                this.exit();
-            }
-            else if (command === 'cancel') {
-                this.cancel();
-            }
-        };
-        return ExitManager;
-    }());
-    exports["default"] = ExitManager;
+    }
+    exports.seriesList = seriesList;
 });
 define("aspectRatioManager", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -3147,236 +3583,121 @@ define("aspectRatioManager", ["require", "exports"], function (require, exports)
     };
     exports["default"] = _;
 });
-define("SearchManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_7, HTTP_5, createPrevViewData_4) {
+define("inputLayer/playInput", ["require", "exports", "Play", "aspectRatioManager"], function (require, exports, Play_2, aspectRatioManager_1) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_7["default"]();
-    var SearchManager = /** @class */ (function () {
-        function SearchManager() {
+    function play(code) {
+        switch (code) {
+            case 27:
+                Play_2["default"].exitPlay();
+                break;
+            case 8:
+                Play_2["default"].exitPlay();
+                break;
+            case 122:
+                Play_2["default"].exitPlay();
+                break;
+            case 82:
+                Play_2["default"].switchPlayPause();
+                break;
+            case 89:
+                Play_2["default"].showPlayInfo();
+                break;
+            case 13:
+                Play_2["default"].showPlayInfo();
+                break;
+            case 38:
+                Play_2["default"].prevTimeShiftSize();
+                break;
+            case 40:
+                Play_2["default"].nextTimeShiftSize();
+                break;
+            case 107:
+                Play_2["default"].volumePlus();
+                break;
+            case 109:
+                Play_2["default"].volumeMinus();
+                break;
+            case 37:
+                Play_2["default"].timeShiftLeft();
+                break;
+            case 39:
+                Play_2["default"].timeShiftRight();
+                break;
+            case 66:
+                Play_2["default"].timeShiftLeft();
+                break;
+            case 70:
+                Play_2["default"].timeShiftRight();
+                break;
+            case 120:
+                Play_2["default"].OpenSettingMenu();
+                break;
+            case 123:
+                Play_2["default"].OpenSettingMenu();
+                break;
+            case 117:
+                aspectRatioManager_1["default"].handler();
+                break;
         }
-        SearchManager.prototype.openWindow = function () {
-            model.App.route.set(model.App.route.get() + "/searchManager");
-            var input = document.querySelector(".app_home_searchManager_search_input");
-            input.focus();
-            try {
-                stb.ShowVirtualKeyboard();
-            }
-            catch (e) {
-                console.log(e);
-            }
-        };
-        SearchManager.prototype.back = function () {
-            model.App.route.set('/serialList');
-            try {
-                stb.HideVirtualKeyboard();
-            }
-            catch (e) {
-                console.log(e);
-            }
-        };
-        SearchManager.prototype.submit = function () {
-            var list = model.genreManager.list_default.get();
-            list.forEach(function (item) {
-                item.active = false;
-            });
-            model.genreManager.list_default.set(list);
-            try {
-                stb.HideVirtualKeyboard();
-            }
-            catch (e) {
-                console.log(e);
-            }
-            var elem = document.querySelector(".app_home_searchManager_search_input");
-            var query = elem.value;
-            model.searchManager.query.set(query);
-            model.serialList.list.set(createPrevViewData_4["default"]());
-            HTTP_5.get_Serials({ offset: 0 }).then(function (data) {
-                model.serialList.list.set(data);
-            });
-            model.App.route.set('/serialList');
-        };
-        return SearchManager;
-    }());
-    exports["default"] = SearchManager;
-});
-define("GenreManager", ["require", "exports", "AppModel", "HTTP", "createPrevViewData"], function (require, exports, AppModel_8, HTTP_6, createPrevViewData_5) {
-    "use strict";
-    exports.__esModule = true;
-    var model = new AppModel_8["default"]();
-    var GenreManager = /** @class */ (function () {
-        function GenreManager() {
+    }
+    exports.play = play;
+    function playSettingMenu(code) {
+        switch (code) {
+            case 13:
+                Play_2["default"].playSettingMenuSubmit();
+                break;
+            case 38:
+                Play_2["default"].playSettingMenuPrevElem();
+                break;
+            case 40:
+                Play_2["default"].playSettingMenuNextElem();
+                break;
+            case 120:
+                Play_2["default"].closeSettingMenu();
+                break;
+            case 27:
+                Play_2["default"].closeSettingMenu();
+                break;
+            case 8:
+                Play_2["default"].closeSettingMenu();
+                break;
+            case 122:
+                Play_2["default"].closeSettingMenu();
+                break;
+            case 123:
+                Play_2["default"].closeSettingMenu();
+                break;
         }
-        GenreManager.prototype.openWindow = function () {
-            model.genreManager.list.set(JSON.parse(JSON.stringify(model.genreManager.list_default.get())));
-            model.genreManager.buttonsList.set(JSON.parse(JSON.stringify(model.genreManager.buttonsList_default.get())));
-            model.genreManager.position.set(10);
-            model.App.route.set(model.App.route.get() + "/genreManager");
-            model.genreManager.focus.set('list');
-        };
-        GenreManager.prototype.changeFocusRight = function () {
-            model.genreManager.focus.set('buttons');
-        };
-        GenreManager.prototype.changeFocusLeft = function () {
-            model.genreManager.focus.set('list');
-        };
-        GenreManager.prototype.changeFocusTop = function () {
-            var focus = model.genreManager.focus.get();
-            if (focus === 'list') {
-                this.changeFocusTopList();
-            }
-            else if (focus === 'buttons') {
-                this.changeFocusTopButtons();
-            }
-        };
-        GenreManager.prototype.changeFocusTopList = function () {
-            var position = model.genreManager.position.get();
-            if (position > 0) {
-                model.genreManager.position.set(position - 1);
-            }
-        };
-        GenreManager.prototype.changeFocusBottom = function () {
-            var focus = model.genreManager.focus.get();
-            if (focus === 'list') {
-                this.changeFocusBottomList();
-            }
-            else if (focus === 'buttons') {
-                this.changeFocusBottomButtons();
-            }
-        };
-        GenreManager.prototype.changeFocusBottomList = function () {
-            var position = model.genreManager.position.get();
-            if (position < model.genreManager.list.get().length - 3) {
-                model.genreManager.position.set(position + 1);
-            }
-        };
-        GenreManager.prototype.submit = function () {
-            var focus = model.genreManager.focus.get();
-            if (focus === 'list') {
-                this.submitList();
-            }
-            else if (focus === 'buttons') {
-                this.submitButtons();
-            }
-        };
-        GenreManager.prototype.submitList = function () {
-            var focusItem = model.genreManager.display()[2];
-            var list = model.genreManager.list.get();
-            list.forEach(function (item) {
-                if (item.name === focusItem.name) {
-                    item.active = item.active ? false : true;
-                }
-            });
-            model.genreManager.list.set(list);
-        };
-        GenreManager.prototype.submitButtons = function () {
-            var list = model.genreManager.buttonsList.get();
-            var i = 0;
-            var focusIndex;
-            list.forEach(function (item) {
-                if (item.focus) {
-                    focusIndex = i;
-                }
-                i++;
-            });
-            var active = list[focusIndex];
-            this[active.command]();
-        };
-        GenreManager.prototype.changeFocusButtons = function (diff) {
-            var list = model.genreManager.buttonsList.get();
-            var i = 0;
-            var focusIndex;
-            list.forEach(function (item) {
-                if (item.focus) {
-                    focusIndex = i;
-                    item.focus = false;
-                }
-                i++;
-            });
-            if (typeof list[focusIndex + diff] !== 'undefined') {
-                list[focusIndex + diff].focus = true;
-            }
-            else {
-                list[focusIndex].focus = true;
-            }
-            model.genreManager.buttonsList.set(list);
-        };
-        GenreManager.prototype.changeFocusTopButtons = function () {
-            this.changeFocusButtons(-1);
-        };
-        GenreManager.prototype.changeFocusBottomButtons = function () {
-            this.changeFocusButtons(1);
-        };
-        GenreManager.prototype.back = function () {
-            model.App.route.set('/serialList');
-        };
-        GenreManager.prototype.clear = function () {
-            var list = model.genreManager.list.get();
-            list.forEach(function (item) {
-                item.active = false;
-            });
-            model.genreManager.list.set(list);
-        };
-        GenreManager.prototype.enter = function () {
-            model.searchManager.query.set(false);
-            model.genreManager.list_default.set(JSON.parse(JSON.stringify(model.genreManager.list.get())));
-            model.serialList.list.set(createPrevViewData_5["default"]());
-            HTTP_6.get_Serials({ offset: 0 }).then(function (data) {
-                model.serialList.list.set(data);
-            });
-            this.back();
-        };
-        return GenreManager;
-    }());
-    exports["default"] = GenreManager;
+    }
+    exports.playSettingMenu = playSettingMenu;
 });
-define("InfoManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_9) {
+define("inputLayer/exitReqInput", ["require", "exports", "ExitManager"], function (require, exports, ExitManager_2) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_9["default"]();
-    var GenreManager = /** @class */ (function () {
-        function GenreManager() {
+    var exitManager = new ExitManager_2["default"]();
+    function exitReq(code) {
+        switch (code) {
+            case 112:
+                exitManager.cancel();
+                break;
+            case 40:
+                exitManager.downFocusPosition();
+                break;
+            case 38:
+                exitManager.upFocusPosition();
+                break;
+            case 13:
+                exitManager.submit();
+                break;
         }
-        GenreManager.prototype.openWindow = function () {
-            model.App.route.set(model.App.route.get() + "/infoManager");
-        };
-        GenreManager.prototype.back = function () {
-            var route = model.App.route.get();
-            if (route === "/UpdateLIstPage/infoManager") {
-                model.App.route.set('/UpdateLIstPage');
-            }
-            else if (route === "/serialList/infoManager") {
-                model.App.route.set('/serialList');
-            }
-        };
-        GenreManager.prototype.scrollBottom = function () {
-            var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
-            document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll + 10;
-        };
-        GenreManager.prototype.scrollTop = function () {
-            var scroll = document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop;
-            document.querySelector('.app_home_infoManager_window_body_box2_description').scrollTop = scroll - 10;
-        };
-        return GenreManager;
-    }());
-    exports["default"] = GenreManager;
+    }
+    exports.exitReq = exitReq;
 });
-define("inputLayer", ["require", "exports", "AppModel", "ListControllers/ListControllerSerials", "ListControllers/ListControllerVideo", "ListControllers/ListControllerSeasons", "ListControllers/ListControllerUpdatesList", "Play", "ExitManager", "RouteManager", "aspectRatioManager", "SearchManager", "GenreManager", "InfoManager"], function (require, exports, AppModel_10, ListControllerSerials_2, ListControllerVideo_1, ListControllerSeasons_1, ListControllerUpdatesList_1, Play_2, ExitManager_1, RouteManager_6, aspectRatioManager_1, SearchManager_1, GenreManager_1, InfoManager_1) {
+define("inputLayer/inputLayer", ["require", "exports", "AppModel", "inputLayer/serialListInput", "inputLayer/updateListPage", "inputLayer/seasonListInput", "inputLayer/seriesListInput", "inputLayer/playInput", "inputLayer/exitReqInput"], function (require, exports, AppModel_14, serialListInput_1, updateListPage_1, seasonListInput_1, seriesListInput_1, playInput_1, exitReqInput_1) {
     "use strict";
     exports.__esModule = true;
-    var model = new AppModel_10["default"]();
-    var instanceModel = model.getInstance("serialList");
-    var listControllerSerials = new ListControllerSerials_2["default"](instanceModel);
-    var instanceModelVideo = model.getInstance("seriesList");
-    var listControllerVideo = new ListControllerVideo_1["default"](instanceModelVideo);
-    var instanceModelSeasonList = model.getInstance("seasonList");
-    var listControllerSeasons = new ListControllerSeasons_1["default"](instanceModelSeasonList);
-    var instanceModelUpdatesList = model.getInstance("updateList");
-    var listControllerUpdatesList = new ListControllerUpdatesList_1["default"](instanceModelUpdatesList);
-    var genreManager = new GenreManager_1["default"]();
-    var infoManager = new InfoManager_1["default"]();
-    var searchManager = new SearchManager_1["default"]();
-    var exitManager = new ExitManager_1["default"]();
-    var routeManager = new RouteManager_6["default"]();
+    var model = new AppModel_14["default"]();
     var _ = {
         init: function init() {
             document.onkeydown = function (event) {
@@ -3391,303 +3712,17 @@ define("inputLayer", ["require", "exports", "AppModel", "ListControllers/ListCon
             }
         },
         handlers: {
-            "/serialList": function (code) {
-                switch (code) {
-                    case 8:
-                        routeManager.back();
-                        break;
-                    case 27:
-                        routeManager.home();
-                        break;
-                    case 40:
-                        listControllerSerials.downFocusPosition();
-                        break;
-                    case 38:
-                        listControllerSerials.upFocusPosition();
-                        break;
-                    case 39:
-                        listControllerSerials.rigthFocusPosition();
-                        break;
-                    case 37:
-                        listControllerSerials.leftFocusPosition();
-                        break;
-                    case 13:
-                        listControllerSerials.onEnter();
-                        break;
-                    case 112:
-                        genreManager.openWindow();
-                        break;
-                    case 113:
-                        infoManager.openWindow();
-                        break;
-                    case 114:
-                        searchManager.openWindow();
-                        break;
-                }
-            },
-            "/serialList/genreManager": function (code) {
-                switch (code) {
-                    case 39:
-                        genreManager.changeFocusRight();
-                        break;
-                    case 37:
-                        genreManager.changeFocusLeft();
-                        break;
-                    case 38:
-                        genreManager.changeFocusTop();
-                        break;
-                    case 40:
-                        genreManager.changeFocusBottom();
-                        break;
-                    case 13:
-                        genreManager.submit();
-                        break;
-                    case 8:
-                        genreManager.back();
-                        break;
-                }
-            },
-            "/serialList/infoManager": function (code) {
-                switch (code) {
-                    case 8:
-                        infoManager.back();
-                        break;
-                    case 40:
-                        infoManager.scrollBottom();
-                        break;
-                    case 38:
-                        infoManager.scrollTop();
-                        break;
-                }
-            },
-            "/serialList/searchManager": function (code) {
-                switch (code) {
-                    case 13:
-                        searchManager.submit();
-                        break;
-                    case 8:
-                        searchManager.back();
-                        break;
-                }
-            },
-            "/UpdateLIstPage": function (code) {
-                switch (code) {
-                    case 27:
-                        exitManager.exitReq();
-                        break;
-                    case 40:
-                        listControllerUpdatesList.downFocusPosition();
-                        break;
-                    case 38:
-                        listControllerUpdatesList.upFocusPosition();
-                        break;
-                    case 39:
-                        listControllerUpdatesList.rigthFocusPosition();
-                        break;
-                    case 37:
-                        listControllerUpdatesList.leftFocusPosition();
-                        break;
-                    case 13:
-                        listControllerUpdatesList.onEnter();
-                        break;
-                    case 112:
-                        listControllerUpdatesList.openSerialList();
-                        break;
-                    case 113:
-                        infoManager.openWindow();
-                        break;
-                    case 114:
-                        //  searchManager.openWindow()
-                        break;
-                }
-            },
-            "/UpdateLIstPage/infoManager": function (code) {
-                switch (code) {
-                    case 8:
-                        infoManager.back();
-                        break;
-                    case 40:
-                        infoManager.scrollBottom();
-                        break;
-                    case 38:
-                        infoManager.scrollTop();
-                        break;
-                }
-            },
-            "/seasonList": function (code) {
-                switch (code) {
-                    case 112:
-                        routeManager.back();
-                        break;
-                    case 8:
-                        routeManager.back();
-                        break;
-                    case 27:
-                        routeManager.home();
-                        break;
-                    case 40:
-                        listControllerSeasons.downFocusPosition();
-                        break;
-                    case 38:
-                        listControllerSeasons.upFocusPosition();
-                        break;
-                    case 39:
-                        listControllerSeasons.rigthFocusPosition();
-                        break;
-                    case 37:
-                        listControllerSeasons.leftFocusPosition();
-                        break;
-                    case 13:
-                        listControllerSeasons.onEnter();
-                        break;
-                }
-            },
-            "/playListsList": function (code) {
-                switch (code) {
-                    case 27:
-                        routeManager.home();
-                        break;
-                    case 112:
-                        exitManager.exitReq();
-                        break;
-                    case 115:
-                        routeManager.home();
-                        break;
-                    case 114:
-                        routeManager.back();
-                        break;
-                    case 8:
-                        routeManager.back();
-                        break;
-                }
-            },
-            "/seriesList": function (code) {
-                switch (code) {
-                    case 112:
-                        routeManager.back();
-                        break;
-                    case 8:
-                        routeManager.back();
-                        break;
-                    case 27:
-                        routeManager.home();
-                        break;
-                    case 40:
-                        listControllerVideo.downFocusPosition();
-                        break;
-                    case 38:
-                        listControllerVideo.upFocusPosition();
-                        break;
-                    case 39:
-                        listControllerVideo.rigthFocusPosition();
-                        break;
-                    case 37:
-                        listControllerVideo.leftFocusPosition();
-                        break;
-                    case 13:
-                        listControllerVideo.onEnter();
-                        break;
-                }
-            },
-            "/play": function (code) {
-                switch (code) {
-                    case 27:
-                        Play_2["default"].exitPlay();
-                        break;
-                    case 8:
-                        Play_2["default"].exitPlay();
-                        break;
-                    case 122:
-                        Play_2["default"].exitPlay();
-                        break;
-                    case 82:
-                        Play_2["default"].switchPlayPause();
-                        break;
-                    case 89:
-                        Play_2["default"].showPlayInfo();
-                        break;
-                    case 13:
-                        Play_2["default"].showPlayInfo();
-                        break;
-                    case 38:
-                        Play_2["default"].prevTimeShiftSize();
-                        break;
-                    case 40:
-                        Play_2["default"].nextTimeShiftSize();
-                        break;
-                    case 107:
-                        Play_2["default"].volumePlus();
-                        break;
-                    case 109:
-                        Play_2["default"].volumeMinus();
-                        break;
-                    case 37:
-                        Play_2["default"].timeShiftLeft();
-                        break;
-                    case 39:
-                        Play_2["default"].timeShiftRight();
-                        break;
-                    case 66:
-                        Play_2["default"].timeShiftLeft();
-                        break;
-                    case 70:
-                        Play_2["default"].timeShiftRight();
-                        break;
-                    case 120:
-                        Play_2["default"].OpenSettingMenu();
-                        break;
-                    case 123:
-                        Play_2["default"].OpenSettingMenu();
-                        break;
-                    case 117:
-                        aspectRatioManager_1["default"].handler();
-                        break;
-                }
-            },
-            "/play/settingMenu": function (code) {
-                switch (code) {
-                    case 13:
-                        Play_2["default"].playSettingMenuSubmit();
-                        break;
-                    case 38:
-                        Play_2["default"].playSettingMenuPrevElem();
-                        break;
-                    case 40:
-                        Play_2["default"].playSettingMenuNextElem();
-                        break;
-                    case 120:
-                        Play_2["default"].closeSettingMenu();
-                        break;
-                    case 27:
-                        Play_2["default"].closeSettingMenu();
-                        break;
-                    case 8:
-                        Play_2["default"].closeSettingMenu();
-                        break;
-                    case 122:
-                        Play_2["default"].closeSettingMenu();
-                        break;
-                    case 123:
-                        Play_2["default"].closeSettingMenu();
-                        break;
-                }
-            },
-            "/exitReq": function (code) {
-                switch (code) {
-                    case 112:
-                        exitManager.cancel();
-                        break;
-                    case 40:
-                        exitManager.downFocusPosition();
-                        break;
-                    case 38:
-                        exitManager.upFocusPosition();
-                        break;
-                    case 13:
-                        exitManager.submit();
-                        break;
-                }
-            }
+            "/serialList": serialListInput_1.serialList,
+            "/serialList/genreManager": serialListInput_1.serialListGenreManager,
+            "/serialList/infoManager": serialListInput_1.serialListInfoManager,
+            "/serialList/searchManager": serialListInput_1.serialListSearchManager,
+            "/UpdateLIstPage": updateListPage_1.UpdateLIstPage,
+            "/UpdateLIstPage/infoManager": updateListPage_1.UpdateLIstPageInfoManager,
+            "/seasonList": seasonListInput_1.seasonList,
+            "/seriesList": seriesListInput_1.seriesList,
+            "/play": playInput_1.play,
+            "/play/settingMenu": playInput_1.playSettingMenu,
+            "/exitReq": exitReqInput_1.exitReq
         }
     };
     exports["default"] = _;
@@ -3726,10 +3761,9 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_11, PageRouter_1, inputLayer_1, adaptation_1, HTTP_7, aspectRatioManager_2, createPrevViewData_6) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_15, PageRouter_1, inputLayer_1, adaptation_1, HTTP_7, aspectRatioManager_2, createPrevViewData_6) {
     "use strict";
     exports.__esModule = true;
-    var prodaction = true;
     var App = /** @class */ (function () {
         function App() {
         }
@@ -3762,7 +3796,7 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             var appContainer = document.getElementById(appContainerSelector);
             var pageRouterWrap = document.createElement("div");
             appContainer.appendChild(pageRouterWrap);
-            var model = new AppModel_11["default"]();
+            var model = new AppModel_15["default"]();
             window.model = model;
             model.App.userMac.set(mac);
             model.updateList.list.set(createPrevViewData_6["default"]());

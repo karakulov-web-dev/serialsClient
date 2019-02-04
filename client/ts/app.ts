@@ -1,7 +1,7 @@
 import bindPolifil from "./Polyfill/bindSimplePolyfill";
 import AppModel from "./AppModel";
 import PageRouter from "./Components/PageRouter";
-import inputLayer from "./inputLayer";
+import inputLayer from "./inputLayer/inputLayer";
 import {stbObj} from "./interfaceGlobal"
 import adaptation from "./adaptation"
 import {getUpdateList} from "./HTTP"
@@ -13,7 +13,6 @@ declare var stb:stbObj
 declare var netscape:any 
 declare var window:any 
 
-var prodaction = true
 class App {
   static main(appContainerSelector: string) {
     bindPolifil();
