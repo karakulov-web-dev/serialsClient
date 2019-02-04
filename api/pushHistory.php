@@ -47,8 +47,7 @@ if (!$error) {
         $sql = "DELETE FROM `history` WHERE userMac='$userMac' ORDER BY time ASC LIMIT $dif";
         $reqTools->reqDb($sql);
     }
-
-    $sql = "INSERT INTO `history`(`userMac`, `time`, `seriesNumber`, `seasonId`) VALUES ('$userMac',$time,$seriesNumber,$seasonId)";
+    $sql = "INSERT INTO `history`(`userMac`, `time`, `seriesName`, `seasonId`) VALUES ('$userMac',$time,'$seriesName',$seasonId)";
     $reqTools->reqDb($sql);
     
    // echo json_encode($result,JSON_UNESCAPED_UNICODE);
