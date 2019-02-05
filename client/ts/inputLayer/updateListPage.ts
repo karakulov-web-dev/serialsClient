@@ -40,6 +40,9 @@ export function UpdateLIstPage(code) {
       case 114:
       listControllerUpdatesList.openHistoryList();
         break;
+        case 115:
+        listControllerUpdatesList.openFavoritesList()
+        break
     }
   }
   export function UpdateLIstPageInfoManager(code) {

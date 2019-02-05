@@ -44,6 +44,9 @@ export function serialList(code) {
     case 114:
       searchManager.openWindow();
       break;
+    case 115:
+    listControllerSerials.addFav();
+    break;
   }
 }
 

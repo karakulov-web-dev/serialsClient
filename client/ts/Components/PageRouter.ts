@@ -6,6 +6,7 @@ import PlayComponent from "./PlayComponent"
 import ExitReqPageComp from "./ExitReqPageComp"
 import UpdateLIstPageComponent from "./UpdateLIstPageComponent";
 import HistoryPageComponent from "./HistoryPageComponent"
+import FavoritesPageComponent from "./FavoritesPageComponent"
 
 export default class PageRouter extends BaseComponent {
   constructor() {
@@ -41,6 +42,8 @@ export default class PageRouter extends BaseComponent {
       page = new UpdateLIstPageComponent()
     } else if (route === '/historyList') {
       page = new HistoryPageComponent()
+    } else if (route === '/favoritesList') {
+      page = new FavoritesPageComponent()
     }
     
     page.render(elem);

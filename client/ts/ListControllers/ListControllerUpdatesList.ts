@@ -1,5 +1,5 @@
 import ListControllerSerials from "./ListControllerSerials";
-import { getUpdateList, getSeason, get_Serials, getHistory} from "../HTTP";
+import { getUpdateList, getSeason, get_Serials, getHistory, getFavorites} from "../HTTP";
 import RouteManager from "../RouteManager";
 import createPrevViewData from "../createPrevViewData";
 
@@ -55,6 +55,13 @@ export default class ListControllerUpdatesList extends ListControllerSerials {
     this.model.historyList.list.set(createPrevViewData());
     getHistory().then(data => {
       this.model.historyList.list.set(data);
+    });
+  }
+  public openFavoritesList() {
+    new RouteManager().set("/favoritesList");
+    this.model.favoritesList.list.set(createPrevViewData());
+    getFavorites().then(data => {
+      this.model.favoritesList.list.set(data);
     });
   }
 }

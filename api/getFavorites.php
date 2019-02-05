@@ -16,7 +16,7 @@ if ($error) {
 
 if (!$error) {
     $reqTools = new ReqTools();
-    $sql = "SELECT * FROM `favorites` WHERE userMac='$userMac'";
+    $sql = "SELECT * FROM `favorites` JOIN  `serials` ON  `favorites`.serialId =  `serials`.id WHERE userMac='$userMac'";
     $result = $reqTools->reqDb($sql);
     echo json_encode($result,JSON_UNESCAPED_UNICODE);
 }

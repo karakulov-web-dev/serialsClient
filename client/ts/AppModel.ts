@@ -268,6 +268,27 @@ export default class AppModel extends Model {
       });
     });
 
+    let favoritesList = this.createInstance("favoritesList");
+    favoritesList.createValue("list", []);
+    favoritesList.createValue("focusPosition", 0);
+    favoritesList.createValue("scrolPosition", 0);
+    favoritesList.createValue("display", function() {
+      let list = favoritesList.getValue("list");
+      let scrolPosition = favoritesList.getValue("scrolPosition");
+      list = list.get();
+      scrolPosition = scrolPosition.get();
+      let maxPosition = scrolPosition + 8;
+      var i = 0;
+      return list.filter(item => {
+        let status = false;
+        if (i >= scrolPosition && i <= maxPosition) {
+          status = true;
+        }
+        i++;
+        return status;
+      });
+    });
+
     let seriesList = this.createInstance("seriesList");
     seriesList.createValue("list", []);
     seriesList.createValue("title", 'title');

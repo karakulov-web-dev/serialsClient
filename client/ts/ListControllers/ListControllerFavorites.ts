@@ -1,6 +1,6 @@
 import ListController from "./ListController";
 import RouteManager from "../RouteManager";
-import { getSeasons, get_Serials, getSeason, pushFavorites } from "../HTTP";
+import { getSeasons,  getSeason } from "../HTTP";
 import createPrevViewData from "../createPrevViewData";
 
 export default class ListControllerSerials extends ListController {
@@ -51,31 +51,5 @@ export default class ListControllerSerials extends ListController {
       list.set(data);
     });
   }
-  protected infiniteScroll() {
-    let length = this.model.serialList.list.get().length;
-    let scrolPosition = this.model.serialList.scrolPosition.get();
-    let dif = length - scrolPosition;
-    if (dif < 20) {
-      this.addContent();
-    }
-  }
-  protected addContent() {
-    if (this.execution) {
-      return;
-    }
-    this.execution = true
-    let length = this.model.serialList.list.get().length;
-    let currentList = this.model.serialList.list.get();
-    get_Serials({ offset: length }).then(data => {
-      currentList = currentList.concat(data);
-      this.model.serialList.list.set(currentList);
-      this.execution = false
-    });
-  }
-  public addFav() {
-    this.defineActiveItem();
-    pushFavorites(this.activeItem.id);
-  }
-  private execution:boolean
   protected activeItem;
 }

@@ -377,6 +377,26 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     return status;
                 });
             });
+            var favoritesList = _this.createInstance("favoritesList");
+            favoritesList.createValue("list", []);
+            favoritesList.createValue("focusPosition", 0);
+            favoritesList.createValue("scrolPosition", 0);
+            favoritesList.createValue("display", function () {
+                var list = favoritesList.getValue("list");
+                var scrolPosition = favoritesList.getValue("scrolPosition");
+                list = list.get();
+                scrolPosition = scrolPosition.get();
+                var maxPosition = scrolPosition + 8;
+                var i = 0;
+                return list.filter(function (item) {
+                    var status = false;
+                    if (i >= scrolPosition && i <= maxPosition) {
+                        status = true;
+                    }
+                    i++;
+                    return status;
+                });
+            });
             var seriesList = _this.createInstance("seriesList");
             seriesList.createValue("list", []);
             seriesList.createValue("title", 'title');
@@ -1874,7 +1894,72 @@ define("Components/HistoryPageComponent", ["require", "exports", "Components/Bas
     }(BaseComponent_17["default"]));
     exports["default"] = UpdateLIstPageComponent;
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/SerialComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent", "Components/HistoryPageComponent"], function (require, exports, BaseComponent_18, SerialComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1, HistoryPageComponent_1) {
+define("Components/FavoritesListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_4) {
+    "use strict";
+    exports.__esModule = true;
+    var FavoritesListComponent = /** @class */ (function (_super) {
+        __extends(FavoritesListComponent, _super);
+        function FavoritesListComponent() {
+            return _super.call(this, "favoritesList", {
+                elemClassName: "app_ChannelListComponent",
+                wrapClassName: "app_ChannelListComponent_wrap_elem",
+                cardClassName: "app_ChannelListComponent_card",
+                wrapActiveClassName: "app_ChannelListComponent_wrap_elem active",
+                imgClassName: "app_ChannelListComponent_card_img",
+                h1ClassName: "app_ChannelListComponent_card_h1"
+            }) || this;
+        }
+        return FavoritesListComponent;
+    }(ListComponent_4["default"]));
+    exports["default"] = FavoritesListComponent;
+});
+define("Components/FavoritesPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/FavoritesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_18, HeaderComponent_7, FavoritesListComponent_1, BottomButtonComponent_7) {
+    "use strict";
+    exports.__esModule = true;
+    var FavoritesPageComponent = /** @class */ (function (_super) {
+        __extends(FavoritesPageComponent, _super);
+        function FavoritesPageComponent() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        FavoritesPageComponent.prototype.create = function () {
+            var elem = document.createElement("div");
+            elem.className = "app_HomeComponent";
+            var compList = [FavoritesListComponent_1["default"]];
+            new HeaderComponent_7["default"]('Избранное').render(elem.appendChild(document.createElement("div")));
+            compList.forEach(function (Comp) {
+                var wrap = document.createElement("div");
+                var comp = new Comp();
+                elem.appendChild(wrap);
+                comp.render(wrap);
+            });
+            var bottomBtnComp = new BottomButtonComponent_7["default"]({
+                red: {
+                    text: "Удалить",
+                    visible: true
+                },
+                green: {
+                    text: "Удалить все",
+                    visible: true
+                },
+                yellow: {
+                    text: "Поиск",
+                    visible: false
+                },
+                blue: {
+                    text: "В избранное",
+                    visible: false
+                }
+            });
+            var btnWrap = document.createElement("div");
+            elem.appendChild(btnWrap);
+            bottomBtnComp.render(btnWrap);
+            return elem;
+        };
+        return FavoritesPageComponent;
+    }(BaseComponent_18["default"]));
+    exports["default"] = FavoritesPageComponent;
+});
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/SerialComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent", "Components/HistoryPageComponent", "Components/FavoritesPageComponent"], function (require, exports, BaseComponent_19, SerialComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1, HistoryPageComponent_1, FavoritesPageComponent_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -1917,11 +2002,14 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             else if (route === '/historyList') {
                 page = new HistoryPageComponent_1["default"]();
             }
+            else if (route === '/favoritesList') {
+                page = new FavoritesPageComponent_1["default"]();
+            }
             page.render(elem);
             return elem;
         };
         return PageRouter;
-    }(BaseComponent_18["default"]));
+    }(BaseComponent_19["default"]));
     exports["default"] = PageRouter;
 });
 define("RouteManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
@@ -2236,6 +2324,44 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         });
     }
     exports.clearHistory = clearHistory;
+    function pushFavorites(serialId) {
+        var item = {
+            userMac: model.App.userMac.get(),
+            serialId: Number(serialId)
+        };
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify(item);
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/pushFavorites.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        //var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.pushFavorites = pushFavorites;
+    function getFavorites() {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({ userMac: model.App.userMac.get() });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getFavorites.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.getFavorites = getFavorites;
 });
 define("createPrevViewData", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2328,6 +2454,10 @@ define("ListControllers/ListControllerSerials", ["require", "exports", "ListCont
                 _this.model.serialList.list.set(currentList);
                 _this.execution = false;
             });
+        };
+        ListControllerSerials.prototype.addFav = function () {
+            this.defineActiveItem();
+            HTTP_1.pushFavorites(this.activeItem.id);
         };
         return ListControllerSerials;
     }(ListController_1["default"]));
@@ -2592,6 +2722,9 @@ define("inputLayer/serialListInput", ["require", "exports", "RouteManager", "Lis
             case 114:
                 searchManager.openWindow();
                 break;
+            case 115:
+                listControllerSerials.addFav();
+                break;
         }
     }
     exports.serialList = serialList;
@@ -2704,6 +2837,14 @@ define("ListControllers/ListControllerUpdatesList", ["require", "exports", "List
             this.model.historyList.list.set(createPrevViewData_4["default"]());
             HTTP_4.getHistory().then(function (data) {
                 _this.model.historyList.list.set(data);
+            });
+        };
+        ListControllerUpdatesList.prototype.openFavoritesList = function () {
+            var _this = this;
+            new RouteManager_3["default"]().set("/favoritesList");
+            this.model.favoritesList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.getFavorites().then(function (data) {
+                _this.model.favoritesList.list.set(data);
             });
         };
         return ListControllerUpdatesList;
@@ -2824,6 +2965,9 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
                 break;
             case 114:
                 listControllerUpdatesList.openHistoryList();
+                break;
+            case 115:
+                listControllerUpdatesList.openFavoritesList();
                 break;
         }
     }
@@ -3887,10 +4031,115 @@ define("inputLayer/exitReqInput", ["require", "exports", "ExitManager"], functio
     }
     exports.exitReq = exitReq;
 });
-define("inputLayer/inputLayer", ["require", "exports", "AppModel", "inputLayer/serialListInput", "inputLayer/updateListPage", "inputLayer/seasonListInput", "inputLayer/seriesListInput", "inputLayer/playInput", "inputLayer/historyListInput", "inputLayer/exitReqInput"], function (require, exports, AppModel_15, serialListInput_1, updateListPage_1, seasonListInput_1, seriesListInput_1, playInput_1, historyListInput_1, exitReqInput_1) {
+define("ListControllers/ListControllerFavorites", ["require", "exports", "ListControllers/ListController", "RouteManager", "HTTP", "createPrevViewData"], function (require, exports, ListController_5, RouteManager_11, HTTP_8, createPrevViewData_7) {
+    "use strict";
+    exports.__esModule = true;
+    var ListControllerSerials = /** @class */ (function (_super) {
+        __extends(ListControllerSerials, _super);
+        function ListControllerSerials() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ListControllerSerials.prototype.onEnter = function () {
+            this.defineActiveItem();
+            this.openSerial();
+        };
+        ListControllerSerials.prototype.defineActiveItem = function () {
+            var focusPosition = this.focusPosition.get();
+            var display = this.display.get()();
+            this.activeItem = display[focusPosition];
+        };
+        ListControllerSerials.prototype.openSerial = function () {
+            if (this.activeItem.seasons_number > 1) {
+                this.openSeasonList();
+            }
+            else {
+                this.openSeriesList();
+            }
+        };
+        ListControllerSerials.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name);
+            new RouteManager_11["default"]().set("/seriesList");
+            var list = this.model.getInstance("seriesList").getValue("list");
+            this.model.seriesList.scrolPosition.set(0);
+            this.model.seriesList.focusPosition.set(0);
+            var seasonsIdList = JSON.parse(this.activeItem.seasonListIdJson);
+            var seasonId = seasonsIdList[0];
+            list.set(createPrevViewData_7["default"]());
+            HTTP_8.getSeason(seasonId).then(function (data) {
+                data.playlist.forEach(function (item) {
+                    item.poster = data.poster;
+                    item.season_number = data.season_number;
+                    item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
+                });
+                list.set(data.playlist);
+            });
+        };
+        ListControllerSerials.prototype.openSeasonList = function () {
+            new RouteManager_11["default"]().set("/seasonList");
+            var list = this.model.getInstance("seasonList").getValue("list");
+            this.model.seasonList.scrolPosition.set(0);
+            this.model.seasonList.focusPosition.set(0);
+            list.set(createPrevViewData_7["default"]());
+            HTTP_8.getSeasons(JSON.parse(this.activeItem.seasonListIdJson)).then(function (data) {
+                list.set(data);
+            });
+        };
+        return ListControllerSerials;
+    }(ListController_5["default"]));
+    exports["default"] = ListControllerSerials;
+});
+define("inputLayer/favoritsInput", ["require", "exports", "RouteManager", "ListControllers/ListControllerFavorites", "AppModel"], function (require, exports, RouteManager_12, ListControllerFavorites_1, AppModel_15) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_15["default"]();
+    var instanceModel = model.getInstance("favoritesList");
+    var listControllerFavorites = new ListControllerFavorites_1["default"](instanceModel);
+    var routeManager = new RouteManager_12["default"]();
+    function favoritsList(code) {
+        switch (code) {
+            case 8:
+                routeManager.back();
+                break;
+            case 27:
+                routeManager.home();
+                break;
+            case 40:
+                listControllerFavorites.downFocusPosition();
+                break;
+            case 38:
+                listControllerFavorites.upFocusPosition();
+                break;
+            case 39:
+                listControllerFavorites.rigthFocusPosition();
+                break;
+            case 37:
+                listControllerFavorites.leftFocusPosition();
+                break;
+            case 13:
+                listControllerFavorites.onEnter();
+                break;
+            case 112:
+                // genreManager.openWindow();
+                break;
+            case 113:
+                // infoManager.openWindow();
+                break;
+            case 114:
+                // searchManager.openWindow();
+                break;
+            case 115:
+                //  listControllerSerials.addFav();
+                break;
+        }
+    }
+    exports.favoritsList = favoritsList;
+});
+define("inputLayer/inputLayer", ["require", "exports", "AppModel", "inputLayer/serialListInput", "inputLayer/updateListPage", "inputLayer/seasonListInput", "inputLayer/seriesListInput", "inputLayer/playInput", "inputLayer/historyListInput", "inputLayer/exitReqInput", "inputLayer/favoritsInput"], function (require, exports, AppModel_16, serialListInput_1, updateListPage_1, seasonListInput_1, seriesListInput_1, playInput_1, historyListInput_1, exitReqInput_1, favoritsInput_1) {
+    "use strict";
+    exports.__esModule = true;
+    var model = new AppModel_16["default"]();
     var _ = {
         init: function init() {
             document.onkeydown = function (event) {
@@ -3916,7 +4165,8 @@ define("inputLayer/inputLayer", ["require", "exports", "AppModel", "inputLayer/s
             "/play": playInput_1.play,
             "/play/settingMenu": playInput_1.playSettingMenu,
             "/exitReq": exitReqInput_1.exitReq,
-            "/historyList": historyListInput_1.historyList
+            "/historyList": historyListInput_1.historyList,
+            "/favoritesList": favoritsInput_1.favoritsList
         }
     };
     exports["default"] = _;
@@ -3955,7 +4205,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_16, PageRouter_1, inputLayer_1, adaptation_1, HTTP_8, aspectRatioManager_2, createPrevViewData_7) {
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_17, PageRouter_1, inputLayer_1, adaptation_1, HTTP_9, aspectRatioManager_2, createPrevViewData_8) {
     "use strict";
     exports.__esModule = true;
     var App = /** @class */ (function () {
@@ -3990,11 +4240,11 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             var appContainer = document.getElementById(appContainerSelector);
             var pageRouterWrap = document.createElement("div");
             appContainer.appendChild(pageRouterWrap);
-            var model = new AppModel_16["default"]();
+            var model = new AppModel_17["default"]();
             window.model = model;
             model.App.userMac.set(mac);
-            model.updateList.list.set(createPrevViewData_7["default"]());
-            HTTP_8.getUpdateList({ offset: 0 }).then(function (data) {
+            model.updateList.list.set(createPrevViewData_8["default"]());
+            HTTP_9.getUpdateList({ offset: 0 }).then(function (data) {
                 model.updateList.list.set(data);
             });
             inputLayer_1["default"].init();
