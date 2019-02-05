@@ -2362,6 +2362,43 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         });
     }
     exports.getFavorites = getFavorites;
+    function clearFavorites() {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({ userMac: model.App.userMac.get() });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/clearFavorites.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        //var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.clearFavorites = clearFavorites;
+    function deleteFavorites(serialId) {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({
+                serialId: Number(serialId),
+                userMac: model.App.userMac.get()
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/deleteFavorites.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        //var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.deleteFavorites = deleteFavorites;
 });
 define("createPrevViewData", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -4086,6 +4123,25 @@ define("ListControllers/ListControllerFavorites", ["require", "exports", "ListCo
                 list.set(data);
             });
         };
+        ListControllerSerials.prototype.clearFavorites = function () {
+            this.model.favoritesList.list.set([]);
+            HTTP_8.clearFavorites();
+        };
+        ListControllerSerials.prototype.deleteFavorites = function () {
+            var _this = this;
+            this.defineActiveItem();
+            HTTP_8.deleteFavorites(this.activeItem.serialId);
+            var list = this.model.favoritesList.list.get();
+            var activeItem;
+            list.forEach(function (item) {
+                if (item.serialId === _this.activeItem.serialId) {
+                    activeItem = item;
+                }
+            });
+            var index = list.indexOf(activeItem);
+            list.splice(index, 1);
+            this.model.favoritesList.list.set(list);
+        };
         return ListControllerSerials;
     }(ListController_5["default"]));
     exports["default"] = ListControllerSerials;
@@ -4121,10 +4177,10 @@ define("inputLayer/favoritsInput", ["require", "exports", "RouteManager", "ListC
                 listControllerFavorites.onEnter();
                 break;
             case 112:
-                // genreManager.openWindow();
+                listControllerFavorites.deleteFavorites();
                 break;
             case 113:
-                // infoManager.openWindow();
+                listControllerFavorites.clearFavorites();
                 break;
             case 114:
                 // searchManager.openWindow();

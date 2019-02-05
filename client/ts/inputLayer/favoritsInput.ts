@@ -30,10 +30,10 @@ export function favoritsList(code) {
     listControllerFavorites.onEnter();
       break;
     case 112:
-     // genreManager.openWindow();
+    listControllerFavorites.deleteFavorites();
       break;
     case 113:
-     // infoManager.openWindow();
+    listControllerFavorites.clearFavorites();
       break;
     case 114:
      // searchManager.openWindow();

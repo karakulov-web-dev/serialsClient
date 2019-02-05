@@ -231,3 +231,48 @@ export function getFavorites() {
   });
 }
 
+export function clearFavorites() {
+  return new Promise_simple(function(resolve) {
+    var data = JSON.stringify({userMac: model.App.userMac.get()});
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+      "post",
+      "http://212.77.128.177/karakulov/seasonvar/api/clearFavorites.php",
+      true
+    );
+    xhr.send(data);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          //var data = JSON.parse(xhr.responseText);
+          resolve(data);
+        }
+      }
+    };
+  });
+}
+
+export function deleteFavorites(serialId) {
+  return new Promise_simple(function(resolve) {
+    var data = JSON.stringify({
+      serialId: Number(serialId),
+      userMac: model.App.userMac.get()
+    });
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+      "post",
+      "http://212.77.128.177/karakulov/seasonvar/api/deleteFavorites.php",
+      true
+    );
+    xhr.send(data);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          //var data = JSON.parse(xhr.responseText);
+          resolve(data);
+        }
+      }
+    };
+  });
+}
+

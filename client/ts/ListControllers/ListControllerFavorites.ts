@@ -1,6 +1,6 @@
 import ListController from "./ListController";
 import RouteManager from "../RouteManager";
-import { getSeasons,  getSeason } from "../HTTP";
+import { getSeasons,  getSeason, clearFavorites, deleteFavorites } from "../HTTP";
 import createPrevViewData from "../createPrevViewData";
 
 export default class ListControllerSerials extends ListController {
@@ -50,6 +50,24 @@ export default class ListControllerSerials extends ListController {
     getSeasons(JSON.parse(this.activeItem.seasonListIdJson)).then(data => {
       list.set(data);
     });
+  }
+  public clearFavorites () {
+    this.model.favoritesList.list.set([])
+    clearFavorites()
+  }
+  public deleteFavorites() {
+    this.defineActiveItem()
+    deleteFavorites(this.activeItem.serialId)
+    var list = this.model.favoritesList.list.get()
+    let activeItem;
+    list.forEach(item => {
+      if (item.serialId === this.activeItem.serialId) {
+        activeItem = item;
+      }
+    })
+    let index = list.indexOf(activeItem)
+    list.splice(index,1)
+    this.model.favoritesList.list.set(list)
   }
   protected activeItem;
 }
