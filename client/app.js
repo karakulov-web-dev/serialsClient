@@ -2317,11 +2317,16 @@ define("ListControllers/ListControllerSerials", ["require", "exports", "ListCont
         };
         ListControllerSerials.prototype.addContent = function () {
             var _this = this;
+            if (this.execution) {
+                return;
+            }
+            this.execution = true;
             var length = this.model.serialList.list.get().length;
             var currentList = this.model.serialList.list.get();
             HTTP_1.get_Serials({ offset: length }).then(function (data) {
                 currentList = currentList.concat(data);
                 _this.model.serialList.list.set(currentList);
+                _this.execution = false;
             });
         };
         return ListControllerSerials;

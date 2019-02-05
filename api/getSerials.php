@@ -26,14 +26,17 @@ if (gettype($body->searchQuery) == 'string') {
 
 if ($genre) {
     $where = "WHERE $genre";
+    $join = "JOIN `genre` ON `serials`.genreHash = `genre`.genreHash";
 } else if ($searchQuery) {
     $where = "WHERE name LIKE '%{$searchQuery}%'";
+    $join = "";
 } else {
     $where = "";
+    $join = "";
 }
 
 $reqTools = new ReqTools();
-$sql = "SELECT * FROM `serials` JOIN `genre` ON `serials`.genreHash = `genre`.genreHash $where ORDER BY kinopoisk DESC LIMIT 50 OFFSET $offset";
+$sql = "SELECT * FROM `serials` $join $where ORDER BY kinopoisk DESC LIMIT 50 OFFSET $offset";
 $result = $reqTools->reqDb($sql);
 
 echo json_encode($result,JSON_UNESCAPED_UNICODE);

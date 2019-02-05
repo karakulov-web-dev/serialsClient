@@ -60,12 +60,18 @@ export default class ListControllerSerials extends ListController {
     }
   }
   protected addContent() {
+    if (this.execution) {
+      return;
+    }
+    this.execution = true
     let length = this.model.serialList.list.get().length;
     let currentList = this.model.serialList.list.get();
     get_Serials({ offset: length }).then(data => {
       currentList = currentList.concat(data);
       this.model.serialList.list.set(currentList);
+      this.execution = false
     });
   }
+  private execution:boolean
   protected activeItem;
 }
