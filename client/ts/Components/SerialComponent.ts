@@ -6,13 +6,14 @@ import BottomButtonComponent from "./BottomButtonComponent";
 import GenreSelectComponent from "./GenreSelectComponent"
 import InfoComponent from "./InfoComponent"
 import SearchComponent from "./SearchComponent"
+import MessageComponent from "./MessageComponent"
 
 export default class SerialComponent extends BaseComponent {
   protected create() {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [SerialListComponent, GenreSelectComponent, InfoComponent, SearchComponent];
+    let compList = [SerialListComponent, GenreSelectComponent, InfoComponent, SearchComponent, MessageComponent];
   
     let title:any = ''
     let model:any = this.model

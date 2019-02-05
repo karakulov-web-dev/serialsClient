@@ -8,3 +8,14 @@
   right: 0px;
   background: #fafafa;
 }
+.app_messageComponent {
+  position: absolute;
+  bottom: 70px;
+  right: 50px;
+  background: url("../img/bgBottomButton.png");
+  width: 300px;
+  text-align: center;
+  font-family: Roboto, Arial, sans-serif;
+  color: white;
+  padding: 25px;
+}

@@ -73,9 +73,31 @@ export default class ListControllerSerials extends ListController {
     });
   }
   public addFav() {
+    let model = this.model;
+    let messageText = model.message.text;
+    let messageVisible = model.message.visible;
     this.defineActiveItem();
     pushFavorites(this.activeItem.id);
+    messageText.set(`Сериал ${this.activeItem.name} добавлен в избранное`)
+    messageVisible.set(true)
+    hideMessage(messageText,messageVisible);
   }
   private execution:boolean
   protected activeItem;
+}
+
+let timeout;
+function hideMessage(messageText,messageVisible) {
+  let self:any = hideMessage
+  if (self.execution) {
+    clearTimeout(timeout)
+  }
+  self.execution = true
+  timeout = setTimeout(function () {
+    messageText.set(``)
+    messageVisible.set(false)
+    self.execution = false;
+  },
+  3000
+  )
 }

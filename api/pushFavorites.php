@@ -36,6 +36,8 @@ if (!$error) {
         $reqTools->reqDb($sql);
     }
 
+    $sql = "DELETE FROM `favorites` WHERE userMac='$userMac' AND serialId='$serialId'";
+    $reqTools->reqDb($sql);
     $sql = "INSERT INTO `favorites`(`userMac`, `serialId`) VALUES ('$userMac',$serialId)";
     $reqTools->reqDb($sql);
 }

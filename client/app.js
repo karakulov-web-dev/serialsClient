@@ -418,6 +418,9 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     return status;
                 });
             });
+            var messageComponent = _this.createInstance("message");
+            messageComponent.createValue("visible", false);
+            messageComponent.createValue('text', "");
             var video = _this.createInstance("video");
             video.createValue("list", []);
             video.createValue("focusPosition", 0);
@@ -1009,7 +1012,34 @@ define("Components/SearchComponent", ["require", "exports", "Components/BaseComp
     }(BaseComponent_7["default"]));
     exports["default"] = SearchComponent;
 });
-define("Components/SerialComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent", "Components/InfoComponent", "Components/SearchComponent"], function (require, exports, BaseComponent_8, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1, InfoComponent_1, SearchComponent_1) {
+define("Components/MessageComponent", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_8) {
+    "use strict";
+    exports.__esModule = true;
+    var MessageComponent = /** @class */ (function (_super) {
+        __extends(MessageComponent, _super);
+        function MessageComponent() {
+            var _this = _super.call(this) || this;
+            var model = _this.model;
+            model.message.visible.subscribe(_this);
+            model.message.text.subscribe(_this);
+            return _this;
+        }
+        MessageComponent.prototype.create = function () {
+            var model = this.model;
+            var div = document.createElement("div");
+            if (!model.message.visible.get()) {
+                return div;
+            }
+            div.className = "app_messageComponent";
+            var text = model.message.text.get();
+            div.innerHTML = text;
+            return div;
+        };
+        return MessageComponent;
+    }(BaseComponent_8["default"]));
+    exports["default"] = MessageComponent;
+});
+define("Components/SerialComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SerialListComponent", "Components/BottomButtonComponent", "Components/GenreSelectComponent", "Components/InfoComponent", "Components/SearchComponent", "Components/MessageComponent"], function (require, exports, BaseComponent_9, HeaderComponent_1, SerialListComponent_1, BottomButtonComponent_1, GenreSelectComponent_1, InfoComponent_1, SearchComponent_1, MessageComponent_1) {
     "use strict";
     exports.__esModule = true;
     var SerialComponent = /** @class */ (function (_super) {
@@ -1020,7 +1050,7 @@ define("Components/SerialComponent", ["require", "exports", "Components/BaseComp
         SerialComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"], SearchComponent_1["default"]];
+            var compList = [SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"], SearchComponent_1["default"], MessageComponent_1["default"]];
             var title = '';
             var model = this.model;
             var listGenre = model.genreManager.list_default.get().filter(function (item) {
@@ -1072,7 +1102,7 @@ define("Components/SerialComponent", ["require", "exports", "Components/BaseComp
             return elem;
         };
         return SerialComponent;
-    }(BaseComponent_8["default"]));
+    }(BaseComponent_9["default"]));
     exports["default"] = SerialComponent;
 });
 define("Components/SeasonListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_2) {
@@ -1136,7 +1166,7 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
     }(ListComponent_2["default"]));
     exports["default"] = SeasonListComponent;
 });
-define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_9, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
+define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_10, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1179,7 +1209,7 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_9["default"]));
+    }(BaseComponent_10["default"]));
     exports["default"] = HomeComponent;
 });
 define("Components/SeriesListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_3) {
@@ -1264,7 +1294,7 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
         return (timeString);
     }
 });
-define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_10, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
+define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_11, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1308,10 +1338,10 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
             return elem;
         };
         return HomeComponent;
-    }(BaseComponent_10["default"]));
+    }(BaseComponent_11["default"]));
     exports["default"] = HomeComponent;
 });
-define("Components/LoadingWheel", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_11) {
+define("Components/LoadingWheel", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_12) {
     "use strict";
     exports.__esModule = true;
     var LoadingWheel = /** @class */ (function (_super) {
@@ -1337,10 +1367,10 @@ define("Components/LoadingWheel", ["require", "exports", "Components/BaseCompone
             return div;
         };
         return LoadingWheel;
-    }(BaseComponent_11["default"]));
+    }(BaseComponent_12["default"]));
     exports["default"] = LoadingWheel;
 });
-define("Components/ControlBar", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_12) {
+define("Components/ControlBar", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_13) {
     "use strict";
     exports.__esModule = true;
     var ControlBar = /** @class */ (function (_super) {
@@ -1401,7 +1431,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     exports["default"] = ControlBar;
     var ControlBar_progress_blank = /** @class */ (function (_super) {
         __extends(ControlBar_progress_blank, _super);
@@ -1414,7 +1444,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_progress_blank;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_progress_play = /** @class */ (function (_super) {
         __extends(ControlBar_progress_play, _super);
         function ControlBar_progress_play() {
@@ -1433,7 +1463,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_progress_play;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_playButton = /** @class */ (function (_super) {
         __extends(ControlBar_playButton, _super);
         function ControlBar_playButton() {
@@ -1462,7 +1492,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_playButton;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_settingButton = /** @class */ (function (_super) {
         __extends(ControlBar_settingButton, _super);
         function ControlBar_settingButton() {
@@ -1474,7 +1504,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_settingButton;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_volumeBar = /** @class */ (function (_super) {
         __extends(ControlBar_volumeBar, _super);
         function ControlBar_volumeBar() {
@@ -1513,7 +1543,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_volumeBar;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_nameCurrentVideo = /** @class */ (function (_super) {
         __extends(ControlBar_nameCurrentVideo, _super);
         function ControlBar_nameCurrentVideo() {
@@ -1533,7 +1563,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_nameCurrentVideo;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_timeBar = /** @class */ (function (_super) {
         __extends(ControlBar_timeBar, _super);
         function ControlBar_timeBar() {
@@ -1575,7 +1605,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return timeString;
         };
         return ControlBar_timeBar;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_playSettingMenu = /** @class */ (function (_super) {
         __extends(ControlBar_playSettingMenu, _super);
         function ControlBar_playSettingMenu() {
@@ -1615,7 +1645,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return p;
         };
         return ControlBar_playSettingMenu;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
     var ControlBar_timeShiftSizeBar = /** @class */ (function (_super) {
         __extends(ControlBar_timeShiftSizeBar, _super);
         function ControlBar_timeShiftSizeBar() {
@@ -1641,9 +1671,9 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             return div;
         };
         return ControlBar_timeShiftSizeBar;
-    }(BaseComponent_12["default"]));
+    }(BaseComponent_13["default"]));
 });
-define("Components/PlayComponent", ["require", "exports", "Components/BaseComponent", "Components/LoadingWheel", "Components/ControlBar"], function (require, exports, BaseComponent_13, LoadingWheel_1, ControlBar_1) {
+define("Components/PlayComponent", ["require", "exports", "Components/BaseComponent", "Components/LoadingWheel", "Components/ControlBar"], function (require, exports, BaseComponent_14, LoadingWheel_1, ControlBar_1) {
     "use strict";
     exports.__esModule = true;
     var PlayComponent = /** @class */ (function (_super) {
@@ -1669,7 +1699,7 @@ define("Components/PlayComponent", ["require", "exports", "Components/BaseCompon
             return div;
         };
         return PlayComponent;
-    }(BaseComponent_13["default"]));
+    }(BaseComponent_14["default"]));
     exports["default"] = PlayComponent;
     var PauseIndicator = /** @class */ (function (_super) {
         __extends(PauseIndicator, _super);
@@ -1689,9 +1719,9 @@ define("Components/PlayComponent", ["require", "exports", "Components/BaseCompon
             return div;
         };
         return PauseIndicator;
-    }(BaseComponent_13["default"]));
+    }(BaseComponent_14["default"]));
 });
-define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_14) {
+define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponent"], function (require, exports, BaseComponent_15) {
     "use strict";
     exports.__esModule = true;
     var ExitReqComp = /** @class */ (function (_super) {
@@ -1729,10 +1759,10 @@ define("Components/ExitReqComp", ["require", "exports", "Components/BaseComponen
             return div;
         };
         return ExitReqComp;
-    }(BaseComponent_14["default"]));
+    }(BaseComponent_15["default"]));
     exports["default"] = ExitReqComp;
 });
-define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/ExitReqComp"], function (require, exports, BaseComponent_15, HeaderComponent_4, BottomButtonComponent_4, ExitReqComp_1) {
+define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/ExitReqComp"], function (require, exports, BaseComponent_16, HeaderComponent_4, BottomButtonComponent_4, ExitReqComp_1) {
     "use strict";
     exports.__esModule = true;
     var ExitReqPageComp = /** @class */ (function (_super) {
@@ -1769,7 +1799,7 @@ define("Components/ExitReqPageComp", ["require", "exports", "Components/BaseComp
             return div;
         };
         return ExitReqPageComp;
-    }(BaseComponent_15["default"]));
+    }(BaseComponent_16["default"]));
     exports["default"] = ExitReqPageComp;
 });
 define("Components/UpdateListComponent", ["require", "exports", "Components/SeasonListComponent"], function (require, exports, SeasonListComponent_2) {
@@ -1787,7 +1817,7 @@ define("Components/UpdateListComponent", ["require", "exports", "Components/Seas
     }(SeasonListComponent_2["default"]));
     exports["default"] = UpdateListComponent;
 });
-define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/UpdateListComponent", "Components/BottomButtonComponent", "Components/InfoComponent"], function (require, exports, BaseComponent_16, HeaderComponent_5, UpdateListComponent_1, BottomButtonComponent_5, InfoComponent_2) {
+define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/UpdateListComponent", "Components/BottomButtonComponent", "Components/InfoComponent"], function (require, exports, BaseComponent_17, HeaderComponent_5, UpdateListComponent_1, BottomButtonComponent_5, InfoComponent_2) {
     "use strict";
     exports.__esModule = true;
     var UpdateLIstPageComponent = /** @class */ (function (_super) {
@@ -1830,7 +1860,7 @@ define("Components/UpdateLIstPageComponent", ["require", "exports", "Components/
             return elem;
         };
         return UpdateLIstPageComponent;
-    }(BaseComponent_16["default"]));
+    }(BaseComponent_17["default"]));
     exports["default"] = UpdateLIstPageComponent;
 });
 define("Components/HistotyListComponent", ["require", "exports", "Components/SeasonListComponent"], function (require, exports, SeasonListComponent_3) {
@@ -1848,7 +1878,7 @@ define("Components/HistotyListComponent", ["require", "exports", "Components/Sea
     }(SeasonListComponent_3["default"]));
     exports["default"] = HistotyListComponent;
 });
-define("Components/HistoryPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/HistotyListComponent"], function (require, exports, BaseComponent_17, HeaderComponent_6, BottomButtonComponent_6, HistotyListComponent_1) {
+define("Components/HistoryPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/BottomButtonComponent", "Components/HistotyListComponent"], function (require, exports, BaseComponent_18, HeaderComponent_6, BottomButtonComponent_6, HistotyListComponent_1) {
     "use strict";
     exports.__esModule = true;
     var UpdateLIstPageComponent = /** @class */ (function (_super) {
@@ -1891,7 +1921,7 @@ define("Components/HistoryPageComponent", ["require", "exports", "Components/Bas
             return elem;
         };
         return UpdateLIstPageComponent;
-    }(BaseComponent_17["default"]));
+    }(BaseComponent_18["default"]));
     exports["default"] = UpdateLIstPageComponent;
 });
 define("Components/FavoritesListComponent", ["require", "exports", "Components/ListComponent"], function (require, exports, ListComponent_4) {
@@ -1913,7 +1943,7 @@ define("Components/FavoritesListComponent", ["require", "exports", "Components/L
     }(ListComponent_4["default"]));
     exports["default"] = FavoritesListComponent;
 });
-define("Components/FavoritesPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/FavoritesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_18, HeaderComponent_7, FavoritesListComponent_1, BottomButtonComponent_7) {
+define("Components/FavoritesPageComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/FavoritesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_19, HeaderComponent_7, FavoritesListComponent_1, BottomButtonComponent_7) {
     "use strict";
     exports.__esModule = true;
     var FavoritesPageComponent = /** @class */ (function (_super) {
@@ -1956,10 +1986,10 @@ define("Components/FavoritesPageComponent", ["require", "exports", "Components/B
             return elem;
         };
         return FavoritesPageComponent;
-    }(BaseComponent_18["default"]));
+    }(BaseComponent_19["default"]));
     exports["default"] = FavoritesPageComponent;
 });
-define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/SerialComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent", "Components/HistoryPageComponent", "Components/FavoritesPageComponent"], function (require, exports, BaseComponent_19, SerialComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1, HistoryPageComponent_1, FavoritesPageComponent_1) {
+define("Components/PageRouter", ["require", "exports", "Components/BaseComponent", "Components/SerialComponent", "Components/SeasonsComponent", "Components/SeriesComponent", "Components/PlayComponent", "Components/ExitReqPageComp", "Components/UpdateLIstPageComponent", "Components/HistoryPageComponent", "Components/FavoritesPageComponent"], function (require, exports, BaseComponent_20, SerialComponent_1, SeasonsComponent_1, SeriesComponent_1, PlayComponent_1, ExitReqPageComp_1, UpdateLIstPageComponent_1, HistoryPageComponent_1, FavoritesPageComponent_1) {
     "use strict";
     exports.__esModule = true;
     var PageRouter = /** @class */ (function (_super) {
@@ -2009,7 +2039,7 @@ define("Components/PageRouter", ["require", "exports", "Components/BaseComponent
             return elem;
         };
         return PageRouter;
-    }(BaseComponent_19["default"]));
+    }(BaseComponent_20["default"]));
     exports["default"] = PageRouter;
 });
 define("RouteManager", ["require", "exports", "AppModel"], function (require, exports, AppModel_2) {
@@ -2493,12 +2523,31 @@ define("ListControllers/ListControllerSerials", ["require", "exports", "ListCont
             });
         };
         ListControllerSerials.prototype.addFav = function () {
+            var model = this.model;
+            var messageText = model.message.text;
+            var messageVisible = model.message.visible;
             this.defineActiveItem();
             HTTP_1.pushFavorites(this.activeItem.id);
+            messageText.set("\u0421\u0435\u0440\u0438\u0430\u043B " + this.activeItem.name + " \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435");
+            messageVisible.set(true);
+            hideMessage(messageText, messageVisible);
         };
         return ListControllerSerials;
     }(ListController_1["default"]));
     exports["default"] = ListControllerSerials;
+    var timeout;
+    function hideMessage(messageText, messageVisible) {
+        var self = hideMessage;
+        if (self.execution) {
+            clearTimeout(timeout);
+        }
+        self.execution = true;
+        timeout = setTimeout(function () {
+            messageText.set("");
+            messageVisible.set(false);
+            self.execution = false;
+        }, 3000);
+    }
 });
 define("interfaceGlobal", ["require", "exports"], function (require, exports) {
     "use strict";

@@ -311,6 +311,11 @@ export default class AppModel extends Model {
       });
     });
 
+    let messageComponent = this.createInstance("message");
+    messageComponent.createValue("visible", false);
+    messageComponent.createValue('text',"")
+
+
     let video = this.createInstance("video");
     video.createValue("list", []);
     video.createValue("focusPosition", 0);
