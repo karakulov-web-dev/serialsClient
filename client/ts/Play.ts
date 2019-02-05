@@ -139,8 +139,8 @@ _.exitPlay = function() {
   }
   namespace.model.App.route.set("/seriesList")
   try {
-    stb.SetVideoState(0);
     stb.Stop();
+    stb.SetVideoState(0);
   } catch (e) {
     console.log(e);
   }
@@ -533,7 +533,7 @@ _.SettingMenuCommands = {
   changeQuality: function(item) {
     try {
       var position = stb.GetPosTimeEx();
-      stb.Play(item.url);
+      stb.Play(`${item.url}`);
       stb.SetPosTimeEx(position);
     } catch (e) {
       console.log(e);

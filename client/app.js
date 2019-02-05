@@ -3288,8 +3288,8 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
         }
         namespace.model.App.route.set("/seriesList");
         try {
-            stb.SetVideoState(0);
             stb.Stop();
+            stb.SetVideoState(0);
         }
         catch (e) {
             console.log(e);
@@ -3671,7 +3671,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
         changeQuality: function (item) {
             try {
                 var position = stb.GetPosTimeEx();
-                stb.Play(item.url);
+                stb.Play("" + item.url);
                 stb.SetPosTimeEx(position);
             }
             catch (e) {
@@ -3743,7 +3743,7 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
                 }
                 else {
                     stb.SetVideoState(1);
-                    stb.Play(url);
+                    stb.Play("" + url);
                 }
             }
             catch (e) {

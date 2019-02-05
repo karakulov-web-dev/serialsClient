@@ -52,7 +52,7 @@ export default class ListControllerVideo extends ListController {
         throw new Error("url not found");
       } else {
         stb.SetVideoState(1);
-        stb.Play(url);
+        stb.Play(`${url}`);
       }
     } catch (e) {
       console.log(e);
