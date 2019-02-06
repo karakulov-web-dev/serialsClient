@@ -445,8 +445,8 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             });
             var PlayInstance = _this.createInstance("Play");
             PlayInstance.createValue("timeShiftSize", {
-                name: "10 сек",
-                value: 10,
+                name: "01 мин",
+                value: 60,
                 command: "changetimeShiftSize"
             });
             PlayInstance.createValue("loadingWheel", false);

@@ -341,9 +341,9 @@ export default class AppModel extends Model {
 
     let PlayInstance = this.createInstance("Play");
     PlayInstance.createValue("timeShiftSize", {
-      name: "10 сек",
-      value: 10,
-      command: "changetimeShiftSize",
+      name: "01 мин",
+      value: 60,
+      command: "changetimeShiftSize"
     })
     PlayInstance.createValue("loadingWheel", false)
     PlayInstance.createValue("progress", {play:0 , duration: 100})
