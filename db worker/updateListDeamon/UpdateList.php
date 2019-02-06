@@ -8,10 +8,15 @@ class UpdateList {
     }
     public function getData() {
         $bodyReq = array(
-            'key' => '032a4972',
+            'key' => '032a4972_111',
             'command' => 'getUpdateList',
         );
         $this->result = $this->reqTools->reqPostHttp('http://api.seasonvar.ru/', $bodyReq);
+        if (gettype($this->result) == 'object') {
+            if ($this->result->error) {
+                throw new Exception("\n***** ERROR: {$this->result->error} *****\n");
+            }
+        }
         return $this->result;
     }
     public function sendDb() {
