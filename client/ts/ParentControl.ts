@@ -219,7 +219,6 @@ class InputController {
   }
   private rightFocus() {
     if (this.inputElem === document.activeElement) {
-      this.okElem.focus();
     } else if (this.exitElem === document.activeElement) {
     } else if (this.okElem === document.activeElement) {
       this.exitElem.focus();

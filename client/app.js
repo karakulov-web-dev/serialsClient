@@ -4816,7 +4816,6 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
         };
         InputController.prototype.rightFocus = function () {
             if (this.inputElem === document.activeElement) {
-                this.okElem.focus();
             }
             else if (this.exitElem === document.activeElement) {
             }
