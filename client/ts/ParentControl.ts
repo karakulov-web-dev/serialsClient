@@ -1,5 +1,4 @@
 declare var stb: any;
-declare var window: any;
 
 export default class ParentControl {
   constructor() {
@@ -19,6 +18,8 @@ export default class ParentControl {
       this.mac = stb.RDir("MACAddress");
       this.parentControl = stb.RDir("getenv parentControlApps");
     } catch (e) {
+      //this.mac = "00:1a:79:1a:87:fa";
+      // this.parentControl = true;
       console.log(e);
     }
   }
@@ -84,8 +85,12 @@ class ParentControlWindow {
     this.content = document.createElement("div");
     this.h1 = document.createElement("h1");
     this.input = document.createElement("input");
+    this.okButton = document.createElement("input");
+    this.exitButton = document.createElement("input");
     this.invalidElem = document.createElement("p");
     this.input.type = "password";
+    this.okButton.type = "button";
+    this.exitButton.type = "button";
 
     this.body.appendChild(this.wrap);
     this.wrap.appendChild(this.window);
@@ -93,13 +98,16 @@ class ParentControlWindow {
     this.window.appendChild(this.content);
     this.content.appendChild(this.h1);
     this.content.appendChild(this.input);
+    this.content.appendChild(this.okButton);
+    this.content.appendChild(this.exitButton);
     this.content.appendChild(this.invalidElem);
 
     this.header.innerHTML = "РОДИТЕЛЬСКИЙ КОНТРОЛЬ";
     this.h1.innerHTML = "Для доступа к приложению необходимо ввести пароль:";
+    this.okButton.value = "OK";
+    this.exitButton.value = "Выход";
 
     this.addElemsClassName();
-    this.input.focus();
     this.initInput();
   }
   public close() {
@@ -118,31 +126,27 @@ class ParentControlWindow {
     this.h1.className = "ParentControlWindow_h1";
     this.input.className = "ParentControlWindow_input";
     this.invalidElem.className = "ParentControlWindow_invalidElem";
+    this.okButton.className = "ParentControlWindow_okButton";
+    this.exitButton.className = "ParentControlWindow_exitButton";
   }
   private initInput() {
+    let inputController = new InputController(
+      this.input,
+      this.okButton,
+      this.exitButton,
+      this.submit.bind(this)
+    );
     this.oldInputHandler = document.onkeydown;
     document.onkeydown = event => {
-      if (event.keyCode === 13) {
-        this.submit(this.input.value);
-      }
-      if (event.keyCode === 27) {
-        try {
-          stb.SetVideoState(1);
-        } catch (e) {
-          console.log(e);
-        }
-        let back_location = decodeURIComponent(
-          window.location.search.match(/\?referrer\=.*/)
-        );
-        back_location = back_location.replace(/\?referrer\=/, "");
-        window.location = back_location;
-      }
+      inputController.press(event.keyCode);
     };
   }
   private submit(value) {
     this.OnSubmit(value);
   }
   public OnSubmit;
+  private okButton;
+  private exitButton;
   private wrap;
   private body;
   private window;
@@ -152,4 +156,94 @@ class ParentControlWindow {
   private input;
   private oldInputHandler;
   private invalidElem;
+}
+
+class InputController {
+  constructor(inputElem, okElem, exitElem, submitF) {
+    this.inputElem = inputElem;
+    this.okElem = okElem;
+    this.exitElem = exitElem;
+    this.submitF = submitF;
+    this.inputElem.focus();
+  }
+  public press(code: number) {
+    if (code === 13) {
+      this.enter();
+    } else if (code === 40) {
+      this.downFocus();
+    } else if (code === 38) {
+      this.upFocus();
+    } else if (code === 39) {
+      this.rightFocus();
+    } else if (code === 37) {
+      this.leftFocus();
+    } else if (code === 27) {
+      this.exit();
+    } else if (code === 8) {
+      this.back();
+    }
+  }
+  private exit() {
+    var win: any = window;
+    try {
+      stb.SetVideoState(1);
+    } catch (e) {
+      console.log(e);
+    }
+    var back_location = decodeURIComponent(
+      win.location.search.match(/\?referrer\=.*/)
+    );
+    back_location = back_location.replace(/\?referrer\=/, "");
+    win.location = back_location;
+  }
+  private back() {
+    if (this.inputElem !== document.activeElement) {
+      this.exit();
+    }
+  }
+  private downFocus() {
+    if (this.inputElem === document.activeElement) {
+      this.okElem.focus();
+    } else if (this.exitElem === document.activeElement) {
+    } else if (this.okElem === document.activeElement) {
+      this.exitElem.focus();
+    }
+  }
+  private upFocus() {
+    if (this.inputElem === document.activeElement) {
+    } else if (this.exitElem === document.activeElement) {
+      this.okElem.focus();
+    } else if (this.okElem === document.activeElement) {
+      this.inputElem.focus();
+    }
+  }
+  private rightFocus() {
+    if (this.inputElem === document.activeElement) {
+      this.okElem.focus();
+    } else if (this.exitElem === document.activeElement) {
+    } else if (this.okElem === document.activeElement) {
+      this.exitElem.focus();
+    }
+  }
+  private leftFocus() {
+    if (this.inputElem === document.activeElement) {
+    } else if (this.exitElem === document.activeElement) {
+      this.okElem.focus();
+    } else if (this.okElem === document.activeElement) {
+      this.inputElem.focus();
+    }
+  }
+  private enter() {
+    if (this.inputElem === document.activeElement) {
+      this.submitF(this.inputElem.value);
+    } else if (this.exitElem === document.activeElement) {
+      this.exit();
+    } else if (this.okElem === document.activeElement) {
+      this.submitF(this.inputElem.value);
+    }
+  }
+  private submitF: Function;
+  private inputElem: HTMLInputElement;
+  private okElem: HTMLInputElement;
+  private exitElem: HTMLInputElement;
 }

@@ -14,9 +14,11 @@ export default function() {
       ".app_home_infoManager_window {font-size: 20px;}",
       ".ParentControlWindow_h1 {  font-size: 18px; }",
       ".ParentControlWindow_invalidElem {  font-size: 17px; }",
-      ".ParentControlWindow_window { width: 450px;}",
+      ".ParentControlWindow_window { width: 450px; height: 280px;}",
       ".ParentControlWindow_input {width: 77%;} ",
-      ".app_MainSettingMenuList_window { width: 400px; } "
+      ".app_MainSettingMenuList_window { width: 400px; } ",
+      ".ParentControlWindow_exitButton { width: 39.9%;}",
+      ".ParentControlWindow_okButton { width: 39.9%;}"
     ];
     var cssAll = rules.join("\n");
     var head: any = document.getElementsByTagName("head");
