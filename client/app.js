@@ -4588,9 +4588,11 @@ define("adaptation", ["require", "exports"], function (require, exports) {
                 ".app_home_infoManager_window {font-size: 20px;}",
                 ".ParentControlWindow_h1 {  font-size: 18px; }",
                 ".ParentControlWindow_invalidElem {  font-size: 17px; }",
-                ".ParentControlWindow_window { width: 450px;}",
+                ".ParentControlWindow_window { width: 450px; height: 280px;}",
                 ".ParentControlWindow_input {width: 77%;} ",
-                ".app_MainSettingMenuList_window { width: 400px; } "
+                ".app_MainSettingMenuList_window { width: 400px; } ",
+                ".ParentControlWindow_exitButton { width: 39.9%;}",
+                ".ParentControlWindow_okButton { width: 39.9%;}"
             ];
             var cssAll = rules.join("\n");
             var head = document.getElementsByTagName("head");
@@ -4629,6 +4631,8 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
                 this.parentControl = stb.RDir("getenv parentControlApps");
             }
             catch (e) {
+                //this.mac = "00:1a:79:1a:87:fa";
+                // this.parentControl = true;
                 console.log(e);
             }
         };
@@ -4689,19 +4693,26 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
             this.content = document.createElement("div");
             this.h1 = document.createElement("h1");
             this.input = document.createElement("input");
+            this.okButton = document.createElement("input");
+            this.exitButton = document.createElement("input");
             this.invalidElem = document.createElement("p");
             this.input.type = "password";
+            this.okButton.type = "button";
+            this.exitButton.type = "button";
             this.body.appendChild(this.wrap);
             this.wrap.appendChild(this.window);
             this.window.appendChild(this.header);
             this.window.appendChild(this.content);
             this.content.appendChild(this.h1);
             this.content.appendChild(this.input);
+            this.content.appendChild(this.okButton);
+            this.content.appendChild(this.exitButton);
             this.content.appendChild(this.invalidElem);
             this.header.innerHTML = "РОДИТЕЛЬСКИЙ КОНТРОЛЬ";
             this.h1.innerHTML = "Для доступа к приложению необходимо ввести пароль:";
+            this.okButton.value = "OK";
+            this.exitButton.value = "Выход";
             this.addElemsClassName();
-            this.input.focus();
             this.initInput();
         }
         ParentControlWindow.prototype.close = function () {
@@ -4720,31 +4731,121 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
             this.h1.className = "ParentControlWindow_h1";
             this.input.className = "ParentControlWindow_input";
             this.invalidElem.className = "ParentControlWindow_invalidElem";
+            this.okButton.className = "ParentControlWindow_okButton";
+            this.exitButton.className = "ParentControlWindow_exitButton";
         };
         ParentControlWindow.prototype.initInput = function () {
-            var _this = this;
+            var inputController = new InputController(this.input, this.okButton, this.exitButton, this.submit.bind(this));
             this.oldInputHandler = document.onkeydown;
             document.onkeydown = function (event) {
-                if (event.keyCode === 13) {
-                    _this.submit(_this.input.value);
-                }
-                if (event.keyCode === 27) {
-                    try {
-                        stb.SetVideoState(1);
-                    }
-                    catch (e) {
-                        console.log(e);
-                    }
-                    var back_location = decodeURIComponent(window.location.search.match(/\?referrer\=.*/));
-                    back_location = back_location.replace(/\?referrer\=/, "");
-                    window.location = back_location;
-                }
+                inputController.press(event.keyCode);
             };
         };
         ParentControlWindow.prototype.submit = function (value) {
             this.OnSubmit(value);
         };
         return ParentControlWindow;
+    }());
+    var InputController = /** @class */ (function () {
+        function InputController(inputElem, okElem, exitElem, submitF) {
+            this.inputElem = inputElem;
+            this.okElem = okElem;
+            this.exitElem = exitElem;
+            this.submitF = submitF;
+            this.inputElem.focus();
+        }
+        InputController.prototype.press = function (code) {
+            if (code === 13) {
+                this.enter();
+            }
+            else if (code === 40) {
+                this.downFocus();
+            }
+            else if (code === 38) {
+                this.upFocus();
+            }
+            else if (code === 39) {
+                this.rightFocus();
+            }
+            else if (code === 37) {
+                this.leftFocus();
+            }
+            else if (code === 27) {
+                this.exit();
+            }
+            else if (code === 8) {
+                this.back();
+            }
+        };
+        InputController.prototype.exit = function () {
+            var win = window;
+            try {
+                stb.SetVideoState(1);
+            }
+            catch (e) {
+                console.log(e);
+            }
+            var back_location = decodeURIComponent(win.location.search.match(/\?referrer\=.*/));
+            back_location = back_location.replace(/\?referrer\=/, "");
+            win.location = back_location;
+        };
+        InputController.prototype.back = function () {
+            if (this.inputElem !== document.activeElement) {
+                this.exit();
+            }
+        };
+        InputController.prototype.downFocus = function () {
+            if (this.inputElem === document.activeElement) {
+                this.okElem.focus();
+            }
+            else if (this.exitElem === document.activeElement) {
+            }
+            else if (this.okElem === document.activeElement) {
+                this.exitElem.focus();
+            }
+        };
+        InputController.prototype.upFocus = function () {
+            if (this.inputElem === document.activeElement) {
+            }
+            else if (this.exitElem === document.activeElement) {
+                this.okElem.focus();
+            }
+            else if (this.okElem === document.activeElement) {
+                this.inputElem.focus();
+            }
+        };
+        InputController.prototype.rightFocus = function () {
+            if (this.inputElem === document.activeElement) {
+                this.okElem.focus();
+            }
+            else if (this.exitElem === document.activeElement) {
+            }
+            else if (this.okElem === document.activeElement) {
+                this.exitElem.focus();
+            }
+        };
+        InputController.prototype.leftFocus = function () {
+            if (this.inputElem === document.activeElement) {
+            }
+            else if (this.exitElem === document.activeElement) {
+                this.okElem.focus();
+            }
+            else if (this.okElem === document.activeElement) {
+                this.inputElem.focus();
+            }
+        };
+        InputController.prototype.enter = function () {
+            if (this.inputElem === document.activeElement) {
+                this.submitF(this.inputElem.value);
+            }
+            else if (this.exitElem === document.activeElement) {
+                this.exit();
+            }
+            else if (this.okElem === document.activeElement) {
+                this.submitF(this.inputElem.value);
+            }
+        };
+        return InputController;
     }());
 });
 define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData", "ParentControl"], function (require, exports, bindSimplePolyfill_1, AppModel_17, PageRouter_1, inputLayer_1, adaptation_1, HTTP_9, aspectRatioManager_2, createPrevViewData_8, ParentControl_1) {
