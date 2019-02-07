@@ -1,7 +1,8 @@
-
 import RouteManager from "../RouteManager";
 import AppModel from "../AppModel";
-import ListControllerHistory from "../ListControllers/ListControllerHistory"
+import ListControllerHistory from "../ListControllers/ListControllerHistory";
+import MainSettingMenu from "../MainSettingMenu";
+var mainSettingMenu;
 
 let routeManager = new RouteManager();
 let model = new AppModel();
@@ -17,22 +18,30 @@ export function historyList(code) {
       routeManager.home();
       break;
     case 40:
-    listControllerHistory.downFocusPosition();
+      listControllerHistory.downFocusPosition();
       break;
     case 38:
-    listControllerHistory.upFocusPosition();
+      listControllerHistory.upFocusPosition();
       break;
     case 39:
-    listControllerHistory.rigthFocusPosition();
+      listControllerHistory.rigthFocusPosition();
       break;
     case 37:
-    listControllerHistory.leftFocusPosition();
+      listControllerHistory.leftFocusPosition();
       break;
     case 13:
-    listControllerHistory.onEnter();
-    break;
+      listControllerHistory.onEnter();
+      break;
     case 112:
-    listControllerHistory.clear();
-    break;
+      listControllerHistory.clear();
+      break;
+    case 120:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
+    case 123:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
   }
 }

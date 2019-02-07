@@ -4,6 +4,9 @@ import AppModel from "../AppModel";
 import SearchManager from "../SearchManager";
 import GenreManager from "../GenreManager";
 import InfoManager from "../InfoManager";
+import MainSettingMenu from "../MainSettingMenu";
+var mainSettingMenu;
+
 let genreManager = new GenreManager();
 let infoManager = new InfoManager();
 let searchManager = new SearchManager();
@@ -45,8 +48,16 @@ export function serialList(code) {
       searchManager.openWindow();
       break;
     case 115:
-    listControllerSerials.addFav();
-    break;
+      listControllerSerials.addFav();
+      break;
+    case 120:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
+    case 123:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
   }
 }
 
@@ -70,6 +81,14 @@ export function serialListGenreManager(code) {
     case 8:
       genreManager.back();
       break;
+    case 120:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
+    case 123:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
   }
 }
 
@@ -84,6 +103,14 @@ export function serialListInfoManager(code) {
     case 38:
       infoManager.scrollTop();
       break;
+    case 120:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
+    case 123:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
   }
 }
 
@@ -94,6 +121,14 @@ export function serialListSearchManager(code) {
       break;
     case 8:
       searchManager.back();
+      break;
+    case 120:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
+    case 123:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
       break;
   }
 }

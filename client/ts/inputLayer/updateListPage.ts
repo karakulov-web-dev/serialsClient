@@ -2,7 +2,10 @@ import ListControllerUpdatesList from "../ListControllers/ListControllerUpdatesL
 import AppModel from "../AppModel";
 import ExitManager from "../ExitManager";
 import InfoManager from "../InfoManager";
+
 import MainSettingMenu from "../MainSettingMenu";
+var mainSettingMenu;
+
 let model = new AppModel();
 let instanceModelUpdatesList = model.getInstance("updateList");
 let listControllerUpdatesList = new ListControllerUpdatesList(
@@ -11,8 +14,6 @@ let listControllerUpdatesList = new ListControllerUpdatesList(
 let infoManager = new InfoManager();
 
 let exitManager = new ExitManager();
-
-var mainSettingMenu;
 
 export function UpdateLIstPage(code) {
   switch (code) {
@@ -66,6 +67,14 @@ export function UpdateLIstPageInfoManager(code) {
       break;
     case 38:
       infoManager.scrollTop();
+      break;
+    case 120:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
+    case 123:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
       break;
   }
 }

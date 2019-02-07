@@ -2766,255 +2766,6 @@ define("InfoManager", ["require", "exports", "AppModel"], function (require, exp
     }());
     exports["default"] = GenreManager;
 });
-define("inputLayer/serialListInput", ["require", "exports", "RouteManager", "ListControllers/ListControllerSerials", "AppModel", "SearchManager", "GenreManager", "InfoManager"], function (require, exports, RouteManager_2, ListControllerSerials_1, AppModel_8, SearchManager_1, GenreManager_1, InfoManager_1) {
-    "use strict";
-    exports.__esModule = true;
-    var genreManager = new GenreManager_1["default"]();
-    var infoManager = new InfoManager_1["default"]();
-    var searchManager = new SearchManager_1["default"]();
-    var model = new AppModel_8["default"]();
-    var instanceModel = model.getInstance("serialList");
-    var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
-    var routeManager = new RouteManager_2["default"]();
-    function serialList(code) {
-        switch (code) {
-            case 8:
-                routeManager.back();
-                break;
-            case 27:
-                routeManager.home();
-                break;
-            case 40:
-                listControllerSerials.downFocusPosition();
-                break;
-            case 38:
-                listControllerSerials.upFocusPosition();
-                break;
-            case 39:
-                listControllerSerials.rigthFocusPosition();
-                break;
-            case 37:
-                listControllerSerials.leftFocusPosition();
-                break;
-            case 13:
-                listControllerSerials.onEnter();
-                break;
-            case 112:
-                genreManager.openWindow();
-                break;
-            case 113:
-                infoManager.openWindow();
-                break;
-            case 114:
-                searchManager.openWindow();
-                break;
-            case 115:
-                listControllerSerials.addFav();
-                break;
-        }
-    }
-    exports.serialList = serialList;
-    function serialListGenreManager(code) {
-        switch (code) {
-            case 39:
-                genreManager.changeFocusRight();
-                break;
-            case 37:
-                genreManager.changeFocusLeft();
-                break;
-            case 38:
-                genreManager.changeFocusTop();
-                break;
-            case 40:
-                genreManager.changeFocusBottom();
-                break;
-            case 13:
-                genreManager.submit();
-                break;
-            case 8:
-                genreManager.back();
-                break;
-        }
-    }
-    exports.serialListGenreManager = serialListGenreManager;
-    function serialListInfoManager(code) {
-        switch (code) {
-            case 8:
-                infoManager.back();
-                break;
-            case 40:
-                infoManager.scrollBottom();
-                break;
-            case 38:
-                infoManager.scrollTop();
-                break;
-        }
-    }
-    exports.serialListInfoManager = serialListInfoManager;
-    function serialListSearchManager(code) {
-        switch (code) {
-            case 13:
-                searchManager.submit();
-                break;
-            case 8:
-                searchManager.back();
-                break;
-        }
-    }
-    exports.serialListSearchManager = serialListSearchManager;
-});
-define("ListControllers/ListControllerUpdatesList", ["require", "exports", "ListControllers/ListControllerSerials", "HTTP", "RouteManager", "createPrevViewData"], function (require, exports, ListControllerSerials_2, HTTP_4, RouteManager_3, createPrevViewData_4) {
-    "use strict";
-    exports.__esModule = true;
-    var ListControllerUpdatesList = /** @class */ (function (_super) {
-        __extends(ListControllerUpdatesList, _super);
-        function ListControllerUpdatesList() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        ListControllerUpdatesList.prototype.openSerial = function () {
-            this.openSeriesList();
-        };
-        ListControllerUpdatesList.prototype.openSeriesList = function () {
-            this.model.seriesList.title.set(this.activeItem.name);
-            new RouteManager_3["default"]().set("/seriesList");
-            var list = this.model.getInstance("seriesList").getValue("list");
-            this.model.seriesList.scrolPosition.set(0);
-            this.model.seriesList.focusPosition.set(0);
-            list.set(createPrevViewData_4["default"]());
-            HTTP_4.getSeason(this.activeItem.idSeasonvar).then(function (data) {
-                data.playlist.forEach(function (item) {
-                    item.poster = data.poster;
-                    item.season_number = data.season_number;
-                    item.serial = data.name;
-                    item.seriesName = data.name + " (" + item.name + ")";
-                    item.seasonId = data.idSeasonvar;
-                });
-                list.set(data.playlist);
-            });
-        };
-        ListControllerUpdatesList.prototype.addContent = function () {
-            var _this = this;
-            var length = this.model.updateList.list.get().length;
-            var currentList = this.model.updateList.list.get();
-            HTTP_4.getUpdateList(length).then(function (data) {
-                currentList = currentList.concat(data);
-                _this.model.updateList.list.set(currentList);
-            });
-        };
-        ListControllerUpdatesList.prototype.infiniteScroll = function () {
-            var length = this.model.updateList.list.get().length;
-            var scrolPosition = this.model.updateList.scrolPosition.get();
-            var dif = length - scrolPosition;
-            if (dif < 20) {
-                this.addContent();
-            }
-        };
-        ListControllerUpdatesList.prototype.openSerialList = function () {
-            var _this = this;
-            new RouteManager_3["default"]().set("/serialList");
-            this.model.serialList.list.set(createPrevViewData_4["default"]());
-            HTTP_4.get_Serials({ offset: 0 }).then(function (data) {
-                _this.model.serialList.list.set(data);
-            });
-        };
-        ListControllerUpdatesList.prototype.openHistoryList = function () {
-            var _this = this;
-            new RouteManager_3["default"]().set("/historyList");
-            this.model.historyList.list.set(createPrevViewData_4["default"]());
-            HTTP_4.getHistory().then(function (data) {
-                _this.model.historyList.list.set(data);
-            });
-        };
-        ListControllerUpdatesList.prototype.openFavoritesList = function () {
-            var _this = this;
-            new RouteManager_3["default"]().set("/favoritesList");
-            this.model.favoritesList.list.set(createPrevViewData_4["default"]());
-            HTTP_4.getFavorites().then(function (data) {
-                _this.model.favoritesList.list.set(data);
-            });
-        };
-        return ListControllerUpdatesList;
-    }(ListControllerSerials_2["default"]));
-    exports["default"] = ListControllerUpdatesList;
-});
-define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], function (require, exports, AppModel_9, RouteManager_4) {
-    "use strict";
-    exports.__esModule = true;
-    var routeManager = new RouteManager_4["default"]();
-    var ExitManager = /** @class */ (function () {
-        function ExitManager() {
-            if (typeof ExitManager.cache !== 'undefined') {
-                return ExitManager.cache;
-            }
-            this.model = new AppModel_9["default"]();
-            this.App = this.model.getInstance("App");
-            this.route = this.App.getValue("route");
-            this.ExitMenuInstance = this.model.getInstance("ExitMenuInstance");
-            this.exitReqConfig = this.ExitMenuInstance.getValue("config");
-            ExitManager.cache = this;
-        }
-        ExitManager.prototype.exitReq = function () {
-            this.oldRoute = this.route.get();
-            this.exitReqConfig.set({
-                text: "Вы дейстивтельно хотите выйти?",
-                list: [
-                    {
-                        name: "Да",
-                        command: "exit",
-                        active: true
-                    },
-                    {
-                        name: "Отмена",
-                        command: "cancel",
-                        active: false
-                    }
-                ]
-            });
-            routeManager.set("/exitReq");
-        };
-        ExitManager.prototype.exit = function () {
-            stb.SetVideoState(1);
-            var back_location = decodeURIComponent(window.location.search.match(/\?referrer\=.*/));
-            back_location = back_location.replace(/\?referrer\=/, '');
-            window.location = back_location;
-        };
-        ExitManager.prototype.cancel = function () {
-            routeManager.back();
-        };
-        ExitManager.prototype.downFocusPosition = function () {
-            var config = this.exitReqConfig.get();
-            var list = config.list;
-            list[0].active = false;
-            list[1].active = true;
-            this.exitReqConfig.set(config);
-        };
-        ExitManager.prototype.upFocusPosition = function () {
-            var config = this.exitReqConfig.get();
-            var list = config.list;
-            list[0].active = true;
-            list[1].active = false;
-            this.exitReqConfig.set(config);
-        };
-        ExitManager.prototype.submit = function () {
-            var config = this.exitReqConfig.get();
-            var list = config.list;
-            var command;
-            list.forEach(function (item) {
-                if (item.active) {
-                    command = item.command;
-                }
-            });
-            if (command === 'exit') {
-                this.exit();
-            }
-            else if (command === 'cancel') {
-                this.cancel();
-            }
-        };
-        return ExitManager;
-    }());
-    exports["default"] = ExitManager;
-});
 define("MainSettingMenu", ["require", "exports"], function (require, exports) {
     "use strict";
     exports.__esModule = true;
@@ -3213,15 +2964,297 @@ define("MainSettingMenu", ["require", "exports"], function (require, exports) {
         return ParentControlMenuList;
     }(MenuList));
 });
-define("inputLayer/updateListPage", ["require", "exports", "ListControllers/ListControllerUpdatesList", "AppModel", "ExitManager", "InfoManager", "MainSettingMenu"], function (require, exports, ListControllerUpdatesList_1, AppModel_10, ExitManager_1, InfoManager_2, MainSettingMenu_1) {
+define("inputLayer/serialListInput", ["require", "exports", "RouteManager", "ListControllers/ListControllerSerials", "AppModel", "SearchManager", "GenreManager", "InfoManager", "MainSettingMenu"], function (require, exports, RouteManager_2, ListControllerSerials_1, AppModel_8, SearchManager_1, GenreManager_1, InfoManager_1, MainSettingMenu_1) {
     "use strict";
     exports.__esModule = true;
+    var mainSettingMenu;
+    var genreManager = new GenreManager_1["default"]();
+    var infoManager = new InfoManager_1["default"]();
+    var searchManager = new SearchManager_1["default"]();
+    var model = new AppModel_8["default"]();
+    var instanceModel = model.getInstance("serialList");
+    var listControllerSerials = new ListControllerSerials_1["default"](instanceModel);
+    var routeManager = new RouteManager_2["default"]();
+    function serialList(code) {
+        switch (code) {
+            case 8:
+                routeManager.back();
+                break;
+            case 27:
+                routeManager.home();
+                break;
+            case 40:
+                listControllerSerials.downFocusPosition();
+                break;
+            case 38:
+                listControllerSerials.upFocusPosition();
+                break;
+            case 39:
+                listControllerSerials.rigthFocusPosition();
+                break;
+            case 37:
+                listControllerSerials.leftFocusPosition();
+                break;
+            case 13:
+                listControllerSerials.onEnter();
+                break;
+            case 112:
+                genreManager.openWindow();
+                break;
+            case 113:
+                infoManager.openWindow();
+                break;
+            case 114:
+                searchManager.openWindow();
+                break;
+            case 115:
+                listControllerSerials.addFav();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+        }
+    }
+    exports.serialList = serialList;
+    function serialListGenreManager(code) {
+        switch (code) {
+            case 39:
+                genreManager.changeFocusRight();
+                break;
+            case 37:
+                genreManager.changeFocusLeft();
+                break;
+            case 38:
+                genreManager.changeFocusTop();
+                break;
+            case 40:
+                genreManager.changeFocusBottom();
+                break;
+            case 13:
+                genreManager.submit();
+                break;
+            case 8:
+                genreManager.back();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+        }
+    }
+    exports.serialListGenreManager = serialListGenreManager;
+    function serialListInfoManager(code) {
+        switch (code) {
+            case 8:
+                infoManager.back();
+                break;
+            case 40:
+                infoManager.scrollBottom();
+                break;
+            case 38:
+                infoManager.scrollTop();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+        }
+    }
+    exports.serialListInfoManager = serialListInfoManager;
+    function serialListSearchManager(code) {
+        switch (code) {
+            case 13:
+                searchManager.submit();
+                break;
+            case 8:
+                searchManager.back();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+        }
+    }
+    exports.serialListSearchManager = serialListSearchManager;
+});
+define("ListControllers/ListControllerUpdatesList", ["require", "exports", "ListControllers/ListControllerSerials", "HTTP", "RouteManager", "createPrevViewData"], function (require, exports, ListControllerSerials_2, HTTP_4, RouteManager_3, createPrevViewData_4) {
+    "use strict";
+    exports.__esModule = true;
+    var ListControllerUpdatesList = /** @class */ (function (_super) {
+        __extends(ListControllerUpdatesList, _super);
+        function ListControllerUpdatesList() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        ListControllerUpdatesList.prototype.openSerial = function () {
+            this.openSeriesList();
+        };
+        ListControllerUpdatesList.prototype.openSeriesList = function () {
+            this.model.seriesList.title.set(this.activeItem.name);
+            new RouteManager_3["default"]().set("/seriesList");
+            var list = this.model.getInstance("seriesList").getValue("list");
+            this.model.seriesList.scrolPosition.set(0);
+            this.model.seriesList.focusPosition.set(0);
+            list.set(createPrevViewData_4["default"]());
+            HTTP_4.getSeason(this.activeItem.idSeasonvar).then(function (data) {
+                data.playlist.forEach(function (item) {
+                    item.poster = data.poster;
+                    item.season_number = data.season_number;
+                    item.serial = data.name;
+                    item.seriesName = data.name + " (" + item.name + ")";
+                    item.seasonId = data.idSeasonvar;
+                });
+                list.set(data.playlist);
+            });
+        };
+        ListControllerUpdatesList.prototype.addContent = function () {
+            var _this = this;
+            var length = this.model.updateList.list.get().length;
+            var currentList = this.model.updateList.list.get();
+            HTTP_4.getUpdateList(length).then(function (data) {
+                currentList = currentList.concat(data);
+                _this.model.updateList.list.set(currentList);
+            });
+        };
+        ListControllerUpdatesList.prototype.infiniteScroll = function () {
+            var length = this.model.updateList.list.get().length;
+            var scrolPosition = this.model.updateList.scrolPosition.get();
+            var dif = length - scrolPosition;
+            if (dif < 20) {
+                this.addContent();
+            }
+        };
+        ListControllerUpdatesList.prototype.openSerialList = function () {
+            var _this = this;
+            new RouteManager_3["default"]().set("/serialList");
+            this.model.serialList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.get_Serials({ offset: 0 }).then(function (data) {
+                _this.model.serialList.list.set(data);
+            });
+        };
+        ListControllerUpdatesList.prototype.openHistoryList = function () {
+            var _this = this;
+            new RouteManager_3["default"]().set("/historyList");
+            this.model.historyList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.getHistory().then(function (data) {
+                _this.model.historyList.list.set(data);
+            });
+        };
+        ListControllerUpdatesList.prototype.openFavoritesList = function () {
+            var _this = this;
+            new RouteManager_3["default"]().set("/favoritesList");
+            this.model.favoritesList.list.set(createPrevViewData_4["default"]());
+            HTTP_4.getFavorites().then(function (data) {
+                _this.model.favoritesList.list.set(data);
+            });
+        };
+        return ListControllerUpdatesList;
+    }(ListControllerSerials_2["default"]));
+    exports["default"] = ListControllerUpdatesList;
+});
+define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], function (require, exports, AppModel_9, RouteManager_4) {
+    "use strict";
+    exports.__esModule = true;
+    var routeManager = new RouteManager_4["default"]();
+    var ExitManager = /** @class */ (function () {
+        function ExitManager() {
+            if (typeof ExitManager.cache !== 'undefined') {
+                return ExitManager.cache;
+            }
+            this.model = new AppModel_9["default"]();
+            this.App = this.model.getInstance("App");
+            this.route = this.App.getValue("route");
+            this.ExitMenuInstance = this.model.getInstance("ExitMenuInstance");
+            this.exitReqConfig = this.ExitMenuInstance.getValue("config");
+            ExitManager.cache = this;
+        }
+        ExitManager.prototype.exitReq = function () {
+            this.oldRoute = this.route.get();
+            this.exitReqConfig.set({
+                text: "Вы дейстивтельно хотите выйти?",
+                list: [
+                    {
+                        name: "Да",
+                        command: "exit",
+                        active: true
+                    },
+                    {
+                        name: "Отмена",
+                        command: "cancel",
+                        active: false
+                    }
+                ]
+            });
+            routeManager.set("/exitReq");
+        };
+        ExitManager.prototype.exit = function () {
+            stb.SetVideoState(1);
+            var back_location = decodeURIComponent(window.location.search.match(/\?referrer\=.*/));
+            back_location = back_location.replace(/\?referrer\=/, '');
+            window.location = back_location;
+        };
+        ExitManager.prototype.cancel = function () {
+            routeManager.back();
+        };
+        ExitManager.prototype.downFocusPosition = function () {
+            var config = this.exitReqConfig.get();
+            var list = config.list;
+            list[0].active = false;
+            list[1].active = true;
+            this.exitReqConfig.set(config);
+        };
+        ExitManager.prototype.upFocusPosition = function () {
+            var config = this.exitReqConfig.get();
+            var list = config.list;
+            list[0].active = true;
+            list[1].active = false;
+            this.exitReqConfig.set(config);
+        };
+        ExitManager.prototype.submit = function () {
+            var config = this.exitReqConfig.get();
+            var list = config.list;
+            var command;
+            list.forEach(function (item) {
+                if (item.active) {
+                    command = item.command;
+                }
+            });
+            if (command === 'exit') {
+                this.exit();
+            }
+            else if (command === 'cancel') {
+                this.cancel();
+            }
+        };
+        return ExitManager;
+    }());
+    exports["default"] = ExitManager;
+});
+define("inputLayer/updateListPage", ["require", "exports", "ListControllers/ListControllerUpdatesList", "AppModel", "ExitManager", "InfoManager", "MainSettingMenu"], function (require, exports, ListControllerUpdatesList_1, AppModel_10, ExitManager_1, InfoManager_2, MainSettingMenu_2) {
+    "use strict";
+    exports.__esModule = true;
+    var mainSettingMenu;
     var model = new AppModel_10["default"]();
     var instanceModelUpdatesList = model.getInstance("updateList");
     var listControllerUpdatesList = new ListControllerUpdatesList_1["default"](instanceModelUpdatesList);
     var infoManager = new InfoManager_2["default"]();
     var exitManager = new ExitManager_1["default"]();
-    var mainSettingMenu;
     function UpdateLIstPage(code) {
         switch (code) {
             case 27:
@@ -3255,11 +3288,11 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
                 listControllerUpdatesList.openFavoritesList();
                 break;
             case 120:
-                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu = new MainSettingMenu_2["default"]();
                 mainSettingMenu.open();
                 break;
             case 123:
-                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu = new MainSettingMenu_2["default"]();
                 mainSettingMenu.open();
                 break;
         }
@@ -3275,6 +3308,14 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
                 break;
             case 38:
                 infoManager.scrollTop();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_2["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_2["default"]();
+                mainSettingMenu.open();
                 break;
         }
     }
@@ -3323,9 +3364,10 @@ define("ListControllers/ListControllerSeasons", ["require", "exports", "ListCont
     }(ListController_2["default"]));
     exports["default"] = ListControllerSeasons;
 });
-define("inputLayer/seasonListInput", ["require", "exports", "AppModel", "RouteManager", "ListControllers/ListControllerSeasons"], function (require, exports, AppModel_11, RouteManager_6, ListControllerSeasons_1) {
+define("inputLayer/seasonListInput", ["require", "exports", "AppModel", "RouteManager", "ListControllers/ListControllerSeasons", "MainSettingMenu"], function (require, exports, AppModel_11, RouteManager_6, ListControllerSeasons_1, MainSettingMenu_3) {
     "use strict";
     exports.__esModule = true;
+    var mainSettingMenu;
     var model = new AppModel_11["default"]();
     var instanceModelSeasonList = model.getInstance("seasonList");
     var listControllerSeasons = new ListControllerSeasons_1["default"](instanceModelSeasonList);
@@ -3355,6 +3397,14 @@ define("inputLayer/seasonListInput", ["require", "exports", "AppModel", "RouteMa
                 break;
             case 13:
                 listControllerSeasons.onEnter();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_3["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_3["default"]();
+                mainSettingMenu.open();
                 break;
         }
     }
@@ -3961,9 +4011,10 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
     }(ListController_3["default"]));
     exports["default"] = ListControllerVideo;
 });
-define("inputLayer/seriesListInput", ["require", "exports", "AppModel", "ListControllers/ListControllerVideo", "RouteManager"], function (require, exports, AppModel_13, ListControllerVideo_1, RouteManager_8) {
+define("inputLayer/seriesListInput", ["require", "exports", "AppModel", "ListControllers/ListControllerVideo", "RouteManager", "MainSettingMenu"], function (require, exports, AppModel_13, ListControllerVideo_1, RouteManager_8, MainSettingMenu_4) {
     "use strict";
     exports.__esModule = true;
+    var mainSettingMenu;
     var model = new AppModel_13["default"]();
     var routeManager = new RouteManager_8["default"]();
     var instanceModelVideo = model.getInstance("seriesList");
@@ -3993,6 +4044,14 @@ define("inputLayer/seriesListInput", ["require", "exports", "AppModel", "ListCon
                 break;
             case 13:
                 listControllerVideo.onEnter();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_4["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_4["default"]();
+                mainSettingMenu.open();
                 break;
         }
     }
@@ -4265,9 +4324,10 @@ define("ListControllers/ListControllerHistory", ["require", "exports", "ListCont
     }(ListController_4["default"]));
     exports["default"] = ListControllerHistory;
 });
-define("inputLayer/historyListInput", ["require", "exports", "RouteManager", "AppModel", "ListControllers/ListControllerHistory"], function (require, exports, RouteManager_10, AppModel_14, ListControllerHistory_1) {
+define("inputLayer/historyListInput", ["require", "exports", "RouteManager", "AppModel", "ListControllers/ListControllerHistory", "MainSettingMenu"], function (require, exports, RouteManager_10, AppModel_14, ListControllerHistory_1, MainSettingMenu_5) {
     "use strict";
     exports.__esModule = true;
+    var mainSettingMenu;
     var routeManager = new RouteManager_10["default"]();
     var model = new AppModel_14["default"]();
     var instanceModelHistory = model.getInstance("historyList");
@@ -4298,13 +4358,22 @@ define("inputLayer/historyListInput", ["require", "exports", "RouteManager", "Ap
             case 112:
                 listControllerHistory.clear();
                 break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_5["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_5["default"]();
+                mainSettingMenu.open();
+                break;
         }
     }
     exports.historyList = historyList;
 });
-define("inputLayer/exitReqInput", ["require", "exports", "ExitManager"], function (require, exports, ExitManager_2) {
+define("inputLayer/exitReqInput", ["require", "exports", "ExitManager", "MainSettingMenu"], function (require, exports, ExitManager_2, MainSettingMenu_6) {
     "use strict";
     exports.__esModule = true;
+    var mainSettingMenu;
     var exitManager = new ExitManager_2["default"]();
     function exitReq(code) {
         switch (code) {
@@ -4319,6 +4388,14 @@ define("inputLayer/exitReqInput", ["require", "exports", "ExitManager"], functio
                 break;
             case 13:
                 exitManager.submit();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_6["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_6["default"]();
+                mainSettingMenu.open();
                 break;
         }
     }
@@ -4402,9 +4479,10 @@ define("ListControllers/ListControllerFavorites", ["require", "exports", "ListCo
     }(ListController_5["default"]));
     exports["default"] = ListControllerSerials;
 });
-define("inputLayer/favoritsInput", ["require", "exports", "RouteManager", "ListControllers/ListControllerFavorites", "AppModel"], function (require, exports, RouteManager_12, ListControllerFavorites_1, AppModel_15) {
+define("inputLayer/favoritsInput", ["require", "exports", "RouteManager", "ListControllers/ListControllerFavorites", "AppModel", "MainSettingMenu"], function (require, exports, RouteManager_12, ListControllerFavorites_1, AppModel_15, MainSettingMenu_7) {
     "use strict";
     exports.__esModule = true;
+    var mainSettingMenu;
     var model = new AppModel_15["default"]();
     var instanceModel = model.getInstance("favoritesList");
     var listControllerFavorites = new ListControllerFavorites_1["default"](instanceModel);
@@ -4443,6 +4521,14 @@ define("inputLayer/favoritsInput", ["require", "exports", "RouteManager", "ListC
                 break;
             case 115:
                 //  listControllerSerials.addFav();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_7["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_7["default"]();
+                mainSettingMenu.open();
                 break;
         }
     }

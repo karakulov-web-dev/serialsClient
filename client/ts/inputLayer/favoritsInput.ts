@@ -1,6 +1,8 @@
 import RouteManager from "../RouteManager";
 import ListControllerFavorites from "../ListControllers/ListControllerFavorites";
 import AppModel from "../AppModel";
+import MainSettingMenu from "../MainSettingMenu";
+var mainSettingMenu;
 let model = new AppModel();
 let instanceModel = model.getInstance("favoritesList");
 let listControllerFavorites = new ListControllerFavorites(instanceModel);
@@ -15,31 +17,39 @@ export function favoritsList(code) {
       routeManager.home();
       break;
     case 40:
-    listControllerFavorites.downFocusPosition();
+      listControllerFavorites.downFocusPosition();
       break;
     case 38:
-    listControllerFavorites.upFocusPosition();
+      listControllerFavorites.upFocusPosition();
       break;
     case 39:
-    listControllerFavorites.rigthFocusPosition();
+      listControllerFavorites.rigthFocusPosition();
       break;
     case 37:
-    listControllerFavorites.leftFocusPosition();
+      listControllerFavorites.leftFocusPosition();
       break;
     case 13:
-    listControllerFavorites.onEnter();
+      listControllerFavorites.onEnter();
       break;
     case 112:
-    listControllerFavorites.deleteFavorites();
+      listControllerFavorites.deleteFavorites();
       break;
     case 113:
-    listControllerFavorites.clearFavorites();
+      listControllerFavorites.clearFavorites();
       break;
     case 114:
-     // searchManager.openWindow();
+      // searchManager.openWindow();
       break;
     case 115:
-  //  listControllerSerials.addFav();
-    break;
+      //  listControllerSerials.addFav();
+      break;
+    case 120:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
+    case 123:
+      mainSettingMenu = new MainSettingMenu();
+      mainSettingMenu.open();
+      break;
   }
 }
