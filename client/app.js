@@ -3015,7 +3015,205 @@ define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], functi
     }());
     exports["default"] = ExitManager;
 });
-define("inputLayer/updateListPage", ["require", "exports", "ListControllers/ListControllerUpdatesList", "AppModel", "ExitManager", "InfoManager"], function (require, exports, ListControllerUpdatesList_1, AppModel_10, ExitManager_1, InfoManager_2) {
+define("MainSettingMenu", ["require", "exports"], function (require, exports) {
+    "use strict";
+    exports.__esModule = true;
+    var MainSettingMenu = /** @class */ (function () {
+        function MainSettingMenu() {
+            this.mainList = new MainMenuList();
+            this.interface = new MainSettingMenuWindow(this.mainList);
+            this.list = this.mainList;
+            MainSettingMenu.cache = this;
+        }
+        MainSettingMenu.getCurrentInstance = function () {
+            return MainSettingMenu.cache;
+        };
+        MainSettingMenu.prototype.open = function () {
+            var _this = this;
+            this.interface.create();
+            this.oldInputHandler = document.onkeydown;
+            document.onkeydown = function (event) {
+                if (event.keyCode === 13) {
+                    _this.submit();
+                }
+                if (event.keyCode === 38) {
+                    _this.upFocus();
+                }
+                if (event.keyCode === 40) {
+                    _this.downFocus();
+                }
+                if (event.keyCode === 27) {
+                    _this.close();
+                }
+                if (event.keyCode === 8) {
+                    _this.close();
+                }
+            };
+        };
+        MainSettingMenu.prototype.returnOldInput = function () {
+            document.onkeydown = this.oldInputHandler;
+        };
+        MainSettingMenu.prototype.close = function () {
+            this.returnOldInput();
+            this.interface.remove();
+        };
+        MainSettingMenu.prototype.setMunuList = function (menuList) {
+            this.interface.menuList = menuList;
+            this.interface.update();
+            this.list = menuList;
+        };
+        MainSettingMenu.prototype.submit = function () {
+            var item = this.list.getFocusItem();
+            item.action();
+        };
+        MainSettingMenu.prototype.upFocus = function () {
+            this.list.upFocus();
+            this.interface.update();
+        };
+        MainSettingMenu.prototype.downFocus = function () {
+            this.list.downFocus();
+            this.interface.update();
+        };
+        return MainSettingMenu;
+    }());
+    exports["default"] = MainSettingMenu;
+    var MainSettingMenuWindow = /** @class */ (function () {
+        function MainSettingMenuWindow(menuList) {
+            this.body = document.getElementsByTagName("body")[0];
+            this.menuList = menuList;
+        }
+        MainSettingMenuWindow.prototype.create = function () {
+            this.div = document.createElement("div");
+            this.window = document.createElement("div");
+            this.header = document.createElement("div");
+            this.content = document.createElement("div");
+            this.body.appendChild(this.div);
+            this.div.appendChild(this.window);
+            this.window.appendChild(this.header);
+            this.window.appendChild(this.content);
+            this.addElemsClassName();
+            this.update();
+        };
+        MainSettingMenuWindow.prototype.addElemsClassName = function () {
+            this.div.className = "app_MainSettingMenuList_wrap";
+            this.window.className = "app_MainSettingMenuList_window";
+            this.header.className = "app_MainSettingMenuList_header";
+            this.content.className = "app_MainSettingMenuList_content";
+        };
+        MainSettingMenuWindow.prototype.update = function () {
+            var _this = this;
+            this.header.innerHTML = this.menuList.name;
+            this.content.innerHTML = "";
+            this.menuList.list.forEach(function (item) {
+                var div = document.createElement("div");
+                var p = document.createElement("p");
+                div.appendChild(p);
+                p.innerHTML = item.name;
+                _this.content.appendChild(div);
+                div.className = "app_MainSettingMenuListItem";
+                if (item.focus) {
+                    div.className = "app_MainSettingMenuListItem active";
+                }
+            });
+        };
+        MainSettingMenuWindow.prototype.remove = function () {
+            this.body.removeChild(this.div);
+        };
+        return MainSettingMenuWindow;
+    }());
+    var MenuListItem = /** @class */ (function () {
+        function MenuListItem(name, focus, action) {
+            this.name = name;
+            this.focus = focus;
+            this.action = action;
+        }
+        return MenuListItem;
+    }());
+    var MenuList = /** @class */ (function () {
+        function MenuList(name, list) {
+            this.name = name;
+            this.list = list;
+        }
+        MenuList.prototype.getFocusItem = function () {
+            var focusItem;
+            this.list.forEach(function (item) {
+                if (item.focus) {
+                    focusItem = item;
+                }
+            });
+            return focusItem;
+        };
+        MenuList.prototype.downFocus = function () {
+            var focusItem = this.getFocusItem();
+            var focusIndex = this.list.indexOf(focusItem);
+            var newFocusIndex = focusIndex + 1;
+            if (typeof this.list[newFocusIndex] !== "undefined") {
+                this.list[focusIndex].focus = false;
+                this.list[newFocusIndex].focus = true;
+            }
+        };
+        MenuList.prototype.upFocus = function () {
+            var focusItem = this.getFocusItem();
+            var focusIndex = this.list.indexOf(focusItem);
+            var newFocusIndex = focusIndex - 1;
+            if (typeof this.list[newFocusIndex] !== "undefined") {
+                this.list[focusIndex].focus = false;
+                this.list[newFocusIndex].focus = true;
+            }
+        };
+        return MenuList;
+    }());
+    var MainMenuList = /** @class */ (function (_super) {
+        __extends(MainMenuList, _super);
+        function MainMenuList() {
+            var _this = this;
+            var list = [];
+            list[0] = new MenuListItem("Родительский контроль", true, function (_) {
+                var menu = MainSettingMenu.getCurrentInstance();
+                var parentControlMenuList = new ParentControlMenuList();
+                menu.setMunuList(parentControlMenuList);
+            });
+            _this = _super.call(this, "Настройки", list) || this;
+            return _this;
+        }
+        return MainMenuList;
+    }(MenuList));
+    var ParentControlMenuList = /** @class */ (function (_super) {
+        __extends(ParentControlMenuList, _super);
+        function ParentControlMenuList() {
+            var _this = this;
+            var list = [];
+            list[0] = new MenuListItem("Включить", true, function (_) {
+                var menu = MainSettingMenu.getCurrentInstance();
+                menu.close();
+                setTimeout(function () {
+                    try {
+                        stb.RDir("setenv parentControlApps true");
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }, 10);
+            });
+            list[1] = new MenuListItem("Выключить", false, function (_) {
+                var menu = MainSettingMenu.getCurrentInstance();
+                menu.close();
+                setTimeout(function () {
+                    try {
+                        stb.RDir("setenv parentControlApps  ");
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }, 10);
+            });
+            _this = _super.call(this, "Родительский контроль", list) || this;
+            return _this;
+        }
+        return ParentControlMenuList;
+    }(MenuList));
+});
+define("inputLayer/updateListPage", ["require", "exports", "ListControllers/ListControllerUpdatesList", "AppModel", "ExitManager", "InfoManager", "MainSettingMenu"], function (require, exports, ListControllerUpdatesList_1, AppModel_10, ExitManager_1, InfoManager_2, MainSettingMenu_1) {
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_10["default"]();
@@ -3023,6 +3221,7 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
     var listControllerUpdatesList = new ListControllerUpdatesList_1["default"](instanceModelUpdatesList);
     var infoManager = new InfoManager_2["default"]();
     var exitManager = new ExitManager_1["default"]();
+    var mainSettingMenu;
     function UpdateLIstPage(code) {
         switch (code) {
             case 27:
@@ -3054,6 +3253,14 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
                 break;
             case 115:
                 listControllerUpdatesList.openFavoritesList();
+                break;
+            case 120:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
+                break;
+            case 123:
+                mainSettingMenu = new MainSettingMenu_1["default"]();
+                mainSettingMenu.open();
                 break;
         }
     }
@@ -4292,7 +4499,12 @@ define("adaptation", ["require", "exports"], function (require, exports) {
                 ".app_home_infoManager_window_body_box2_description {height: 50%;}",
                 ".app_home_infoManager_window { width: 600px; height: 450px;}",
                 ".app_home_infoManager_window_body_box1_infoBox {width: 70%;}",
-                ".app_home_infoManager_window {font-size: 20px;}"
+                ".app_home_infoManager_window {font-size: 20px;}",
+                ".ParentControlWindow_h1 {  font-size: 18px; }",
+                ".ParentControlWindow_invalidElem {  font-size: 17px; }",
+                ".ParentControlWindow_window { width: 450px;}",
+                ".ParentControlWindow_input {width: 77%;} ",
+                ".app_MainSettingMenuList_window { width: 400px; } "
             ];
             var cssAll = rules.join("\n");
             var head = document.getElementsByTagName("head");
@@ -4310,7 +4522,135 @@ define("adaptation", ["require", "exports"], function (require, exports) {
     }
     exports["default"] = default_2;
 });
-define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData"], function (require, exports, bindSimplePolyfill_1, AppModel_17, PageRouter_1, inputLayer_1, adaptation_1, HTTP_9, aspectRatioManager_2, createPrevViewData_8) {
+define("ParentControl", ["require", "exports"], function (require, exports) {
+    "use strict";
+    exports.__esModule = true;
+    var ParentControl = /** @class */ (function () {
+        function ParentControl() {
+            ParentControl;
+            if (ParentControl.cache) {
+                return ParentControl.cache;
+            }
+            ParentControl.cache = this;
+        }
+        ParentControl.prototype.init = function () {
+            this.getEnv();
+            this.getPassword();
+        };
+        ParentControl.prototype.getEnv = function () {
+            try {
+                this.mac = stb.RDir("MACAddress");
+                this.parentControl = stb.RDir("getenv parentControlApps");
+            }
+            catch (e) {
+                console.log(e);
+            }
+        };
+        ParentControl.prototype.getPassword = function () {
+            var _this = this;
+            var xhr = new XMLHttpRequest();
+            xhr.open("get", "http://212.77.128.205/stalker_portal/custom/get_pass.php?mac=" + this.mac, true);
+            xhr.send();
+            xhr.onreadystatechange = function (_) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        _this.password = data.password;
+                        _this.ready();
+                    }
+                }
+            };
+        };
+        ParentControl.prototype.isParentControlOn = function () {
+            if (typeof this.parentControl === "undefined") {
+                return false;
+            }
+            if (this.parentControl) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        };
+        ParentControl.prototype.openParentControlWindow = function () {
+            var _this = this;
+            this.parentControlWindow = new ParentControlWindow();
+            this.parentControlWindow.OnSubmit = function (password) {
+                if (_this.checkPassword(password)) {
+                    _this.parentControlWindow.close();
+                }
+                else {
+                    _this.parentControlWindow.invalid();
+                }
+            };
+        };
+        ParentControl.prototype.checkPassword = function (password) {
+            return password === this.password;
+        };
+        ParentControl.prototype.ready = function () {
+            this.onReady();
+        };
+        ParentControl.cache = false;
+        return ParentControl;
+    }());
+    exports["default"] = ParentControl;
+    var ParentControlWindow = /** @class */ (function () {
+        function ParentControlWindow() {
+            this.body = document.getElementsByTagName("body")[0];
+            this.wrap = document.createElement("div");
+            this.window = document.createElement("div");
+            this.header = document.createElement("div");
+            this.content = document.createElement("div");
+            this.h1 = document.createElement("h1");
+            this.input = document.createElement("input");
+            this.invalidElem = document.createElement("p");
+            this.input.type = "password";
+            this.body.appendChild(this.wrap);
+            this.wrap.appendChild(this.window);
+            this.window.appendChild(this.header);
+            this.window.appendChild(this.content);
+            this.content.appendChild(this.h1);
+            this.content.appendChild(this.input);
+            this.content.appendChild(this.invalidElem);
+            this.header.innerHTML = "РОДИТЕЛЬСКИЙ КОНТРОЛЬ";
+            this.h1.innerHTML = "Для доступа к приложению необходимо ввести пароль:";
+            this.addElemsClassName();
+            this.input.focus();
+            this.initInput();
+        }
+        ParentControlWindow.prototype.close = function () {
+            document.onkeydown = this.oldInputHandler;
+            this.wrap.style.display = "none";
+            this.body.removeChild(this.wrap);
+        };
+        ParentControlWindow.prototype.invalid = function () {
+            this.invalidElem.innerHTML = "Неправильный пароль!";
+        };
+        ParentControlWindow.prototype.addElemsClassName = function () {
+            this.wrap.className = "ParentControlWindow_wrap";
+            this.window.className = "ParentControlWindow_window";
+            this.header.className = "ParentControlWindow_header";
+            this.content.className = "ParentControlWindow_content";
+            this.h1.className = "ParentControlWindow_h1";
+            this.input.className = "ParentControlWindow_input";
+            this.invalidElem.className = "ParentControlWindow_invalidElem";
+        };
+        ParentControlWindow.prototype.initInput = function () {
+            var _this = this;
+            this.oldInputHandler = document.onkeydown;
+            document.onkeydown = function (event) {
+                if (event.keyCode === 13) {
+                    _this.submit(_this.input.value);
+                }
+            };
+        };
+        ParentControlWindow.prototype.submit = function (value) {
+            this.OnSubmit(value);
+        };
+        return ParentControlWindow;
+    }());
+});
+define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData", "ParentControl"], function (require, exports, bindSimplePolyfill_1, AppModel_17, PageRouter_1, inputLayer_1, adaptation_1, HTTP_9, aspectRatioManager_2, createPrevViewData_8, ParentControl_1) {
     "use strict";
     exports.__esModule = true;
     var App = /** @class */ (function () {
@@ -4337,9 +4677,17 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             catch (e) {
                 console.log(e);
             }
-            if (typeof mac === 'undefined') {
-                mac = 'testMac';
+            if (typeof mac === "undefined") {
+                mac = "testMac";
             }
+            var parentControl = new ParentControl_1["default"]();
+            parentControl.init();
+            parentControl.onReady = function () {
+                if (!parentControl.isParentControlOn()) {
+                    return false;
+                }
+                parentControl.openParentControlWindow();
+            };
             aspectRatioManager_2["default"].mount("aspect");
             aspectRatioManager_2["default"].init();
             var appContainer = document.getElementById(appContainerSelector);

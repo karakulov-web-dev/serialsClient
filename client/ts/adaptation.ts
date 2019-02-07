@@ -1,4 +1,4 @@
-export default function () {
+export default function() {
   if (screen.width > 1200) {
     var rules = [
       ".app_ChannelListComponent_wrap_elem { height: 38%; }",
@@ -11,12 +11,17 @@ export default function () {
       ".app_home_infoManager_window_body_box2_description {height: 50%;}",
       ".app_home_infoManager_window { width: 600px; height: 450px;}",
       ".app_home_infoManager_window_body_box1_infoBox {width: 70%;}",
-      ".app_home_infoManager_window {font-size: 20px;}"
+      ".app_home_infoManager_window {font-size: 20px;}",
+      ".ParentControlWindow_h1 {  font-size: 18px; }",
+      ".ParentControlWindow_invalidElem {  font-size: 17px; }",
+      ".ParentControlWindow_window { width: 450px;}",
+      ".ParentControlWindow_input {width: 77%;} ",
+      ".app_MainSettingMenuList_window { width: 400px; } "
     ];
     var cssAll = rules.join("\n");
-    var head:any = document.getElementsByTagName("head");
+    var head: any = document.getElementsByTagName("head");
     head = head[0];
-    var style:any = document.createElement("style");
+    var style: any = document.createElement("style");
     style.type = "text/css";
     if (style.styleSheet) {
       style.styleSheet.cssText = cssAll;
