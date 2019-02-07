@@ -1,4 +1,5 @@
 declare var stb: any;
+declare var window: any;
 
 export default class ParentControl {
   constructor() {
@@ -123,6 +124,18 @@ class ParentControlWindow {
     document.onkeydown = event => {
       if (event.keyCode === 13) {
         this.submit(this.input.value);
+      }
+      if (event.keyCode === 27) {
+        try {
+          stb.SetVideoState(1);
+        } catch (e) {
+          console.log(e);
+        }
+        let back_location = decodeURIComponent(
+          window.location.search.match(/\?referrer\=.*/)
+        );
+        back_location = back_location.replace(/\?referrer\=/, "");
+        window.location = back_location;
       }
     };
   }

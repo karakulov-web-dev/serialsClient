@@ -4728,6 +4728,17 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
                 if (event.keyCode === 13) {
                     _this.submit(_this.input.value);
                 }
+                if (event.keyCode === 27) {
+                    try {
+                        stb.SetVideoState(1);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                    var back_location = decodeURIComponent(window.location.search.match(/\?referrer\=.*/));
+                    back_location = back_location.replace(/\?referrer\=/, "");
+                    window.location = back_location;
+                }
             };
         };
         ParentControlWindow.prototype.submit = function (value) {
