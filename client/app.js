@@ -3977,12 +3977,14 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             this.model.Play.loadingWheel.set(true);
             var url;
             var display = this.model.seriesList.display.get()();
-            var activePosition = this.model.video.focusPosition.get();
+            var activePosition = this.model.seriesList.focusPosition.get();
             var qualityArr = [{ url: display[activePosition].link }];
             if (typeof qualityArr[0].url === "undefined") {
                 throw new Error("qualityArr undefined");
             }
+            console.log("activePosition", activePosition);
             HTTP_6.pushHistory(display[activePosition]);
+            console.log("qualityArr ", qualityArr);
             Play_1["default"].playControlInterfaceInit();
             var newQualityArr = [];
             qualityArr.forEach(function (item) {
@@ -3994,6 +3996,7 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             setTimeout(function () {
                 _this.model.Play.loadingWheel.set(false);
             }, 500);
+            console.log("url ", url);
             try {
                 if (!url) {
                     throw new Error("url not found");

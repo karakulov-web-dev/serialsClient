@@ -28,14 +28,14 @@ export default class ListControllerVideo extends ListController {
     this.model.Play.loadingWheel.set(true);
     var url;
     var display = this.model.seriesList.display.get()();
-    var activePosition = this.model.video.focusPosition.get();
+    var activePosition = this.model.seriesList.focusPosition.get();
     var qualityArr = [{ url: display[activePosition].link }];
     if (typeof qualityArr[0].url === "undefined") {
       throw new Error("qualityArr undefined");
     }
-
-    pushHistory(display[activePosition])
-
+    console.log("activePosition", activePosition);
+    pushHistory(display[activePosition]);
+    console.log("qualityArr ", qualityArr);
     Play.playControlInterfaceInit();
     var newQualityArr = [];
     qualityArr.forEach(function(item) {
@@ -47,6 +47,7 @@ export default class ListControllerVideo extends ListController {
     setTimeout(() => {
       this.model.Play.loadingWheel.set(false);
     }, 500);
+    console.log("url ", url);
     try {
       if (!url) {
         throw new Error("url not found");
