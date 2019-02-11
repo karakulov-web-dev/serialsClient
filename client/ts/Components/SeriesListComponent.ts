@@ -12,12 +12,12 @@ export default class SeriesListComponent extends ChannelListComponent {
     });
   }
   protected createItem(item) {
-    let title
-    let imgSrc
+    let title;
+    let imgSrc;
 
-      title = item.name
-      imgSrc = item.poster
- 
+    title = item.name;
+    imgSrc = item.poster;
+
     let wrap = document.createElement("div");
     let card = document.createElement("div");
     let img = document.createElement("img");
@@ -27,7 +27,7 @@ export default class SeriesListComponent extends ChannelListComponent {
     card.className = this.classNameConfig.cardClassName;
     img.className = this.classNameConfig.imgClassName;
     h1.className = this.classNameConfig.h1ClassName;
-    
+
     if (item.active) {
       wrap.className = this.classNameConfig.wrapActiveClassName;
     }
@@ -36,13 +36,13 @@ export default class SeriesListComponent extends ChannelListComponent {
     card.appendChild(img);
     card.appendChild(h1);
 
-    if (typeof item.contentDetails !== 'undefined') {
-      let duration = document.createElement("div")
-      let dr = item.contentDetails.duration
-      var timetring = convertISO8601(dr)
- 
-      duration.innerHTML = `${timetring}`
-      duration.className = "app_VideoListComponent_card_duration"
+    if (typeof item.contentDetails !== "undefined") {
+      let duration = document.createElement("div");
+      let dr = item.contentDetails.duration;
+      var timetring = convertISO8601(dr);
+
+      duration.innerHTML = `${timetring}`;
+      duration.className = "app_VideoListComponent_card_duration";
       card.appendChild(duration);
     }
 
@@ -53,9 +53,9 @@ export default class SeriesListComponent extends ChannelListComponent {
       title = title + "...";
     }
 
-    h1.innerHTML = title;
-    
-    if (imgSrc !== 'posterPrevView') {
+    let perevod = item.perevod ? item.perevod : "Стандартный";
+    h1.innerHTML = title + " (Перевод " + perevod + ")";
+    if (imgSrc !== "posterPrevView") {
       img.src = imgSrc;
     }
     return wrap;
@@ -63,23 +63,26 @@ export default class SeriesListComponent extends ChannelListComponent {
 }
 
 function convertISO8601(input) {
-    var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
-    var hours:any = 0, minutes:any = 0, seconds:any = 0, totalseconds;
-    if (reptms.test(input)) {
-        var matches = reptms.exec(input);
-        if (matches[1]) hours = Number(matches[1]);
-        if (matches[2]) minutes = Number(matches[2]);
-        if (matches[3]) seconds = Number(matches[3]);
-        hours = hours ? hours+":" : ""
-        minutes = minutes ? minutes+":" : "00:"
-        seconds = seconds + ""
-        if (hours) {
-          minutes = minutes.length === 2 ? "0" + minutes : minutes
-        }
-        if (minutes) {
-          seconds = seconds.length === 1 ? "0" + seconds : seconds
-        }
-        var timeString = `${hours}${minutes}${seconds}`
+  var reptms = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/;
+  var hours: any = 0,
+    minutes: any = 0,
+    seconds: any = 0,
+    totalseconds;
+  if (reptms.test(input)) {
+    var matches = reptms.exec(input);
+    if (matches[1]) hours = Number(matches[1]);
+    if (matches[2]) minutes = Number(matches[2]);
+    if (matches[3]) seconds = Number(matches[3]);
+    hours = hours ? hours + ":" : "";
+    minutes = minutes ? minutes + ":" : "00:";
+    seconds = seconds + "";
+    if (hours) {
+      minutes = minutes.length === 2 ? "0" + minutes : minutes;
     }
-    return (timeString);
+    if (minutes) {
+      seconds = seconds.length === 1 ? "0" + seconds : seconds;
+    }
+    var timeString = `${hours}${minutes}${seconds}`;
   }
+  return timeString;
+}

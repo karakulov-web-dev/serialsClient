@@ -1246,7 +1246,7 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
             wrap.appendChild(card);
             card.appendChild(img);
             card.appendChild(h1);
-            if (typeof item.contentDetails !== 'undefined') {
+            if (typeof item.contentDetails !== "undefined") {
                 var duration = document.createElement("div");
                 var dr = item.contentDetails.duration;
                 var timetring = convertISO8601(dr);
@@ -1260,8 +1260,9 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
                 title = title.join("");
                 title = title + "...";
             }
-            h1.innerHTML = title;
-            if (imgSrc !== 'posterPrevView') {
+            var perevod = item.perevod ? item.perevod : "Стандартный";
+            h1.innerHTML = title + " (Перевод " + perevod + ")";
+            if (imgSrc !== "posterPrevView") {
                 img.src = imgSrc;
             }
             return wrap;
@@ -1291,7 +1292,7 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
             }
             var timeString = "" + hours + minutes + seconds;
         }
-        return (timeString);
+        return timeString;
     }
 });
 define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_11, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
@@ -3982,9 +3983,7 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             if (typeof qualityArr[0].url === "undefined") {
                 throw new Error("qualityArr undefined");
             }
-            console.log("activePosition", activePosition);
             HTTP_6.pushHistory(display[activePosition]);
-            console.log("qualityArr ", qualityArr);
             Play_1["default"].playControlInterfaceInit();
             var newQualityArr = [];
             qualityArr.forEach(function (item) {
@@ -3996,7 +3995,6 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             setTimeout(function () {
                 _this.model.Play.loadingWheel.set(false);
             }, 500);
-            console.log("url ", url);
             try {
                 if (!url) {
                     throw new Error("url not found");

@@ -33,9 +33,7 @@ export default class ListControllerVideo extends ListController {
     if (typeof qualityArr[0].url === "undefined") {
       throw new Error("qualityArr undefined");
     }
-    console.log("activePosition", activePosition);
     pushHistory(display[activePosition]);
-    console.log("qualityArr ", qualityArr);
     Play.playControlInterfaceInit();
     var newQualityArr = [];
     qualityArr.forEach(function(item) {
@@ -47,7 +45,6 @@ export default class ListControllerVideo extends ListController {
     setTimeout(() => {
       this.model.Play.loadingWheel.set(false);
     }, 500);
-    console.log("url ", url);
     try {
       if (!url) {
         throw new Error("url not found");
