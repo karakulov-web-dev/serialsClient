@@ -3143,6 +3143,14 @@ define("ListControllers/ListControllerUpdatesList", ["require", "exports", "List
         };
         ListControllerUpdatesList.prototype.openSerialList = function () {
             var _this = this;
+            this.model.searchManager.query.set(false);
+            var list = this.model.genreManager.list_default.get();
+            var newList = list.map(function (_) {
+                _.active = false;
+                _.focus = false;
+                return _;
+            });
+            this.model.genreManager.list_default.set(newList);
             new RouteManager_3["default"]().set("/serialList");
             this.model.serialList.list.set(createPrevViewData_4["default"]());
             HTTP_4.get_Serials({ offset: 0 }).then(function (data) {

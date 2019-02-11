@@ -1,5 +1,11 @@
 import ListControllerSerials from "./ListControllerSerials";
-import { getUpdateList, getSeason, get_Serials, getHistory, getFavorites} from "../HTTP";
+import {
+  getUpdateList,
+  getSeason,
+  get_Serials,
+  getHistory,
+  getFavorites
+} from "../HTTP";
 import RouteManager from "../RouteManager";
 import createPrevViewData from "../createPrevViewData";
 
@@ -22,7 +28,6 @@ export default class ListControllerUpdatesList extends ListControllerSerials {
 
         item.seriesName = `${data.name} (${item.name})`;
         item.seasonId = data.idSeasonvar;
-        
       });
       list.set(data.playlist);
     });
@@ -44,6 +49,14 @@ export default class ListControllerUpdatesList extends ListControllerSerials {
     }
   }
   public openSerialList() {
+    this.model.searchManager.query.set(false);
+    let list = this.model.genreManager.list_default.get();
+    let newList = list.map(_ => {
+      _.active = false;
+      _.focus = false;
+      return _;
+    });
+    this.model.genreManager.list_default.set(newList);
     new RouteManager().set("/serialList");
     this.model.serialList.list.set(createPrevViewData());
     get_Serials({ offset: 0 }).then(data => {
