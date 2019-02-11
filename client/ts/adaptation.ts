@@ -2,7 +2,7 @@ export default function() {
   if (screen.width > 1200) {
     var rules = [
       ".app_ChannelListComponent_wrap_elem { height: 38%; }",
-      ".app_ChannelListComponent_card_img  {  height: 77%; }",
+      ".app_ChannelListComponent_card_img  {  height: 70%; }",
       ".app_ChannelListComponent_card_h1   { font-size: 23px; }",
       ".app_Play_ControlBar_timeShiftSizeBar { right: 230px; }",
       ".app_home_genreManager_window  {    width: 400px;} ",
