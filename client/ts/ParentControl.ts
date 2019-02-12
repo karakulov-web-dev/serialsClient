@@ -16,7 +16,7 @@ export default class ParentControl {
   public getEnv() {
     try {
       this.mac = stb.RDir("MACAddress");
-      this.parentControl = stb.RDir("getenv parentControlApps");
+      this.parentControl = stb.RDir("getenv parent_control_apps");
     } catch (e) {
       //this.mac = "00:1a:79:1a:87:fa";
       // this.parentControl = true;
@@ -45,6 +45,8 @@ export default class ParentControl {
   }
   public isParentControlOn() {
     if (typeof this.parentControl === "undefined") {
+      return false;
+    } else if (this.parentControl === "false") {
       return false;
     }
     if (this.parentControl) {

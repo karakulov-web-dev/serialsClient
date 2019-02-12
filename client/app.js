@@ -2940,7 +2940,7 @@ define("MainSettingMenu", ["require", "exports"], function (require, exports) {
                 menu.close();
                 setTimeout(function () {
                     try {
-                        stb.RDir("setenv parentControlApps true");
+                        stb.RDir("setenv parent_control_apps true");
                     }
                     catch (e) {
                         console.log(e);
@@ -2952,7 +2952,7 @@ define("MainSettingMenu", ["require", "exports"], function (require, exports) {
                 menu.close();
                 setTimeout(function () {
                     try {
-                        stb.RDir("setenv parentControlApps  ");
+                        stb.RDir("setenv parent_control_apps false");
                     }
                     catch (e) {
                         console.log(e);
@@ -4637,7 +4637,7 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
         ParentControl.prototype.getEnv = function () {
             try {
                 this.mac = stb.RDir("MACAddress");
-                this.parentControl = stb.RDir("getenv parentControlApps");
+                this.parentControl = stb.RDir("getenv parent_control_apps");
             }
             catch (e) {
                 //this.mac = "00:1a:79:1a:87:fa";
@@ -4662,6 +4662,9 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
         };
         ParentControl.prototype.isParentControlOn = function () {
             if (typeof this.parentControl === "undefined") {
+                return false;
+            }
+            else if (this.parentControl === "false") {
                 return false;
             }
             if (this.parentControl) {

@@ -187,7 +187,7 @@ class ParentControlMenuList extends MenuList implements MenuListInterface {
       menu.close();
       setTimeout(function() {
         try {
-          stb.RDir("setenv parentControlApps true");
+          stb.RDir("setenv parent_control_apps true");
         } catch (e) {
           console.log(e);
         }
@@ -198,7 +198,7 @@ class ParentControlMenuList extends MenuList implements MenuListInterface {
       menu.close();
       setTimeout(function() {
         try {
-          stb.RDir("setenv parentControlApps  ");
+          stb.RDir("setenv parent_control_apps false");
         } catch (e) {
           console.log(e);
         }
