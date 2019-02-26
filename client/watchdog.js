@@ -9,15 +9,11 @@ watchdog_init();
 //------------------------------------------------------------------------------------------------------
 function watchdog_init()
 {
-		 if (decodeURIComponent(window.location).search(/token/) != -1)
-		 	{
-		 watchdog.ajax_loader = decodeURIComponent(window.location).substring(decodeURIComponent(window.location).search(/ajax_loader\=.+?\&/), decodeURIComponent(window.location).search(/\&/)).replace(/ajax_loader\=/, '');
-		 watchdog.token = decodeURIComponent(window.location).substring(decodeURIComponent(window.location).search(/token\=.+?\&/), decodeURIComponent(window.location).search(/\&timeout/)).replace(/token\=/, '');		 
-		 watchdog.timeout = decodeURIComponent(window.location).substring(decodeURIComponent(window.location).search(/timeout\=.*/), decodeURIComponent(window.location).length).replace(/timeout\=/, '')*1000;		 
-		 console.log("watchdog.ajax_loader="+watchdog.ajax_loader);
-		 console.log("watchdog.token="+watchdog.token);
-		 console.log("watchdog.timeout="+watchdog.timeout);
-		 //setInterval('console.log("secunda");', 1000);
+		 if (decodeURIComponent(window.location).search(/token\=/) != -1)
+		 	{		 
+		 watchdog.ajax_loader = parseGetParams("ajax_loader");
+		 watchdog.token = parseGetParams("token");
+		 watchdog.timeout = parseGetParams("timeout")*1000;		 
 		 send_request();
 		 setInterval('send_request();', watchdog.timeout);
 		}
@@ -29,11 +25,11 @@ function watchdog_init()
                 								if(!result)
                 										{
                 											//Ошибка сохранения
-                											console('Server error');
+                											console.log('Server error');
                 										}
                 										else
                 										{                												
-                    										console.log("result_request_watchdog="+JSON.stringify(result));
+                    										//console.log("result_request_watchdog="+JSON.stringify(result));
                     										watchdog_parse_result(result.data);
                     									}
                 								}
@@ -50,7 +46,7 @@ function request_watchdog(params, callback){
 
        function(result, errors){
         // errors - содержит ошибки сервера и debug сообщения
-        //gSTB.Debug(errors);       
+        gSTB.Debug(errors);       
 
            callback(result);
        },
@@ -60,12 +56,32 @@ function request_watchdog(params, callback){
    		);
 	}
 
+function parseGetParams(par) {
+        var tmp = new Array();      // два вспомагательных   
+        var tmp2 = new Array();     // массива   
+        var param = new Array();   
+        var get = location.search;  // строка GET запроса
+        var result="";  //переменная результата   
+        if(get != '') {   
+            tmp = (get.substr(1)).split('&');   // разделяем переменные   
+            for(var i=0; i < tmp.length; i++) {   
+                tmp2 = tmp[i].split('=');       // массив param будет содержать   
+                param[tmp2[0]] = tmp2[1];       // пары ключ(имя переменной)->значение   
+            }   
+        }                
+        if (typeof param[par]!= 'undefined')        {           
+		      	                    
+            result = param[par];
+        }	
+        return result;	
+   }
+
 function watchdog_parse_result(data){
-			console.log("watchdog_parse_result");
-			console.log("data="+JSON.stringify(data));
+			//console.log("watchdog_parse_result");
+			//console.log("data="+JSON.stringify(data));
 			stb = gSTB; 
 				if (typeof(data.id) != 'undefined'){      
-        	console.log("data.event="+data.event);
+        	//console.log("data.event="+data.event);
         switch(data.event){
             case 'diagnostic_page':
             {

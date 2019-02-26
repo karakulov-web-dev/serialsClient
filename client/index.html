@@ -18,19 +18,35 @@
     <link rel="stylesheet" href="css/app_home_searchManager.css" />
     <link rel="stylesheet" href="css/ParentControl.css" />
     <link rel="stylesheet" href="css/MainSettingMenu.css" />
-    <script type="text/javascript" src="JsHttpRequest.js"></script>
-    <script type="text/javascript" src="watchdog.js"></script>
   </head>
   <body>
     <script type="text/javascript">
-      var stb;
-      var stbEvent;
+      try {
+        netscape.security.PrivilegeManager.enablePrivilege(
+          "UniversalXPConnect"
+        );
+        stb = gSTB;
+        stb.InitPlayer();
+        stb.SetVideoControl(1);
+        stb.SetVideoState(1);
+        stb.SetTopWin(0);
+        stb.SetVolume(100);
+        var stbEvent = {
+          onEvent: function(data) {},
+          event: 0
+        };
+        mac = stb.RDir("MACAddress");
+      } catch (e) {
+        console.log(e);
+      }
     </script>
     <script
       data-main="app"
       type="text/javascript"
       src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.1/require.min.js"
     ></script>
+    <script type="text/javascript" src="JsHttpRequest.js"></script>
+    <script type="text/javascript" src="watchdog.js"></script>
     <div id="app"></div>
     <div id="aspect"></div>
   </body>

@@ -3183,7 +3183,7 @@ define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], functi
     var routeManager = new RouteManager_4["default"]();
     var ExitManager = /** @class */ (function () {
         function ExitManager() {
-            if (typeof ExitManager.cache !== 'undefined') {
+            if (typeof ExitManager.cache !== "undefined") {
                 return ExitManager.cache;
             }
             this.model = new AppModel_9["default"]();
@@ -3214,9 +3214,8 @@ define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], functi
         };
         ExitManager.prototype.exit = function () {
             stb.SetVideoState(1);
-            var back_location = decodeURIComponent(window.location.search.match(/\?referrer\=.*/));
-            back_location = back_location.replace(/\?referrer\=/, '');
-            window.location = back_location;
+            var win = window;
+            win.location = parseGetParams("referrer");
         };
         ExitManager.prototype.cancel = function () {
             routeManager.back();
@@ -3244,16 +3243,34 @@ define("ExitManager", ["require", "exports", "AppModel", "RouteManager"], functi
                     command = item.command;
                 }
             });
-            if (command === 'exit') {
+            if (command === "exit") {
                 this.exit();
             }
-            else if (command === 'cancel') {
+            else if (command === "cancel") {
                 this.cancel();
             }
         };
         return ExitManager;
     }());
     exports["default"] = ExitManager;
+    function parseGetParams(par) {
+        var tmp = new Array(); // два вспомагательных
+        var tmp2 = new Array(); // массива
+        var param = new Array();
+        var get = location.search; // строка GET запроса
+        var result = ""; //переменная результата
+        if (get != "") {
+            tmp = get.substr(1).split("&"); // разделяем переменные
+            for (var i = 0; i < tmp.length; i++) {
+                tmp2 = tmp[i].split("="); // массив param будет содержать
+                param[tmp2[0]] = tmp2[1]; // пары ключ(имя переменной)->значение
+            }
+        }
+        if (typeof param[par] != "undefined") {
+            result = param[par];
+        }
+        return result;
+    }
 });
 define("inputLayer/updateListPage", ["require", "exports", "ListControllers/ListControllerUpdatesList", "AppModel", "ExitManager", "InfoManager", "MainSettingMenu"], function (require, exports, ListControllerUpdatesList_1, AppModel_10, ExitManager_1, InfoManager_2, MainSettingMenu_2) {
     "use strict";
@@ -4797,9 +4814,7 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
             catch (e) {
                 console.log(e);
             }
-            var back_location = decodeURIComponent(win.location.search.match(/\?referrer\=.*/));
-            back_location = back_location.replace(/\?referrer\=/, "");
-            win.location = back_location;
+            win.location = parseGetParams("referrer");
         };
         InputController.prototype.back = function () {
             if (this.inputElem !== document.activeElement) {
@@ -4858,6 +4873,24 @@ define("ParentControl", ["require", "exports"], function (require, exports) {
         };
         return InputController;
     }());
+    function parseGetParams(par) {
+        var tmp = new Array(); // два вспомагательных
+        var tmp2 = new Array(); // массива
+        var param = new Array();
+        var get = location.search; // строка GET запроса
+        var result = ""; //переменная результата
+        if (get != "") {
+            tmp = get.substr(1).split("&"); // разделяем переменные
+            for (var i = 0; i < tmp.length; i++) {
+                tmp2 = tmp[i].split("="); // массив param будет содержать
+                param[tmp2[0]] = tmp2[1]; // пары ключ(имя переменной)->значение
+            }
+        }
+        if (typeof param[par] != "undefined") {
+            result = param[par];
+        }
+        return result;
+    }
 });
 define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", "Components/PageRouter", "inputLayer/inputLayer", "adaptation", "HTTP", "aspectRatioManager", "createPrevViewData", "ParentControl"], function (require, exports, bindSimplePolyfill_1, AppModel_17, PageRouter_1, inputLayer_1, adaptation_1, HTTP_9, aspectRatioManager_2, createPrevViewData_8, ParentControl_1) {
     "use strict";
@@ -4870,17 +4903,6 @@ define("app", ["require", "exports", "Polyfill/bindSimplePolyfill", "AppModel", 
             adaptation_1["default"]();
             var mac;
             try {
-                netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
-                stb = gSTB;
-                stb.InitPlayer();
-                stb.SetVideoControl(1);
-                stb.SetVideoState(1);
-                stb.SetTopWin(0);
-                stb.SetVolume(100);
-                var stbEvent = {
-                    onEvent: function (data) { },
-                    event: 0
-                };
                 mac = stb.RDir("MACAddress");
             }
             catch (e) {

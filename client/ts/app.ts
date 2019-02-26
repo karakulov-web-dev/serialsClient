@@ -9,9 +9,7 @@ import aspectRatioManager from "./aspectRatioManager";
 import createPrevViewData from "./createPrevViewData";
 import ParentControl from "./ParentControl";
 
-declare var gSTB: stbObj;
 declare var stb: stbObj;
-declare var netscape: any;
 declare var window: any;
 
 class App {
@@ -20,18 +18,6 @@ class App {
     adaptation();
     var mac;
     try {
-      netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
-
-      stb = gSTB;
-      stb.InitPlayer();
-      stb.SetVideoControl(1);
-      stb.SetVideoState(1);
-      stb.SetTopWin(0);
-      stb.SetVolume(100);
-      var stbEvent = {
-        onEvent: function(data) {},
-        event: 0
-      };
       mac = stb.RDir("MACAddress");
     } catch (e) {
       console.log(e);

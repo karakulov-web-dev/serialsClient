@@ -192,11 +192,7 @@ class InputController {
     } catch (e) {
       console.log(e);
     }
-    var back_location = decodeURIComponent(
-      win.location.search.match(/\?referrer\=.*/)
-    );
-    back_location = back_location.replace(/\?referrer\=/, "");
-    win.location = back_location;
+    win.location = parseGetParams("referrer");
   }
   private back() {
     if (this.inputElem !== document.activeElement) {
@@ -247,4 +243,23 @@ class InputController {
   private inputElem: HTMLInputElement;
   private okElem: HTMLInputElement;
   private exitElem: HTMLInputElement;
+}
+
+function parseGetParams(par) {
+  var tmp = new Array(); // два вспомагательных
+  var tmp2 = new Array(); // массива
+  var param = new Array();
+  var get = location.search; // строка GET запроса
+  var result = ""; //переменная результата
+  if (get != "") {
+    tmp = get.substr(1).split("&"); // разделяем переменные
+    for (var i = 0; i < tmp.length; i++) {
+      tmp2 = tmp[i].split("="); // массив param будет содержать
+      param[tmp2[0]] = tmp2[1]; // пары ключ(имя переменной)->значение
+    }
+  }
+  if (typeof param[par] != "undefined") {
+    result = param[par];
+  }
+  return result;
 }
