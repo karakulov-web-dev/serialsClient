@@ -14,13 +14,15 @@ export interface stbObj {
   SetSpeed(value: any);
   IsPlaying();
   Stop();
-  ShowVirtualKeyboard()
-  HideVirtualKeyboard()
-  RDir(string:string);
+  ShowVirtualKeyboard();
+  HideVirtualKeyboard();
+  RDir(string: string);
+  GetMute();
+  SetMute(number: number);
 }
 
 export interface windowObj {
-  location: any
+  location: any;
 }
 
 export interface PlayOjb {

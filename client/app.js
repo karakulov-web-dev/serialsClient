@@ -3475,7 +3475,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
             season = season + " \u0441\u0435\u0437\u043E\u043D";
         }
         else {
-            season = '';
+            season = "";
         }
         name = item.serial + ": " + season + " " + item.name;
         namespace.model.Play.name.set(name);
@@ -3605,6 +3605,24 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
             }
             stb.SetVolume(vol);
             namespace.model.Play.volume.set(stb.GetVolume());
+        }
+        catch (e) {
+            console.log(e);
+        }
+    };
+    _.mute = function () {
+        this.showPlayInfo();
+        try {
+            var mute = stb.GetMute();
+            if (mute) {
+                stb.SetMute(0);
+                var vol = stb.GetVolume();
+                namespace.model.Play.volume.set(vol);
+            }
+            else {
+                stb.SetMute(1);
+                namespace.model.Play.volume.set(0);
+            }
         }
         catch (e) {
             console.log(e);
@@ -3777,7 +3795,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
                 }
                 i++;
             });
-            if (typeof timeShiftSizeList[index + changeValue] !== 'undefined') {
+            if (typeof timeShiftSizeList[index + changeValue] !== "undefined") {
                 namespace.model.Play.timeShiftSize.set(timeShiftSizeList[index + changeValue]);
             }
             else {
@@ -3939,7 +3957,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
             namespace.model.Play.settingMenu.list.set(volumeList);
         },
         changeVolume: function (item) {
-            var vol = +(item.name.split("%")[0]);
+            var vol = +item.name.split("%")[0];
             try {
                 stb.SetVolume(vol);
                 namespace.model.Play.volume.set(stb.GetVolume());
@@ -4272,6 +4290,9 @@ define("inputLayer/playInput", ["require", "exports", "Play", "aspectRatioManage
                 break;
             case 117:
                 aspectRatioManager_1["default"].handler();
+                break;
+            case 192:
+                Play_2["default"].mute();
                 break;
         }
     }

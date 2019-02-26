@@ -42,9 +42,9 @@ _.playControlInterfaceInit = function() {
   let item = display[activePosition];
   let season = item.season_number;
   if (+season > 0) {
-    season = `${season} сезон`
+    season = `${season} сезон`;
   } else {
-    season = '';
+    season = "";
   }
   name = `${item.serial}: ${season} ${item.name}`;
 
@@ -137,7 +137,7 @@ _.exitPlay = function() {
   } catch (e) {
     console.log(e);
   }
-  namespace.model.App.route.set("/seriesList")
+  namespace.model.App.route.set("/seriesList");
   try {
     stb.Stop();
     stb.SetVideoState(0);
@@ -151,7 +151,7 @@ _.volumePlus = function() {
     var vol = stb.GetVolume();
     vol = vol + 10;
     if (vol > 100) {
-      vol = 100
+      vol = 100;
     }
     stb.SetVolume(vol);
     namespace.model.Play.volume.set(stb.GetVolume());
@@ -170,6 +170,22 @@ _.volumeMinus = function() {
     }
     stb.SetVolume(vol);
     namespace.model.Play.volume.set(stb.GetVolume());
+  } catch (e) {
+    console.log(e);
+  }
+};
+_.mute = function() {
+  this.showPlayInfo();
+  try {
+    var mute = stb.GetMute();
+    if (mute) {
+      stb.SetMute(0);
+      var vol = stb.GetVolume();
+      namespace.model.Play.volume.set(vol);
+    } else {
+      stb.SetMute(1);
+      namespace.model.Play.volume.set(0);
+    }
   } catch (e) {
     console.log(e);
   }
@@ -277,7 +293,7 @@ _.timeShiftLeft = function() {
   }
   this.timeShiftControlActive = true;
   this.timeShiftCurrentTime =
-  time - namespace.model.Play.timeShiftSize.get().value * 1000;
+    time - namespace.model.Play.timeShiftSize.get().value * 1000;
   var duration = stb.GetMediaLenEx();
   var percent = 100 / duration;
   var percentPosition = percent * this.timeShiftCurrentTime;
@@ -338,31 +354,33 @@ _.timeShiftLeft = function() {
   }, 1500);
 };
 
-(function () {
-  _.nextTimeShiftSize = function () {
-    changeTimeShiftSize (1)
+(function() {
+  _.nextTimeShiftSize = function() {
+    changeTimeShiftSize(1);
     _.showPlayInfo();
-  }
-  
-  _.prevTimeShiftSize = function () {
-    changeTimeShiftSize (-1)
-    _.showPlayInfo();
-  }
+  };
 
-  function changeTimeShiftSize (changeValue:number) {
-    var size = namespace.model.Play.timeShiftSize.get()
+  _.prevTimeShiftSize = function() {
+    changeTimeShiftSize(-1);
+    _.showPlayInfo();
+  };
+
+  function changeTimeShiftSize(changeValue: number) {
+    var size = namespace.model.Play.timeShiftSize.get();
     var i = 0;
     var index = 0;
-    timeShiftSizeList.forEach(function (item) {
+    timeShiftSizeList.forEach(function(item) {
       if (item.value === size.value) {
-        index = i
+        index = i;
       }
-      i++
-    })
-    if (typeof timeShiftSizeList[index + changeValue] !== 'undefined') {
-      namespace.model.Play.timeShiftSize.set(timeShiftSizeList[index + changeValue])
+      i++;
+    });
+    if (typeof timeShiftSizeList[index + changeValue] !== "undefined") {
+      namespace.model.Play.timeShiftSize.set(
+        timeShiftSizeList[index + changeValue]
+      );
     } else {
-      namespace.model.Play.timeShiftSize.set(timeShiftSizeList[index])
+      namespace.model.Play.timeShiftSize.set(timeShiftSizeList[index]);
     }
   }
 
@@ -395,13 +413,13 @@ _.timeShiftLeft = function() {
     {
       name: "10 сек",
       value: 10,
-      command: "changetimeShiftSize",
+      command: "changetimeShiftSize"
     }
-  ]
-})()
+  ];
+})();
 
 _.OpenSettingMenu = function() {
-  namespace.model.App.route.set("/play/settingMenu") 
+  namespace.model.App.route.set("/play/settingMenu");
   namespace.model.Play.settingMenu.visible.set(true);
   namespace.model.Play.visibleControlBar.set(true);
   if (typeof _.showPlayInfo.timer !== "undefined") {
@@ -456,7 +474,7 @@ _.playSettingMenuSubmit = function() {
   this.SettingMenuCommands[key](activeItem);
 };
 _.closeSettingMenu = function() {
-  namespace.model.App.route.set("/play")
+  namespace.model.App.route.set("/play");
   var qualityList = namespace.model.Play.settingMenu.qualityList.get();
   qualityList.forEach(function(item) {
     item.active = false;
@@ -481,8 +499,8 @@ _.SettingMenuCommands = {
         item.activated = true;
       }
     });
-    namespace.model.Play.timeShiftSize.set(item)
-    _.closeSettingMenu() 
+    namespace.model.Play.timeShiftSize.set(item);
+    _.closeSettingMenu();
   },
   openQualityList: function() {
     var qualityList = namespace.model.Play.settingMenu.qualityList.get();
@@ -514,19 +532,19 @@ _.SettingMenuCommands = {
     namespace.model.Play.settingMenu.list.set(qualityList);
     namespace.model.Play.settingMenu.qualityList.set(qualityList);
   },
-  openVolumeList: function () {
+  openVolumeList: function() {
     var volumeList = namespace.model.Play.settingMenu.volumeList.get();
     namespace.model.Play.settingMenu.list.set(volumeList);
   },
-  changeVolume: function (item) {
-    var vol = +(item.name.split("%")[0])
+  changeVolume: function(item) {
+    var vol = +item.name.split("%")[0];
     try {
       stb.SetVolume(vol);
       namespace.model.Play.volume.set(stb.GetVolume());
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-    namespace.model.App.route.set("/play")
+    namespace.model.App.route.set("/play");
     _.showPlayInfo();
     namespace.model.Play.settingMenu.visible.set(false);
   },
@@ -547,7 +565,7 @@ _.SettingMenuCommands = {
       item.activated = false;
     });
     item.activated = true;
-    _.closeSettingMenu() 
+    _.closeSettingMenu();
   }
 };
 
