@@ -8,7 +8,7 @@ class UpdateList {
     }
     public function getData() {
         $bodyReq = array(
-            'key' => '032a4972_111',
+            'key' => '033238e5',
             'command' => 'getUpdateList',
         );
         $this->result = $this->reqTools->reqPostHttp('http://api.seasonvar.ru/', $bodyReq);

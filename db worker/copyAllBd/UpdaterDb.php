@@ -21,7 +21,7 @@ class UpdaterDb {
     }
     private function updateItemInDb($item) {
         $bodyReq = array(
-            'key' => '032a4972',
+            'key' => '033238e5',
             'command' => 'getSeasonList',
             'id' => $item->id
         );
@@ -37,7 +37,7 @@ class UpdaterDb {
     }
     private function seasonPlayListUpdateDb($item) {
         $bodyReq = array(
-            'key' => '032a4972',
+            'key' => '033238e5',
             'command' => 'getSeason',
             'season_id' => $item->id
         );

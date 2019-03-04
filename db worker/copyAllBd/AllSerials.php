@@ -8,7 +8,7 @@ class AllSerials {
     }
     public function get() {
         $bodyReq = array(
-            'key' => '032a4972',
+            'key' => '033238e5',
             'command' => 'getSerialList'
         );
         $this->result = $this->reqTools->reqPostHttp('http://api.seasonvar.ru/', $bodyReq);
