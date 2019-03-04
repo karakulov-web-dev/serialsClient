@@ -21,6 +21,12 @@ export interface stbObj {
   SetMute(number: number);
 }
 
+export interface stbEvent {
+  onEvent(data);
+  onEventTmp(data);
+  event: 0;
+}
+
 export interface windowObj {
   location: any;
 }

@@ -32,7 +32,10 @@
         stb.SetTopWin(0);
         stb.SetVolume(100);
         var stbEvent = {
-          onEvent: function(data) {},
+          onEvent: function(data) {
+            this.onEventTmp(data);
+          },
+          onEventTmp: function() {},
           event: 0
         };
         mac = stb.RDir("MACAddress");

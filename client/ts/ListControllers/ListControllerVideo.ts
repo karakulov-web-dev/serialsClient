@@ -1,10 +1,12 @@
 import ListController from "./ListController";
 import Play from "../Play";
-import { stbObj } from "../interfaceGlobal";
+import { stbObj, stbEvent } from "../interfaceGlobal";
 import RouteManager from "../RouteManager";
-import { pushHistory } from "../HTTP";
+import { pushHistory, ErrorSeasonNotFound } from "../HTTP";
+import { Promise_simple } from "../Polyfill/Promise_simple";
 
 declare var stb: stbObj;
+declare var stbEvent: stbEvent;
 
 export default class ListControllerVideo extends ListController {
   public onEnter() {
@@ -50,7 +52,33 @@ export default class ListControllerVideo extends ListController {
         throw new Error("url not found");
       } else {
         stb.SetVideoState(1);
-        stb.Play(`${url}`);
+        new Promise_simple(resolve => {
+          stb.Play(`${url}`);
+          stbEvent.onEventTmp = function(eventType) {
+            if (eventType == 5) {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+            setTimeout(() => {
+              stbEvent.onEventTmp = function() {};
+            }, 1);
+          };
+        }).then(error => {
+          if (error) {
+            errorUrlNotFound(url);
+          }
+        });
+
+        var errorUrlNotFound = function errorUrlNotFound(url) {
+          console.log(`error url not found: ${url}`);
+          ErrorSeasonNotFound(display[activePosition].seasonId).then(result => {
+            stb.Stop();
+            console.log(JSON.stringify(result));
+            console.log(activePosition);
+            stb.Play(result[activePosition].link);
+          });
+        };
       }
     } catch (e) {
       console.log(e);

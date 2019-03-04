@@ -2204,13 +2204,31 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     "use strict";
     exports.__esModule = true;
     var model = new AppModel_4["default"]();
+    function ErrorSeasonNotFound(id) {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({ id: +id });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/errorSeasonNotFound.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        data.playlist = JSON.parse(data.playlist);
+                        resolve(data.playlist);
+                    }
+                }
+            };
+        });
+    }
+    exports.ErrorSeasonNotFound = ErrorSeasonNotFound;
     function get_Serials(config) {
         var gArr = model.genreManager.list_default.get();
         var gArrNew = [];
         gArr.forEach(function (item) {
             if (item.active) {
                 if (item.name) {
-                    var n = item.name.replace('&', "");
+                    var n = item.name.replace("&", "");
                     gArrNew.push(n);
                 }
             }
@@ -2225,7 +2243,6 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return getSerials(config);
     }
     exports.get_Serials = get_Serials;
-    ;
     function getSerials(config) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = config;
@@ -2244,12 +2261,11 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         });
     }
     exports.getSerials = getSerials;
-    ;
     function getSeasons(idArr) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
             idArr = idArr.map(function (item) { return +item; });
             var data = JSON.stringify({
-                "idArr": idArr
+                idArr: idArr
             });
             var xhr = new XMLHttpRequest();
             xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSeasons.php", true);
@@ -2267,7 +2283,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     exports.getSeasons = getSeasons;
     function getSeason(id) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
-            var data = JSON.stringify({ "id": +id });
+            var data = JSON.stringify({ id: +id });
             var xhr = new XMLHttpRequest();
             xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/get_Season.php", true);
             xhr.send(data);
@@ -2285,7 +2301,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
     exports.getSeason = getSeason;
     function getUpdateList(offset) {
         return new Promise_simple_1.Promise_simple(function (resolve) {
-            var data = JSON.stringify({ "offset": offset });
+            var data = JSON.stringify({ offset: offset });
             var xhr = new XMLHttpRequest();
             xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getUpdateList.php", true);
             xhr.send(data);
@@ -3991,7 +4007,7 @@ define("Play", ["require", "exports", "AppModel"], function (require, exports, A
     };
     exports["default"] = _;
 });
-define("ListControllers/ListControllerVideo", ["require", "exports", "ListControllers/ListController", "Play", "RouteManager", "HTTP"], function (require, exports, ListController_3, Play_1, RouteManager_7, HTTP_6) {
+define("ListControllers/ListControllerVideo", ["require", "exports", "ListControllers/ListController", "Play", "RouteManager", "HTTP", "Polyfill/Promise_simple"], function (require, exports, ListController_3, Play_1, RouteManager_7, HTTP_6, Promise_simple_2) {
     "use strict";
     exports.__esModule = true;
     var ListControllerVideo = /** @class */ (function (_super) {
@@ -4044,7 +4060,33 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
                 }
                 else {
                     stb.SetVideoState(1);
-                    stb.Play("" + url);
+                    new Promise_simple_2.Promise_simple(function (resolve) {
+                        stb.Play("" + url);
+                        stbEvent.onEventTmp = function (eventType) {
+                            if (eventType == 5) {
+                                resolve(true);
+                            }
+                            else {
+                                resolve(false);
+                            }
+                            setTimeout(function () {
+                                stbEvent.onEventTmp = function () { };
+                            }, 1);
+                        };
+                    }).then(function (error) {
+                        if (error) {
+                            errorUrlNotFound(url);
+                        }
+                    });
+                    var errorUrlNotFound = function errorUrlNotFound(url) {
+                        console.log("error url not found: " + url);
+                        HTTP_6.ErrorSeasonNotFound(display[activePosition].seasonId).then(function (result) {
+                            stb.Stop();
+                            console.log(JSON.stringify(result));
+                            console.log(activePosition);
+                            stb.Play(result[activePosition].link);
+                        });
+                    };
                 }
             }
             catch (e) {

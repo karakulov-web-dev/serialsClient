@@ -1,34 +1,55 @@
 import { Promise_simple, Promise } from "./Polyfill/Promise_simple";
 import AppModel from "./AppModel";
 
-let model:any = new AppModel();
+let model: any = new AppModel();
 
-export function get_Serials (config:any):Promise {
-  let gArr = model.genreManager.list_default.get()
-  let gArrNew = []
- gArr.forEach(item => {
+export function ErrorSeasonNotFound(id): Promise {
+  return new Promise_simple(function(resolve) {
+    var data = JSON.stringify({ id: +id });
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+      "post",
+      "http://212.77.128.177/karakulov/seasonvar/api/errorSeasonNotFound.php",
+      true
+    );
+    xhr.send(data);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          data.playlist = JSON.parse(data.playlist);
+          resolve(data.playlist);
+        }
+      }
+    };
+  });
+}
+
+export function get_Serials(config: any): Promise {
+  let gArr = model.genreManager.list_default.get();
+  let gArrNew = [];
+  gArr.forEach(item => {
     if (item.active) {
       if (item.name) {
-        let n = item.name.replace('&',"")
-        gArrNew.push(n)
+        let n = item.name.replace("&", "");
+        gArrNew.push(n);
       }
     }
-  })
+  });
 
   if (gArrNew && gArrNew.length > 0) {
-    config.genre = gArrNew
+    config.genre = gArrNew;
   }
 
-  let searchQuery = model.searchManager.query.get()
+  let searchQuery = model.searchManager.query.get();
   if (searchQuery) {
-      config.searchQuery = searchQuery
+    config.searchQuery = searchQuery;
   }
 
-  return getSerials(config)
-};
+  return getSerials(config);
+}
 
-
-export function getSerials (config:any):Promise {
+export function getSerials(config: any): Promise {
   return new Promise_simple(function(resolve) {
     let data = config;
     data = JSON.stringify(data);
@@ -48,13 +69,13 @@ export function getSerials (config:any):Promise {
       }
     };
   });
-};
+}
 
-export function getSeasons(idArr):Promise {
+export function getSeasons(idArr): Promise {
   return new Promise_simple(function(resolve) {
-    idArr = idArr.map(item => +item)
+    idArr = idArr.map(item => +item);
     var data = JSON.stringify({
-      "idArr": idArr
+      idArr: idArr
     });
     var xhr = new XMLHttpRequest();
     xhr.open(
@@ -74,9 +95,9 @@ export function getSeasons(idArr):Promise {
   });
 }
 
-export function getSeason(id):Promise {
+export function getSeason(id): Promise {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({"id": +id});
+    var data = JSON.stringify({ id: +id });
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
@@ -88,7 +109,7 @@ export function getSeason(id):Promise {
       if (xhr.readyState === 4) {
         if (xhr.status === 200) {
           var data = JSON.parse(xhr.responseText);
-          data.playlist = JSON.parse(data.playlist)
+          data.playlist = JSON.parse(data.playlist);
           resolve(data);
         }
       }
@@ -98,7 +119,7 @@ export function getSeason(id):Promise {
 
 export function getUpdateList(offset) {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({"offset": offset});
+    var data = JSON.stringify({ offset: offset });
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
@@ -116,7 +137,6 @@ export function getUpdateList(offset) {
     };
   });
 }
-
 
 export function pushHistory(item) {
   let time = +new Date();
@@ -145,7 +165,7 @@ export function pushHistory(item) {
 
 export function getHistory() {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({userMac: model.App.userMac.get()});
+    var data = JSON.stringify({ userMac: model.App.userMac.get() });
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
@@ -166,7 +186,7 @@ export function getHistory() {
 
 export function clearHistory() {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({userMac: model.App.userMac.get()});
+    var data = JSON.stringify({ userMac: model.App.userMac.get() });
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
@@ -185,11 +205,11 @@ export function clearHistory() {
   });
 }
 
-export function pushFavorites(serialId:number) {
+export function pushFavorites(serialId: number) {
   let item = {
     userMac: model.App.userMac.get(),
     serialId: Number(serialId)
-  }
+  };
   return new Promise_simple(function(resolve) {
     var data = JSON.stringify(item);
     var xhr = new XMLHttpRequest();
@@ -212,7 +232,7 @@ export function pushFavorites(serialId:number) {
 
 export function getFavorites() {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({userMac: model.App.userMac.get()});
+    var data = JSON.stringify({ userMac: model.App.userMac.get() });
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
@@ -233,7 +253,7 @@ export function getFavorites() {
 
 export function clearFavorites() {
   return new Promise_simple(function(resolve) {
-    var data = JSON.stringify({userMac: model.App.userMac.get()});
+    var data = JSON.stringify({ userMac: model.App.userMac.get() });
     var xhr = new XMLHttpRequest();
     xhr.open(
       "post",
@@ -275,4 +295,3 @@ export function deleteFavorites(serialId) {
     };
   });
 }
-
