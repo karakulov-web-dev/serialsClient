@@ -1146,7 +1146,7 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
             card.appendChild(h1);
             if (title.length > 50) {
                 title = title.split("");
-                title.length = title.length = 90;
+                title.length = 45;
                 title = title.join("");
                 title = title + "...";
             }
@@ -4624,7 +4624,7 @@ define("adaptation", ["require", "exports"], function (require, exports) {
             var rules = [
                 ".app_ChannelListComponent_wrap_elem { height: 38%; }",
                 ".app_ChannelListComponent_card_img  {  height: 70%; }",
-                ".app_ChannelListComponent_card_h1   { font-size: 23px; }",
+                ".app_ChannelListComponent_card_h1   { font-size: 21px; }",
                 ".app_Play_ControlBar_timeShiftSizeBar { right: 230px; }",
                 ".app_home_genreManager_window  {    width: 400px;} ",
                 ".app_home_genreManager_window_list_GenreElemWrap {width: 88%} ",
