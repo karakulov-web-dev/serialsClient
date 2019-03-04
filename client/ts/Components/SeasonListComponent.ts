@@ -41,7 +41,7 @@ export default class SeasonListComponent extends ChannelListComponent {
 
     if (title.length > 50) {
       title = title.split("");
-      title.length = title.length = 90;
+      title.length = 45;
       title = title.join("");
       title = title + "...";
     }
