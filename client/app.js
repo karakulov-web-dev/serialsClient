@@ -3096,7 +3096,7 @@ define("inputLayer/serialListInput", ["require", "exports", "RouteManager", "Lis
             case 13:
                 searchManager.submit();
                 break;
-            case 8:
+            case 27:
                 searchManager.back();
                 break;
             case 120:

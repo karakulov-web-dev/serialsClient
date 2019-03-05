@@ -119,7 +119,7 @@ export function serialListSearchManager(code) {
     case 13:
       searchManager.submit();
       break;
-    case 8:
+    case 27:
       searchManager.back();
       break;
     case 120:
