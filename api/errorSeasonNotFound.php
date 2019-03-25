@@ -13,7 +13,8 @@ seasonPlayListUpdateDb($configReq['id']);
 errorUrlNotFound($configReq['id']);
 
 function errorUrlNotFound($id)
-{
+{   
+  
     if (gettype($id) != 'integer') {
         return false;
     }
@@ -28,8 +29,9 @@ function errorUrlNotFound($id)
     echo json_encode($row, JSON_UNESCAPED_UNICODE);
 }
 function seasonPlayListUpdateDb($id)
-{
+{   
     global $reqTools;
+    global $apiSeasonvarConf;
     $bodyReq = array(
         'key' => $apiSeasonvarConf->key,
         'command' => 'getSeason',
@@ -37,19 +39,20 @@ function seasonPlayListUpdateDb($id)
     );
     $result = $reqTools->reqPostHttp('http://api.seasonvar.ru/', $bodyReq);
 
-
     $playlist = json_encode($result->playlist, JSON_UNESCAPED_UNICODE);
     $idSeasonvar = $id;
 
     $sql = "DELETE FROM `playList` WHERE idSeasonvar={$id}";
     $reqTools->reqDb($sql);
 
+ 
 
     $part1 = "INSERT INTO `playList` ";
     $part2 = "(`idSeasonvar`,`playlist`) ";
     $part3 = 'VALUES ';
     $part4 = " ('{$idSeasonvar}','{$playlist}')";
     $sql = $part1 . $part2 . $part3 . $part4;
+
     $reqTools->reqDb($sql);
 }
  

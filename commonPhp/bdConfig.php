@@ -1,5 +1,4 @@
 <?php
-//require_once('../commonPhp/bdConfig.php');
 $bdConfig = new stdClass();
 $bdConfig->host = "127.0.0.1";
 $bdConfig->username = "karakulov";
