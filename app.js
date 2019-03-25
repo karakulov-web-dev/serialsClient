@@ -2208,7 +2208,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ id: +id });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/errorSeasonNotFound.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/errorSeasonNotFound.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2248,7 +2248,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
             var data = config;
             data = JSON.stringify(data);
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSerials.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/getSerials.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2268,7 +2268,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
                 idArr: idArr
             });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getSeasons.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/getSeasons.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2285,7 +2285,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ id: +id });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/get_Season.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/get_Season.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2303,7 +2303,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ offset: offset });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getUpdateList.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/getUpdateList.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2324,7 +2324,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify(item);
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/pushHistory.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/pushHistory.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2341,7 +2341,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ userMac: model.App.userMac.get() });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getHistory.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/getHistory.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2358,7 +2358,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ userMac: model.App.userMac.get() });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/clearHistory.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/clearHistory.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2379,7 +2379,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify(item);
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/pushFavorites.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/pushFavorites.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2396,7 +2396,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ userMac: model.App.userMac.get() });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/getFavorites.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/getFavorites.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2413,7 +2413,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         return new Promise_simple_1.Promise_simple(function (resolve) {
             var data = JSON.stringify({ userMac: model.App.userMac.get() });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/clearFavorites.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/clearFavorites.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -2433,7 +2433,7 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
                 userMac: model.App.userMac.get()
             });
             var xhr = new XMLHttpRequest();
-            xhr.open("post", "http://212.77.128.177/karakulov/seasonvar/api/deleteFavorites.php", true);
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/deleteFavorites.php", true);
             xhr.send(data);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
