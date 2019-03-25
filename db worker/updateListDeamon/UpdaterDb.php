@@ -1,5 +1,5 @@
 <?php
-require_once('../../commonPhp');
+require_once('../../commonPhp/ReqTools.phpdf');
 require_once('Season.php');
 require_once('Serial.php');
 require_once('Genre.php');
