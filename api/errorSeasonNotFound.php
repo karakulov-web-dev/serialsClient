@@ -1,5 +1,6 @@
 <?php
 require_once('../commonPhp/bdConfig.php');
+require_once('../commonPhp/apiSeasonvarConf.php');
 $mysqli = new mysqli($bdConfig->host, $bdConfig->username, $bdConfig->password, $bdConfig->bdName, $bdConfig->port);
 $mysqli->set_charset("utf8");
 $content = trim(file_get_contents("php://input"));
@@ -30,7 +31,7 @@ function seasonPlayListUpdateDb($id)
 {
     global $reqTools;
     $bodyReq = array(
-        'key' => '033238e5',
+        'key' => $apiSeasonvarConf->key,
         'command' => 'getSeason',
         'season_id' => $id
     );
