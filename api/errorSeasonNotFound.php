@@ -3,7 +3,7 @@ $mysqli = new mysqli("127.0.0.1", "karakulov", "33nrai3tgv", "serials", 3306);
 $mysqli->set_charset("utf8");
 $content = trim(file_get_contents("php://input"));
 $configReq = json_decode($content, true);
-require_once('ReqTools.php');
+require_once('../commonPhp/ReqTools.php');
 
 $reqTools = new ReqTools();
 

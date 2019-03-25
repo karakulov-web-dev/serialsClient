@@ -1,5 +1,5 @@
 <?php
-require_once('ReqTools.php');
+require_once('../commonPhp/ReqTools.php');
 
 $content = trim(file_get_contents("php://input"));
 $body = json_decode($content);

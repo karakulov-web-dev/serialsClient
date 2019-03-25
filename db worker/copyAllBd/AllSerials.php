@@ -1,5 +1,5 @@
 <?php
-require_once('ReqTools.php');
+require_once('../../commonPhp/ReqTools.php');
 
 class AllSerials {
     function __construct()

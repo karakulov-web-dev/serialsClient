@@ -1,5 +1,5 @@
 <?php
-require_once('ReqTools.php');
+require_once('../../commonPhp/ReqTools.phpReqTools.php');
 
 class UpdateList {
     function __construct()
