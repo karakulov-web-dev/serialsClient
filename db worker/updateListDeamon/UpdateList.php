@@ -1,5 +1,6 @@
 <?php
 require_once('../../commonPhp/ReqTools.phpReqTools.php');
+require_once('../commonPhp/apiSeasonvarConf.php');
 
 class UpdateList {
     function __construct()
@@ -8,7 +9,7 @@ class UpdateList {
     }
     public function getData() {
         $bodyReq = array(
-            'key' => '033238e5',
+            'key' => $apiSeasonvarConf->key,
             'command' => 'getUpdateList',
         );
         $this->result = $this->reqTools->reqPostHttp('http://api.seasonvar.ru/', $bodyReq);

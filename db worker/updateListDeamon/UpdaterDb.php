@@ -1,5 +1,6 @@
 <?php
 require_once('../../commonPhp/ReqTools.phpdf');
+require_once('../commonPhp/apiSeasonvarConf.php');
 require_once('Season.php');
 require_once('Serial.php');
 require_once('Genre.php');
@@ -21,7 +22,7 @@ class UpdaterDb {
     }
     private function updateItemInDb($item) {
         $bodyReq = array(
-            'key' => '033238e5',
+            'key' => $apiSeasonvarConf->key,
             'command' => 'getSeasonList',
             'id' => $item->id
         );
@@ -37,7 +38,7 @@ class UpdaterDb {
     }
     private function seasonPlayListUpdateDb($item) {
         $bodyReq = array(
-            'key' => '033238e5',
+            'key' => $apiSeasonvarConf->key,
             'command' => 'getSeason',
             'season_id' => $item->id
         );

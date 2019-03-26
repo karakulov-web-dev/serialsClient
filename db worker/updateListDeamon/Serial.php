@@ -1,6 +1,6 @@
 <?php
-
-$mysqli = new mysqli("127.0.0.1", "karakulov", "33nrai3tgv", "serials", 3306);
+require_once('../commonPhp/bdConfig.php');
+$mysqli = new mysqli($bdConfig->host, $bdConfig->username, $bdConfig->password, $bdConfig->bdName, $bdConfig->port);
 $mysqli->set_charset("utf8");
 
 class Serial
