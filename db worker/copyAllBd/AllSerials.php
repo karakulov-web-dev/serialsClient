@@ -1,5 +1,6 @@
 <?php
 require_once('../../commonPhp/ReqTools.php');
+require_once('../../commonPhp/apiSeasonvarConf.php');
 
 class AllSerials {
     function __construct()
@@ -7,8 +8,9 @@ class AllSerials {
         $this->reqTools = new ReqTools();
     }
     public function get() {
+        global $apiSeasonvarConf;
         $bodyReq = array(
-            'key' => '033238e5',
+            'key' => $apiSeasonvarConf->key,
             'command' => 'getSerialList'
         );
         $this->result = $this->reqTools->reqPostHttp('http://api.seasonvar.ru/', $bodyReq);
