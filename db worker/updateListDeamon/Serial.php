@@ -1,5 +1,5 @@
 <?php
-require_once('../commonPhp/bdConfig.php');
+require_once('../../commonPhp/bdConfig.php');
 $mysqli = new mysqli($bdConfig->host, $bdConfig->username, $bdConfig->password, $bdConfig->bdName, $bdConfig->port);
 $mysqli->set_charset("utf8");
 

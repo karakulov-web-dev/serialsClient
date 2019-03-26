@@ -145,7 +145,7 @@
 .app_Play_ControlBar_playSettingMenu_item {
   text-align: center;
   font-family: Roboto, Arial, sans-serif;
-  background: #cccccc;;
+  background: #cccccc;
   padding: 10px 10px;
   margin: 0px 0px;
   font-weight: bold;
@@ -155,7 +155,8 @@
 }
 
 .app_Play_PauseIndicator {
-  background: url("../img/baseline_pause_circle_outline_white_48dp.png") no-repeat;
+  background: url("../img/baseline_pause_circle_outline_white_48dp.png")
+    no-repeat;
   height: 45px;
   width: 45px;
   position: fixed;

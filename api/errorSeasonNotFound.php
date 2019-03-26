@@ -14,7 +14,7 @@ errorUrlNotFound($configReq['id']);
 
 function errorUrlNotFound($id)
 {   
-  
+
     if (gettype($id) != 'integer') {
         return false;
     }

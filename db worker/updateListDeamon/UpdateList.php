@@ -1,6 +1,6 @@
 <?php
-require_once('../../commonPhp/ReqTools.phpReqTools.php');
-require_once('../commonPhp/apiSeasonvarConf.php');
+require_once('../../commonPhp/ReqTools.php');
+require_once('../../commonPhp/apiSeasonvarConf.php');
 
 class UpdateList {
     function __construct()
@@ -8,6 +8,7 @@ class UpdateList {
         $this->reqTools = new ReqTools();
     }
     public function getData() {
+        global $apiSeasonvarConf;
         $bodyReq = array(
             'key' => $apiSeasonvarConf->key,
             'command' => 'getUpdateList',
