@@ -1,8 +1,7 @@
 import ListController from "./ListController";
 import RouteManager from "../RouteManager";
-import { getSeason } from "../HTTP";
+import { getSeason, pushFavorites, getSerialBySeasonvarId } from "../HTTP";
 import createPrevViewData from "../createPrevViewData";
-
 
 export default class ListControllerSeasons extends ListController {
   public onEnter() {
@@ -16,6 +15,18 @@ export default class ListControllerSeasons extends ListController {
   }
   private openSeason() {
     this.openSeriesList();
+  }
+  public addFav() {
+    let model = this.model;
+    let messageText = model.message.text;
+    let messageVisible = model.message.visible;
+    this.defineActiveItem();
+    getSerialBySeasonvarId(+this.activeItem.idSeasonvar).then(data => {
+      pushFavorites(data.id);
+    });
+    messageText.set(`Сериал ${this.activeItem.name} добавлен в избранное`);
+    messageVisible.set(true);
+    hideMessage(messageText, messageVisible);
   }
   private openSeriesList() {
     this.model.seriesList.title.set(
@@ -32,7 +43,7 @@ export default class ListControllerSeasons extends ListController {
         item.poster = data.poster;
         item.season_number = data.season_number;
         item.serial = data.name;
-        
+
         item.seriesName = `${data.name} (${item.name})`;
         item.seasonId = data.idSeasonvar;
       });
@@ -40,4 +51,18 @@ export default class ListControllerSeasons extends ListController {
     });
   }
   private activeItem;
+}
+
+let timeout;
+function hideMessage(messageText, messageVisible) {
+  let self: any = hideMessage;
+  if (self.execution) {
+    clearTimeout(timeout);
+  }
+  self.execution = true;
+  timeout = setTimeout(function() {
+    messageText.set(``);
+    messageVisible.set(false);
+    self.execution = false;
+  }, 3000);
 }

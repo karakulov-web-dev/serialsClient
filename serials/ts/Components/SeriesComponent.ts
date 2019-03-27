@@ -3,15 +3,16 @@ import BaseComponent from "./BaseComponent";
 import HeaderComponent from "./HeaderComponent";
 import SeriesListComponent from "./SeriesListComponent";
 import BottomButtonComponent from "./BottomButtonComponent";
+import MessageComponent from "./MessageComponent";
 
 export default class HomeComponent extends BaseComponent {
   protected create() {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [SeriesListComponent];
+    let compList = [SeriesListComponent, MessageComponent];
 
-    let model:any = this.model;
+    let model: any = this.model;
 
     new HeaderComponent(model.seriesList.title.get()).render(
       elem.appendChild(document.createElement("div"))
@@ -38,8 +39,8 @@ export default class HomeComponent extends BaseComponent {
         visible: false
       },
       blue: {
-        text: "Сортировать",
-        visible: false
+        text: "В избранное",
+        visible: true
       }
     });
     let btnWrap = document.createElement("div");

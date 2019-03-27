@@ -43,5 +43,8 @@ export function seasonList(code) {
       mainSettingMenu = new MainSettingMenu();
       mainSettingMenu.open();
       break;
+    case 115:
+      listControllerSeasons.addFav();
+      break;
   }
 }

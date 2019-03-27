@@ -14,6 +14,9 @@ export function seriesList(code) {
     case 112:
       routeManager.back();
       break;
+    case 115:
+      listControllerVideo.addFav();
+      break;
     case 8:
       routeManager.back();
       break;

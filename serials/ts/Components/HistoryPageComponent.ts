@@ -2,7 +2,7 @@ import BaseComponent from "./BaseComponent";
 
 import HeaderComponent from "./HeaderComponent";
 import BottomButtonComponent from "./BottomButtonComponent";
-import HistotyListComponent from "./HistotyListComponent"
+import HistotyListComponent from "./HistotyListComponent";
 
 export default class UpdateLIstPageComponent extends BaseComponent {
   protected create() {
@@ -10,8 +10,8 @@ export default class UpdateLIstPageComponent extends BaseComponent {
     elem.className = "app_HomeComponent";
 
     let compList = [HistotyListComponent];
-  
-    new HeaderComponent('История просмотров').render(
+
+    new HeaderComponent("История просмотров").render(
       elem.appendChild(document.createElement("div"))
     );
 
@@ -24,7 +24,7 @@ export default class UpdateLIstPageComponent extends BaseComponent {
 
     let bottomBtnComp = new BottomButtonComponent({
       red: {
-        text: "Очистить",
+        text: "Назад",
         visible: true
       },
       green: {
@@ -37,7 +37,7 @@ export default class UpdateLIstPageComponent extends BaseComponent {
       },
       blue: {
         text: "Очистить",
-        visible: false
+        visible: true
       }
     });
     let btnWrap = document.createElement("div");

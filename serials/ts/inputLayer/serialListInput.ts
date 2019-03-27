@@ -48,7 +48,7 @@ export function serialList(code) {
       searchManager.openWindow();
       break;
     case 115:
-      listControllerSerials.addFav();
+      listControllerSerials.openFavoritesList();
       break;
     case 120:
       mainSettingMenu = new MainSettingMenu();
@@ -95,6 +95,9 @@ export function serialListGenreManager(code) {
 export function serialListInfoManager(code) {
   switch (code) {
     case 8:
+      infoManager.back();
+      break;
+    case 113:
       infoManager.back();
       break;
     case 40:

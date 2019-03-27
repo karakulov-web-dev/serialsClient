@@ -3,17 +3,26 @@ import BaseComponent from "./BaseComponent";
 import HeaderComponent from "./HeaderComponent";
 import SeasonListComponent from "./SeasonListComponent";
 import BottomButtonComponent from "./BottomButtonComponent";
+import MessageComponent from "./MessageComponent";
 
 export default class HomeComponent extends BaseComponent {
   protected create() {
     let elem = document.createElement("div");
     elem.className = "app_HomeComponent";
 
-    let compList = [SeasonListComponent];
+    let compList = [SeasonListComponent, MessageComponent];
 
-    new HeaderComponent(this.model.getInstance('serialList').getValue('display').get()()[this.model.getInstance('serialList').getValue('focusPosition').get()].name).render(
-      elem.appendChild(document.createElement("div"))
-    );
+    new HeaderComponent(
+      this.model
+        .getInstance("serialList")
+        .getValue("display")
+        .get()()[
+        this.model
+          .getInstance("serialList")
+          .getValue("focusPosition")
+          .get()
+      ].name
+    ).render(elem.appendChild(document.createElement("div")));
 
     compList.forEach(Comp => {
       let wrap = document.createElement("div");
@@ -36,8 +45,8 @@ export default class HomeComponent extends BaseComponent {
         visible: false
       },
       blue: {
-        text: "Сортировать",
-        visible: false
+        text: "В избранное",
+        visible: true
       }
     });
     let btnWrap = document.createElement("div");

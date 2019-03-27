@@ -1,6 +1,12 @@
 import ListController from "./ListController";
 import RouteManager from "../RouteManager";
-import { getSeasons, get_Serials, getSeason, pushFavorites } from "../HTTP";
+import {
+  getSeasons,
+  get_Serials,
+  getSeason,
+  pushFavorites,
+  getFavorites
+} from "../HTTP";
 import createPrevViewData from "../createPrevViewData";
 
 export default class ListControllerSerials extends ListController {
@@ -63,13 +69,13 @@ export default class ListControllerSerials extends ListController {
     if (this.execution) {
       return;
     }
-    this.execution = true
+    this.execution = true;
     let length = this.model.serialList.list.get().length;
     let currentList = this.model.serialList.list.get();
     get_Serials({ offset: length }).then(data => {
       currentList = currentList.concat(data);
       this.model.serialList.list.set(currentList);
-      this.execution = false
+      this.execution = false;
     });
   }
   public addFav() {
@@ -78,26 +84,31 @@ export default class ListControllerSerials extends ListController {
     let messageVisible = model.message.visible;
     this.defineActiveItem();
     pushFavorites(this.activeItem.id);
-    messageText.set(`Сериал ${this.activeItem.name} добавлен в избранное`)
-    messageVisible.set(true)
-    hideMessage(messageText,messageVisible);
+    messageText.set(`Сериал ${this.activeItem.name} добавлен в избранное`);
+    messageVisible.set(true);
+    hideMessage(messageText, messageVisible);
   }
-  private execution:boolean
+  public openFavoritesList() {
+    new RouteManager().set("/favoritesList");
+    this.model.favoritesList.list.set(createPrevViewData());
+    getFavorites().then(data => {
+      this.model.favoritesList.list.set(data);
+    });
+  }
+  private execution: boolean;
   protected activeItem;
 }
 
 let timeout;
-function hideMessage(messageText,messageVisible) {
-  let self:any = hideMessage
+function hideMessage(messageText, messageVisible) {
+  let self: any = hideMessage;
   if (self.execution) {
-    clearTimeout(timeout)
+    clearTimeout(timeout);
   }
-  self.execution = true
-  timeout = setTimeout(function () {
-    messageText.set(``)
-    messageVisible.set(false)
+  self.execution = true;
+  timeout = setTimeout(function() {
+    messageText.set(``);
+    messageVisible.set(false);
     self.execution = false;
-  },
-  3000
-  )
+  }, 3000);
 }

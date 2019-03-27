@@ -10,8 +10,8 @@ export default class FavoritesPageComponent extends BaseComponent {
     elem.className = "app_HomeComponent";
 
     let compList = [FavoritesListComponent];
-  
-    new HeaderComponent('Избранное').render(
+
+    new HeaderComponent("Избранное").render(
       elem.appendChild(document.createElement("div"))
     );
 
@@ -24,20 +24,20 @@ export default class FavoritesPageComponent extends BaseComponent {
 
     let bottomBtnComp = new BottomButtonComponent({
       red: {
-        text: "Удалить",
+        text: "Назад",
         visible: true
       },
       green: {
         text: "Удалить все",
-        visible: true
+        visible: false
       },
       yellow: {
-        text: "Поиск",
-        visible: false
+        text: "Удалить",
+        visible: true
       },
       blue: {
-        text: "В избранное",
-        visible: false
+        text: "Удалить все",
+        visible: true
       }
     });
     let btnWrap = document.createElement("div");

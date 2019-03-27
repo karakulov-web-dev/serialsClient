@@ -32,9 +32,12 @@ export function favoritsList(code) {
       listControllerFavorites.onEnter();
       break;
     case 112:
+      routeManager.back();
+      break;
+    case 114:
       listControllerFavorites.deleteFavorites();
       break;
-    case 113:
+    case 115:
       listControllerFavorites.clearFavorites();
       break;
     case 114:

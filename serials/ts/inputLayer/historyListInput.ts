@@ -33,6 +33,9 @@ export function historyList(code) {
       listControllerHistory.onEnter();
       break;
     case 112:
+      routeManager.back();
+      break;
+    case 115:
       listControllerHistory.clear();
       break;
     case 120:

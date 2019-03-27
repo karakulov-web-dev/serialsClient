@@ -1050,26 +1050,35 @@ define("Components/SerialComponent", ["require", "exports", "Components/BaseComp
         SerialComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [SerialListComponent_1["default"], GenreSelectComponent_1["default"], InfoComponent_1["default"], SearchComponent_1["default"], MessageComponent_1["default"]];
-            var title = '';
+            var compList = [
+                SerialListComponent_1["default"],
+                GenreSelectComponent_1["default"],
+                InfoComponent_1["default"],
+                SearchComponent_1["default"],
+                MessageComponent_1["default"]
+            ];
+            var title = "";
             var model = this.model;
-            var listGenre = model.genreManager.list_default.get().filter(function (item) {
+            var listGenre = model.genreManager.list_default
+                .get()
+                .filter(function (item) {
                 if (item.active) {
                     return true;
                 }
-            }).map(function (item) { return item.name; });
+            })
+                .map(function (item) { return item.name; });
             var query = model.searchManager.query.get();
             if (listGenre.length !== 0) {
-                title = "\u0416\u0430\u043D\u0440\u044B: " + listGenre.join(', ');
+                title = "\u0416\u0430\u043D\u0440\u044B: " + listGenre.join(", ");
             }
             if (query) {
                 title = "\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0437\u0430\u043F\u0440\u043E\u0441\u0443: " + query;
             }
             if (title.length > 55) {
-                title = title.split('');
+                title = title.split("");
                 title.length = 52;
-                title = title.join('');
-                title = title + '...';
+                title = title.join("");
+                title = title + "...";
             }
             new HeaderComponent_1["default"](title).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
@@ -1092,7 +1101,7 @@ define("Components/SerialComponent", ["require", "exports", "Components/BaseComp
                     visible: true
                 },
                 blue: {
-                    text: "В избранное",
+                    text: "Избранное",
                     visible: true
                 }
             });
@@ -1166,7 +1175,7 @@ define("Components/SeasonListComponent", ["require", "exports", "Components/List
     }(ListComponent_2["default"]));
     exports["default"] = SeasonListComponent;
 });
-define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_10, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2) {
+define("Components/SeasonsComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeasonListComponent", "Components/BottomButtonComponent", "Components/MessageComponent"], function (require, exports, BaseComponent_10, HeaderComponent_2, SeasonListComponent_1, BottomButtonComponent_2, MessageComponent_2) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1177,8 +1186,14 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [SeasonListComponent_1["default"]];
-            new HeaderComponent_2["default"](this.model.getInstance('serialList').getValue('display').get()()[this.model.getInstance('serialList').getValue('focusPosition').get()].name).render(elem.appendChild(document.createElement("div")));
+            var compList = [SeasonListComponent_1["default"], MessageComponent_2["default"]];
+            new HeaderComponent_2["default"](this.model
+                .getInstance("serialList")
+                .getValue("display")
+                .get()()[this.model
+                .getInstance("serialList")
+                .getValue("focusPosition")
+                .get()].name).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -1199,8 +1214,8 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
                     visible: false
                 },
                 blue: {
-                    text: "Сортировать",
-                    visible: false
+                    text: "В избранное",
+                    visible: true
                 }
             });
             var btnWrap = document.createElement("div");
@@ -1295,7 +1310,7 @@ define("Components/SeriesListComponent", ["require", "exports", "Components/List
         return timeString;
     }
 });
-define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent"], function (require, exports, BaseComponent_11, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3) {
+define("Components/SeriesComponent", ["require", "exports", "Components/BaseComponent", "Components/HeaderComponent", "Components/SeriesListComponent", "Components/BottomButtonComponent", "Components/MessageComponent"], function (require, exports, BaseComponent_11, HeaderComponent_3, SeriesListComponent_1, BottomButtonComponent_3, MessageComponent_3) {
     "use strict";
     exports.__esModule = true;
     var HomeComponent = /** @class */ (function (_super) {
@@ -1306,7 +1321,7 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
         HomeComponent.prototype.create = function () {
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
-            var compList = [SeriesListComponent_1["default"]];
+            var compList = [SeriesListComponent_1["default"], MessageComponent_3["default"]];
             var model = this.model;
             new HeaderComponent_3["default"](model.seriesList.title.get()).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
@@ -1329,8 +1344,8 @@ define("Components/SeriesComponent", ["require", "exports", "Components/BaseComp
                     visible: false
                 },
                 blue: {
-                    text: "Сортировать",
-                    visible: false
+                    text: "В избранное",
+                    visible: true
                 }
             });
             var btnWrap = document.createElement("div");
@@ -1891,7 +1906,7 @@ define("Components/HistoryPageComponent", ["require", "exports", "Components/Bas
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
             var compList = [HistotyListComponent_1["default"]];
-            new HeaderComponent_6["default"]('История просмотров').render(elem.appendChild(document.createElement("div")));
+            new HeaderComponent_6["default"]("История просмотров").render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -1900,7 +1915,7 @@ define("Components/HistoryPageComponent", ["require", "exports", "Components/Bas
             });
             var bottomBtnComp = new BottomButtonComponent_6["default"]({
                 red: {
-                    text: "Очистить",
+                    text: "Назад",
                     visible: true
                 },
                 green: {
@@ -1913,7 +1928,7 @@ define("Components/HistoryPageComponent", ["require", "exports", "Components/Bas
                 },
                 blue: {
                     text: "Очистить",
-                    visible: false
+                    visible: true
                 }
             });
             var btnWrap = document.createElement("div");
@@ -1956,7 +1971,7 @@ define("Components/FavoritesPageComponent", ["require", "exports", "Components/B
             var elem = document.createElement("div");
             elem.className = "app_HomeComponent";
             var compList = [FavoritesListComponent_1["default"]];
-            new HeaderComponent_7["default"]('Избранное').render(elem.appendChild(document.createElement("div")));
+            new HeaderComponent_7["default"]("Избранное").render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -1965,20 +1980,20 @@ define("Components/FavoritesPageComponent", ["require", "exports", "Components/B
             });
             var bottomBtnComp = new BottomButtonComponent_7["default"]({
                 red: {
-                    text: "Удалить",
+                    text: "Назад",
                     visible: true
                 },
                 green: {
                     text: "Удалить все",
-                    visible: true
+                    visible: false
                 },
                 yellow: {
-                    text: "Поиск",
-                    visible: false
+                    text: "Удалить",
+                    visible: true
                 },
                 blue: {
-                    text: "В избранное",
-                    visible: false
+                    text: "Удалить все",
+                    visible: true
                 }
             });
             var btnWrap = document.createElement("div");
@@ -2446,6 +2461,25 @@ define("HTTP", ["require", "exports", "Polyfill/Promise_simple", "AppModel"], fu
         });
     }
     exports.deleteFavorites = deleteFavorites;
+    function getSerialBySeasonvarId(seasonId) {
+        return new Promise_simple_1.Promise_simple(function (resolve) {
+            var data = JSON.stringify({
+                id: Number(seasonId)
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", "http://212.77.128.203/apps/serials/api/getSerialBySeasonvarId.php", true);
+            xhr.send(data);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        resolve(data);
+                    }
+                }
+            };
+        });
+    }
+    exports.getSerialBySeasonvarId = getSerialBySeasonvarId;
 });
 define("createPrevViewData", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -2548,6 +2582,14 @@ define("ListControllers/ListControllerSerials", ["require", "exports", "ListCont
             messageText.set("\u0421\u0435\u0440\u0438\u0430\u043B " + this.activeItem.name + " \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435");
             messageVisible.set(true);
             hideMessage(messageText, messageVisible);
+        };
+        ListControllerSerials.prototype.openFavoritesList = function () {
+            var _this = this;
+            new RouteManager_1["default"]().set("/favoritesList");
+            this.model.favoritesList.list.set(createPrevViewData_1["default"]());
+            HTTP_1.getFavorites().then(function (data) {
+                _this.model.favoritesList.list.set(data);
+            });
         };
         return ListControllerSerials;
     }(ListController_1["default"]));
@@ -3025,7 +3067,7 @@ define("inputLayer/serialListInput", ["require", "exports", "RouteManager", "Lis
                 searchManager.openWindow();
                 break;
             case 115:
-                listControllerSerials.addFav();
+                listControllerSerials.openFavoritesList();
                 break;
             case 120:
                 mainSettingMenu = new MainSettingMenu_1["default"]();
@@ -3072,6 +3114,9 @@ define("inputLayer/serialListInput", ["require", "exports", "RouteManager", "Lis
     function serialListInfoManager(code) {
         switch (code) {
             case 8:
+                infoManager.back();
+                break;
+            case 113:
                 infoManager.back();
                 break;
             case 40:
@@ -3345,6 +3390,9 @@ define("inputLayer/updateListPage", ["require", "exports", "ListControllers/List
             case 8:
                 infoManager.back();
                 break;
+            case 113:
+                infoManager.back();
+                break;
             case 40:
                 infoManager.scrollBottom();
                 break;
@@ -3383,6 +3431,18 @@ define("ListControllers/ListControllerSeasons", ["require", "exports", "ListCont
         ListControllerSeasons.prototype.openSeason = function () {
             this.openSeriesList();
         };
+        ListControllerSeasons.prototype.addFav = function () {
+            var model = this.model;
+            var messageText = model.message.text;
+            var messageVisible = model.message.visible;
+            this.defineActiveItem();
+            HTTP_5.getSerialBySeasonvarId(+this.activeItem.idSeasonvar).then(function (data) {
+                HTTP_5.pushFavorites(data.id);
+            });
+            messageText.set("\u0421\u0435\u0440\u0438\u0430\u043B " + this.activeItem.name + " \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435");
+            messageVisible.set(true);
+            hideMessage(messageText, messageVisible);
+        };
         ListControllerSeasons.prototype.openSeriesList = function () {
             this.model.seriesList.title.set(this.activeItem.name + " (" + this.activeItem.season_number + " \u0441\u0435\u0437\u043E\u043D)");
             new RouteManager_5["default"]().set("/seriesList");
@@ -3405,6 +3465,19 @@ define("ListControllers/ListControllerSeasons", ["require", "exports", "ListCont
         return ListControllerSeasons;
     }(ListController_2["default"]));
     exports["default"] = ListControllerSeasons;
+    var timeout;
+    function hideMessage(messageText, messageVisible) {
+        var self = hideMessage;
+        if (self.execution) {
+            clearTimeout(timeout);
+        }
+        self.execution = true;
+        timeout = setTimeout(function () {
+            messageText.set("");
+            messageVisible.set(false);
+            self.execution = false;
+        }, 3000);
+    }
 });
 define("inputLayer/seasonListInput", ["require", "exports", "AppModel", "RouteManager", "ListControllers/ListControllerSeasons", "MainSettingMenu"], function (require, exports, AppModel_11, RouteManager_6, ListControllerSeasons_1, MainSettingMenu_3) {
     "use strict";
@@ -3447,6 +3520,9 @@ define("inputLayer/seasonListInput", ["require", "exports", "AppModel", "RouteMa
             case 123:
                 mainSettingMenu = new MainSettingMenu_3["default"]();
                 mainSettingMenu.open();
+                break;
+            case 115:
+                listControllerSeasons.addFav();
                 break;
         }
     }
@@ -4030,6 +4106,18 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             var display = this.display.get()();
             this.activeItem = display[focusPosition];
         };
+        ListControllerVideo.prototype.addFav = function () {
+            var model = this.model;
+            var messageText = model.message.text;
+            var messageVisible = model.message.visible;
+            this.defineActiveItem();
+            HTTP_6.getSerialBySeasonvarId(+this.activeItem.seasonId).then(function (data) {
+                HTTP_6.pushFavorites(data.id);
+            });
+            messageText.set("\u0421\u0435\u0440\u0438\u0430\u043B " + this.activeItem.name + " \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435");
+            messageVisible.set(true);
+            hideMessage(messageText, messageVisible);
+        };
         ListControllerVideo.prototype.openVideo = function () {
             var _this = this;
             this.model.App.route.set("/play");
@@ -4096,6 +4184,19 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
         return ListControllerVideo;
     }(ListController_3["default"]));
     exports["default"] = ListControllerVideo;
+    var timeout;
+    function hideMessage(messageText, messageVisible) {
+        var self = hideMessage;
+        if (self.execution) {
+            clearTimeout(timeout);
+        }
+        self.execution = true;
+        timeout = setTimeout(function () {
+            messageText.set("");
+            messageVisible.set(false);
+            self.execution = false;
+        }, 3000);
+    }
 });
 define("inputLayer/seriesListInput", ["require", "exports", "AppModel", "ListControllers/ListControllerVideo", "RouteManager", "MainSettingMenu"], function (require, exports, AppModel_13, ListControllerVideo_1, RouteManager_8, MainSettingMenu_4) {
     "use strict";
@@ -4109,6 +4210,9 @@ define("inputLayer/seriesListInput", ["require", "exports", "AppModel", "ListCon
         switch (code) {
             case 112:
                 routeManager.back();
+                break;
+            case 115:
+                listControllerVideo.addFav();
                 break;
             case 8:
                 routeManager.back();
@@ -4445,6 +4549,9 @@ define("inputLayer/historyListInput", ["require", "exports", "RouteManager", "Ap
                 listControllerHistory.onEnter();
                 break;
             case 112:
+                routeManager.back();
+                break;
+            case 115:
                 listControllerHistory.clear();
                 break;
             case 120:
@@ -4600,9 +4707,12 @@ define("inputLayer/favoritsInput", ["require", "exports", "RouteManager", "ListC
                 listControllerFavorites.onEnter();
                 break;
             case 112:
+                routeManager.back();
+                break;
+            case 114:
                 listControllerFavorites.deleteFavorites();
                 break;
-            case 113:
+            case 115:
                 listControllerFavorites.clearFavorites();
                 break;
             case 114:

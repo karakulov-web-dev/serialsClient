@@ -2,7 +2,12 @@ import ListController from "./ListController";
 import Play from "../Play";
 import { stbObj, stbEvent } from "../interfaceGlobal";
 import RouteManager from "../RouteManager";
-import { pushHistory, ErrorSeasonNotFound } from "../HTTP";
+import {
+  pushHistory,
+  ErrorSeasonNotFound,
+  getSerialBySeasonvarId,
+  pushFavorites
+} from "../HTTP";
 import { Promise_simple } from "../Polyfill/Promise_simple";
 
 declare var stb: stbObj;
@@ -23,6 +28,18 @@ export default class ListControllerVideo extends ListController {
     let focusPosition = this.focusPosition.get();
     let display = this.display.get()();
     this.activeItem = display[focusPosition];
+  }
+  public addFav() {
+    let model = this.model;
+    let messageText = model.message.text;
+    let messageVisible = model.message.visible;
+    this.defineActiveItem();
+    getSerialBySeasonvarId(+this.activeItem.seasonId).then(data => {
+      pushFavorites(data.id);
+    });
+    messageText.set(`Сериал ${this.activeItem.name} добавлен в избранное`);
+    messageVisible.set(true);
+    hideMessage(messageText, messageVisible);
   }
   private openVideo() {
     this.model.App.route.set("/play");
@@ -85,4 +102,18 @@ export default class ListControllerVideo extends ListController {
     }
   }
   private activeItem;
+}
+
+let timeout;
+function hideMessage(messageText, messageVisible) {
+  let self: any = hideMessage;
+  if (self.execution) {
+    clearTimeout(timeout);
+  }
+  self.execution = true;
+  timeout = setTimeout(function() {
+    messageText.set(``);
+    messageVisible.set(false);
+    self.execution = false;
+  }, 3000);
 }

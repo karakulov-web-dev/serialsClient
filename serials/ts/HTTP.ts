@@ -295,3 +295,26 @@ export function deleteFavorites(serialId) {
     };
   });
 }
+
+export function getSerialBySeasonvarId(seasonId: number) {
+  return new Promise_simple(function(resolve) {
+    var data = JSON.stringify({
+      id: Number(seasonId)
+    });
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+      "post",
+      "http://212.77.128.203/apps/serials/api/getSerialBySeasonvarId.php",
+      true
+    );
+    xhr.send(data);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var data = JSON.parse(xhr.responseText);
+          resolve(data);
+        }
+      }
+    };
+  });
+}

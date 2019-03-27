@@ -62,6 +62,9 @@ export function UpdateLIstPageInfoManager(code) {
     case 8:
       infoManager.back();
       break;
+    case 113:
+      infoManager.back();
+      break;
     case 40:
       infoManager.scrollBottom();
       break;
