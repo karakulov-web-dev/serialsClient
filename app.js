@@ -151,10 +151,10 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     command: "back"
                 }
             ]);
-            genreManager.createValue('position', 5);
+            genreManager.createValue("position", 5);
             genreManager.display = function () {
-                var list = genreManager.getValue('list').get();
-                var position = genreManager.getValue('position').get();
+                var list = genreManager.getValue("list").get();
+                var position = genreManager.getValue("position").get();
                 list = JSON.parse(JSON.stringify(list));
                 var arr = [];
                 var i = 0;
@@ -292,7 +292,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     name: "фэнтези",
                     focus: false,
                     active: false
-                },
+                }
             ]);
             var serialList = _this.createInstance("serialList");
             serialList.createValue("list", []);
@@ -337,6 +337,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                     return status;
                 });
             });
+            seasonList.createValue("title", "");
             var updateList = _this.createInstance("updateList");
             updateList.createValue("list", []);
             updateList.createValue("focusPosition", 0);
@@ -399,7 +400,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             });
             var seriesList = _this.createInstance("seriesList");
             seriesList.createValue("list", []);
-            seriesList.createValue("title", 'title');
+            seriesList.createValue("title", "title");
             seriesList.createValue("focusPosition", 0);
             seriesList.createValue("scrolPosition", 0);
             seriesList.createValue("display", function () {
@@ -420,7 +421,7 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
             });
             var messageComponent = _this.createInstance("message");
             messageComponent.createValue("visible", false);
-            messageComponent.createValue('text', "");
+            messageComponent.createValue("text", "");
             var video = _this.createInstance("video");
             video.createValue("list", []);
             video.createValue("focusPosition", 0);
@@ -460,15 +461,15 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                 durationSec: 0
             });
             var settingMenuInstance = PlayInstance.createInstance("settingMenu");
-            settingMenuInstance.createValue('visible', false);
-            settingMenuInstance.createValue('list', []);
-            settingMenuInstance.createValue('mainList', [
+            settingMenuInstance.createValue("visible", false);
+            settingMenuInstance.createValue("list", []);
+            settingMenuInstance.createValue("mainList", [
                 //{ name: "Качество", active: true, command: "openQualityList" },
                 { name: "Громкость", active: true, command: "openVolumeList" }
             ]);
-            settingMenuInstance.createValue('displayType', 'main');
-            settingMenuInstance.createValue('qualityList', []);
-            settingMenuInstance.createValue('volumeList', [
+            settingMenuInstance.createValue("displayType", "main");
+            settingMenuInstance.createValue("qualityList", []);
+            settingMenuInstance.createValue("volumeList", [
                 {
                     name: "100%",
                     active: true,
@@ -1188,12 +1189,9 @@ define("Components/SeasonsComponent", ["require", "exports", "Components/BaseCom
             elem.className = "app_HomeComponent";
             var compList = [SeasonListComponent_1["default"], MessageComponent_2["default"]];
             new HeaderComponent_2["default"](this.model
-                .getInstance("serialList")
-                .getValue("display")
-                .get()()[this.model
-                .getInstance("serialList")
-                .getValue("focusPosition")
-                .get()].name).render(elem.appendChild(document.createElement("div")));
+                .getInstance("seasonList")
+                .getValue("title")
+                .get()).render(elem.appendChild(document.createElement("div")));
             compList.forEach(function (Comp) {
                 var wrap = document.createElement("div");
                 var comp = new Comp();
@@ -2542,6 +2540,7 @@ define("ListControllers/ListControllerSerials", ["require", "exports", "ListCont
             });
         };
         ListControllerSerials.prototype.openSeasonList = function () {
+            this.model.seasonList.title.set(this.activeItem.name);
             new RouteManager_1["default"]().set("/seasonList");
             var list = this.model.getInstance("seasonList").getValue("list");
             this.model.seasonList.scrolPosition.set(0);
@@ -4643,6 +4642,7 @@ define("ListControllers/ListControllerFavorites", ["require", "exports", "ListCo
             });
         };
         ListControllerSerials.prototype.openSeasonList = function () {
+            this.model.seasonList.title.set(this.activeItem.name);
             new RouteManager_11["default"]().set("/seasonList");
             var list = this.model.getInstance("seasonList").getValue("list");
             this.model.seasonList.scrolPosition.set(0);

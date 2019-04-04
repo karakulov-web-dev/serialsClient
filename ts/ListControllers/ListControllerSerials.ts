@@ -48,6 +48,7 @@ export default class ListControllerSerials extends ListController {
     });
   }
   private openSeasonList() {
+    this.model.seasonList.title.set(this.activeItem.name);
     new RouteManager().set("/seasonList");
     let list: any = this.model.getInstance("seasonList").getValue("list");
     this.model.seasonList.scrolPosition.set(0);

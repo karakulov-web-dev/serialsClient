@@ -14,14 +14,9 @@ export default class HomeComponent extends BaseComponent {
 
     new HeaderComponent(
       this.model
-        .getInstance("serialList")
-        .getValue("display")
-        .get()()[
-        this.model
-          .getInstance("serialList")
-          .getValue("focusPosition")
-          .get()
-      ].name
+        .getInstance("seasonList")
+        .getValue("title")
+        .get()
     ).render(elem.appendChild(document.createElement("div")));
 
     compList.forEach(Comp => {

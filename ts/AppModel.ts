@@ -12,12 +12,12 @@ export default class AppModel extends Model {
     App.createValue("userMac", false);
 
     let searchManager = this.createInstance("searchManager");
-    searchManager.createValue("query",false)
+    searchManager.createValue("query", false);
 
     let genreManager = this.createInstance("genreManager");
-    genreManager.createValue("focus","list")
-    genreManager.createValue("buttonsList",[])
-    genreManager.createValue("buttonsList_default",[
+    genreManager.createValue("focus", "list");
+    genreManager.createValue("buttonsList", []);
+    genreManager.createValue("buttonsList_default", [
       {
         name: "Применить",
         focus: true,
@@ -31,36 +31,33 @@ export default class AppModel extends Model {
         name: "Назад",
         command: "back"
       }
-    ])
+    ]);
 
-
-    genreManager.createValue('position',5)
-    genreManager.display = function () {
-      let list = genreManager.getValue('list').get()
-      let position = genreManager.getValue('position').get()
-      list = JSON.parse( JSON.stringify(list) )
-      let arr = []
+    genreManager.createValue("position", 5);
+    genreManager.display = function() {
+      let list = genreManager.getValue("list").get();
+      let position = genreManager.getValue("position").get();
+      list = JSON.parse(JSON.stringify(list));
+      let arr = [];
       let i = 0;
       let ii = 0;
-      list.forEach((
-        item
-      )=> {
+      list.forEach(item => {
         if (i >= position) {
-          if (ii >=5) {
-            return
+          if (ii >= 5) {
+            return;
           }
           if (ii === 2) {
-            item.focus = true
+            item.focus = true;
           }
-          arr.push(item)
+          arr.push(item);
           ii++;
         }
-        i++
-      })
-      return arr
-    }
-    genreManager.createValue("list",[])
-    genreManager.createValue("list_default",[
+        i++;
+      });
+      return arr;
+    };
+    genreManager.createValue("list", []);
+    genreManager.createValue("list_default", [
       {
         name: "",
         focus: false,
@@ -177,14 +174,14 @@ export default class AppModel extends Model {
         name: "фэнтези",
         focus: false,
         active: false
-      },
-    ])
+      }
+    ]);
 
     let serialList = this.createInstance("serialList");
     serialList.createValue("list", []);
-          serialList.createValue("focusPosition", 0);
-          serialList.createValue("scrolPosition", 0);
-          serialList.createValue("display", function() {
+    serialList.createValue("focusPosition", 0);
+    serialList.createValue("scrolPosition", 0);
+    serialList.createValue("display", function() {
       let list = serialList.getValue("list");
       let scrolPosition = serialList.getValue("scrolPosition");
       list = list.get();
@@ -202,8 +199,7 @@ export default class AppModel extends Model {
     });
     serialList.createValue("filtersReq", {
       genre: []
-    })
-      
+    });
 
     let seasonList = this.createInstance("seasonList");
     seasonList.createValue("list", []);
@@ -225,8 +221,9 @@ export default class AppModel extends Model {
         return status;
       });
     });
+    seasonList.createValue("title", "");
 
-    let updateList= this.createInstance("updateList");
+    let updateList = this.createInstance("updateList");
     updateList.createValue("list", []);
     updateList.createValue("focusPosition", 0);
     updateList.createValue("scrolPosition", 0);
@@ -291,7 +288,7 @@ export default class AppModel extends Model {
 
     let seriesList = this.createInstance("seriesList");
     seriesList.createValue("list", []);
-    seriesList.createValue("title", 'title');
+    seriesList.createValue("title", "title");
     seriesList.createValue("focusPosition", 0);
     seriesList.createValue("scrolPosition", 0);
     seriesList.createValue("display", function() {
@@ -313,8 +310,7 @@ export default class AppModel extends Model {
 
     let messageComponent = this.createInstance("message");
     messageComponent.createValue("visible", false);
-    messageComponent.createValue('text',"")
-
+    messageComponent.createValue("text", "");
 
     let video = this.createInstance("video");
     video.createValue("list", []);
@@ -344,28 +340,28 @@ export default class AppModel extends Model {
       name: "01 мин",
       value: 60,
       command: "changetimeShiftSize"
-    })
-    PlayInstance.createValue("loadingWheel", false)
-    PlayInstance.createValue("progress", {play:0 , duration: 100})
-    PlayInstance.createValue("status", false)
-    PlayInstance.createValue("visibleControlBar", false)
-    PlayInstance.createValue("volume", 100)
-    PlayInstance.createValue("name", "")
+    });
+    PlayInstance.createValue("loadingWheel", false);
+    PlayInstance.createValue("progress", { play: 0, duration: 100 });
+    PlayInstance.createValue("status", false);
+    PlayInstance.createValue("visibleControlBar", false);
+    PlayInstance.createValue("volume", 100);
+    PlayInstance.createValue("name", "");
     PlayInstance.createValue("timeBar", {
       playSec: 0,
       durationSec: 0
-    })
+    });
 
-    let settingMenuInstance = PlayInstance.createInstance("settingMenu")
-    settingMenuInstance.createValue('visible', false)
-    settingMenuInstance.createValue('list', [])
-    settingMenuInstance.createValue('mainList', [
+    let settingMenuInstance = PlayInstance.createInstance("settingMenu");
+    settingMenuInstance.createValue("visible", false);
+    settingMenuInstance.createValue("list", []);
+    settingMenuInstance.createValue("mainList", [
       //{ name: "Качество", active: true, command: "openQualityList" },
-      { name: "Громкость",active: true,  command: "openVolumeList" }
-    ])
-    settingMenuInstance.createValue('displayType', 'main')
-    settingMenuInstance.createValue('qualityList', [])
-    settingMenuInstance.createValue('volumeList', [
+      { name: "Громкость", active: true, command: "openVolumeList" }
+    ]);
+    settingMenuInstance.createValue("displayType", "main");
+    settingMenuInstance.createValue("qualityList", []);
+    settingMenuInstance.createValue("volumeList", [
       {
         name: "100%",
         active: true,
@@ -401,10 +397,7 @@ export default class AppModel extends Model {
         active: false,
         command: "changeVolume"
       }
-  ])
-
-
-
+    ]);
 
     let ExitMenuInstance = this.createInstance("ExitMenuInstance");
     ExitMenuInstance.createValue("config", {
@@ -421,7 +414,7 @@ export default class AppModel extends Model {
           active: false
         }
       ]
-    })
+    });
 
     AppModel.cache = this;
   }
