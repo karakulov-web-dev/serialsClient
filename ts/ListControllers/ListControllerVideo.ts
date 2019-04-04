@@ -37,7 +37,7 @@ export default class ListControllerVideo extends ListController {
     getSerialBySeasonvarId(+this.activeItem.seasonId).then(data => {
       pushFavorites(data.id);
     });
-    messageText.set(`Сериал ${this.activeItem.name} добавлен в избранное`);
+    messageText.set(`Сериал ${this.activeItem.serial} добавлен в избранное`);
     messageVisible.set(true);
     hideMessage(messageText, messageVisible);
   }

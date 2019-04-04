@@ -4114,7 +4114,7 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             HTTP_6.getSerialBySeasonvarId(+this.activeItem.seasonId).then(function (data) {
                 HTTP_6.pushFavorites(data.id);
             });
-            messageText.set("\u0421\u0435\u0440\u0438\u0430\u043B " + this.activeItem.name + " \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435");
+            messageText.set("\u0421\u0435\u0440\u0438\u0430\u043B " + this.activeItem.serial + " \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D \u0432 \u0438\u0437\u0431\u0440\u0430\u043D\u043D\u043E\u0435");
             messageVisible.set(true);
             hideMessage(messageText, messageVisible);
         };
