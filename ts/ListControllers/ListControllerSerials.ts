@@ -5,7 +5,8 @@ import {
   get_Serials,
   getSeason,
   pushFavorites,
-  getFavorites
+  getFavorites,
+  ErrorSeasonNotFound
 } from "../HTTP";
 import createPrevViewData from "../createPrevViewData";
 
@@ -35,7 +36,18 @@ export default class ListControllerSerials extends ListController {
     let seasonsIdList = JSON.parse(this.activeItem.seasonListIdJson);
     let seasonId = seasonsIdList[0];
     list.set(createPrevViewData());
+
     getSeason(seasonId).then(data => {
+      try {
+        if (!data.playlist) {
+          throw new Error("playList undefined or null");
+        }
+      } catch (e) {
+        ErrorSeasonNotFound(seasonId);
+        console.log(e);
+        return;
+      }
+
       data.playlist.forEach(item => {
         item.poster = data.poster;
         item.season_number = data.season_number;

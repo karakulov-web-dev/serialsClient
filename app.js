@@ -2529,6 +2529,16 @@ define("ListControllers/ListControllerSerials", ["require", "exports", "ListCont
             var seasonId = seasonsIdList[0];
             list.set(createPrevViewData_1["default"]());
             HTTP_1.getSeason(seasonId).then(function (data) {
+                try {
+                    if (!data.playlist) {
+                        throw new Error("playList undefined or null");
+                    }
+                }
+                catch (e) {
+                    HTTP_1.ErrorSeasonNotFound(seasonId);
+                    console.log(e);
+                    return;
+                }
                 data.playlist.forEach(function (item) {
                     item.poster = data.poster;
                     item.season_number = data.season_number;
