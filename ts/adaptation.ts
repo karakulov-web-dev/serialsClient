@@ -9,7 +9,7 @@ export default function() {
       ".app_home_genreManager_window_list_GenreElemWrap {width: 88%} ",
       ".app_home_genreManager_window_buttonPanel { width: 130px; }",
       ".app_home_infoManager_window_body_box2_description {height: 50%;}",
-      ".app_home_infoManager_window { width: 600px; height: 450px;}",
+      ".app_home_infoManager_window { width: 700px; height: 500px;}",
       ".app_home_infoManager_window_body_box1_infoBox {width: 70%;}",
       ".app_home_infoManager_window {font-size: 20px;}",
       ".ParentControlWindow_h1 {  font-size: 18px; }",
