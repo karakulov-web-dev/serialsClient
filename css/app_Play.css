@@ -199,3 +199,25 @@
   bottom: 5px;
   left: -37px;
 }
+
+.app_Play_ControlBar_serialIcon {
+  position: absolute;
+  left: 0px;
+  bottom: 8px;
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  width: 50%;
+}
+.app_Play_ControlBar_serialIcon_text {
+  position: absolute;
+  left: 50px;
+  top: 10px;
+}
+.app_Play_ControlBar_serialIcon_img {
+  position: absolute;
+  left: 0px;
+  height: 45px;
+  width: 40px;
+}

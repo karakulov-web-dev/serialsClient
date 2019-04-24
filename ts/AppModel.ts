@@ -352,6 +352,11 @@ export default class AppModel extends Model {
       durationSec: 0
     });
 
+    PlayInstance.createValue("serialIcon", {
+      name: "",
+      img: ""
+    });
+
     let settingMenuInstance = PlayInstance.createInstance("settingMenu");
     settingMenuInstance.createValue("visible", false);
     settingMenuInstance.createValue("list", []);

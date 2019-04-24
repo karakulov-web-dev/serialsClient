@@ -460,6 +460,10 @@ define("AppModel", ["require", "exports", "Model"], function (require, exports, 
                 playSec: 0,
                 durationSec: 0
             });
+            PlayInstance.createValue("serialIcon", {
+                name: "",
+                img: ""
+            });
             var settingMenuInstance = PlayInstance.createInstance("settingMenu");
             settingMenuInstance.createValue("visible", false);
             settingMenuInstance.createValue("list", []);
@@ -1415,6 +1419,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             var timeBar_wrap = document.createElement("div");
             var playSettingMenu_wrap = document.createElement("div");
             var timeShiftSizeBar_wrap = document.createElement("div");
+            var controlBar_serialIcon_wrap = document.createElement("div");
             box.appendChild(progress_blank_wrap);
             box.appendChild(progress_play_wrap);
             box.appendChild(playButton_wrap);
@@ -1424,6 +1429,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             box.appendChild(timeBar_wrap);
             box.appendChild(playSettingMenu_wrap);
             box.appendChild(timeShiftSizeBar_wrap);
+            box.appendChild(controlBar_serialIcon_wrap);
             var controlBar_progress_blank = new ControlBar_progress_blank();
             var controlBar_progress_play = new ControlBar_progress_play();
             var controlBar_playButton = new ControlBar_playButton();
@@ -1433,6 +1439,7 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             var controlBar_timeBar = new ControlBar_timeBar();
             var controlBar_playSettingMenu = new ControlBar_playSettingMenu();
             var controlBar_timeShiftSizeBar = new ControlBar_timeShiftSizeBar();
+            var controlBar_serialIcon = new ControlBar_serialIcon();
             controlBar_progress_blank.render(progress_blank_wrap);
             controlBar_progress_play.render(progress_play_wrap);
             controlBar_playButton.render(playButton_wrap);
@@ -1442,11 +1449,37 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
             controlBar_timeBar.render(timeBar_wrap);
             controlBar_playSettingMenu.render(playSettingMenu_wrap);
             controlBar_timeShiftSizeBar.render(timeShiftSizeBar_wrap);
+            controlBar_serialIcon.render(controlBar_serialIcon_wrap);
             return div;
         };
         return ControlBar;
     }(BaseComponent_13["default"]));
     exports["default"] = ControlBar;
+    var ControlBar_serialIcon = /** @class */ (function (_super) {
+        __extends(ControlBar_serialIcon, _super);
+        function ControlBar_serialIcon() {
+            var _this = _super.call(this) || this;
+            _this.instancePlay = _this.model.getInstance("Play");
+            _this.serialIcon = _this.instancePlay.getValue("serialIcon");
+            _this.serialIcon.subscribe(_this);
+            return _this;
+        }
+        ControlBar_serialIcon.prototype.create = function () {
+            var _ = this.serialIcon.get();
+            var div = document.createElement("div");
+            var text = document.createElement("div");
+            var img = document.createElement("img");
+            div.appendChild(text);
+            div.appendChild(img);
+            text.innerHTML = _.name;
+            img.src = _.img;
+            div.className = "app_Play_ControlBar_serialIcon";
+            text.className = "app_Play_ControlBar_serialIcon_text";
+            img.className = "app_Play_ControlBar_serialIcon_img";
+            return div;
+        };
+        return ControlBar_serialIcon;
+    }(BaseComponent_13["default"]));
     var ControlBar_progress_blank = /** @class */ (function (_super) {
         __extends(ControlBar_progress_blank, _super);
         function ControlBar_progress_blank() {
@@ -1672,14 +1705,16 @@ define("Components/ControlBar", ["require", "exports", "Components/BaseComponent
         ControlBar_timeShiftSizeBar.prototype.create = function () {
             var timeShiftSize = this.timeShiftSize.get();
             var div = document.createElement("div");
-            div.className = 'app_Play_ControlBar_timeShiftSizeBar';
+            div.className = "app_Play_ControlBar_timeShiftSizeBar";
             var p = document.createElement("p");
             div.appendChild(p);
             p.innerHTML = timeShiftSize.name;
             var twotone_arrow_drop_down_white_24dp = document.createElement("span");
             var twotone_arrow_drop_up_white_24dp = document.createElement("span");
-            twotone_arrow_drop_down_white_24dp.className = "twotone_arrow_drop_down_white_24dp";
-            twotone_arrow_drop_up_white_24dp.className = "twotone_arrow_drop_up_white_24dp";
+            twotone_arrow_drop_down_white_24dp.className =
+                "twotone_arrow_drop_down_white_24dp";
+            twotone_arrow_drop_up_white_24dp.className =
+                "twotone_arrow_drop_up_white_24dp";
             div.appendChild(twotone_arrow_drop_down_white_24dp);
             div.appendChild(twotone_arrow_drop_up_white_24dp);
             return div;
@@ -4139,6 +4174,7 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             if (typeof qualityArr[0].url === "undefined") {
                 throw new Error("qualityArr undefined");
             }
+            this.pushPlaySerialIconData(display[activePosition]);
             HTTP_6.pushHistory(display[activePosition]);
             Play_1["default"].playControlInterfaceInit();
             var newQualityArr = [];
@@ -4189,6 +4225,12 @@ define("ListControllers/ListControllerVideo", ["require", "exports", "ListContro
             catch (e) {
                 console.log(e);
             }
+        };
+        ListControllerVideo.prototype.pushPlaySerialIconData = function (item) {
+            this.model.Play.serialIcon.set({
+                name: item.serial,
+                img: item.poster
+            });
         };
         return ListControllerVideo;
     }(ListController_3["default"]));

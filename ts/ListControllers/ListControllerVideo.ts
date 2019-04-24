@@ -52,6 +52,7 @@ export default class ListControllerVideo extends ListController {
     if (typeof qualityArr[0].url === "undefined") {
       throw new Error("qualityArr undefined");
     }
+    this.pushPlaySerialIconData(display[activePosition]);
     pushHistory(display[activePosition]);
     Play.playControlInterfaceInit();
     var newQualityArr = [];
@@ -100,6 +101,12 @@ export default class ListControllerVideo extends ListController {
     } catch (e) {
       console.log(e);
     }
+  }
+  private pushPlaySerialIconData(item) {
+    this.model.Play.serialIcon.set({
+      name: item.serial,
+      img: item.poster
+    });
   }
   private activeItem;
 }

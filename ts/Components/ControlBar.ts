@@ -28,6 +28,7 @@ export default class ControlBar extends BaseComponent {
     var timeBar_wrap = document.createElement("div");
     var playSettingMenu_wrap = document.createElement("div");
     var timeShiftSizeBar_wrap = document.createElement("div");
+    var controlBar_serialIcon_wrap = document.createElement("div");
 
     box.appendChild(progress_blank_wrap);
     box.appendChild(progress_play_wrap);
@@ -38,6 +39,7 @@ export default class ControlBar extends BaseComponent {
     box.appendChild(timeBar_wrap);
     box.appendChild(playSettingMenu_wrap);
     box.appendChild(timeShiftSizeBar_wrap);
+    box.appendChild(controlBar_serialIcon_wrap);
 
     let controlBar_progress_blank = new ControlBar_progress_blank();
     let controlBar_progress_play = new ControlBar_progress_play();
@@ -48,6 +50,7 @@ export default class ControlBar extends BaseComponent {
     let controlBar_timeBar = new ControlBar_timeBar();
     let controlBar_playSettingMenu = new ControlBar_playSettingMenu();
     let controlBar_timeShiftSizeBar = new ControlBar_timeShiftSizeBar();
+    let controlBar_serialIcon = new ControlBar_serialIcon();
 
     controlBar_progress_blank.render(progress_blank_wrap);
     controlBar_progress_play.render(progress_play_wrap);
@@ -57,12 +60,38 @@ export default class ControlBar extends BaseComponent {
     controlBar_nameCurrentVideo.render(nameCurrentVideo_wrap);
     controlBar_timeBar.render(timeBar_wrap);
     controlBar_playSettingMenu.render(playSettingMenu_wrap);
-    controlBar_timeShiftSizeBar.render(timeShiftSizeBar_wrap)
+    controlBar_timeShiftSizeBar.render(timeShiftSizeBar_wrap);
+    controlBar_serialIcon.render(controlBar_serialIcon_wrap);
 
     return div;
   }
   private instancePlay;
   private visibleControlBar;
+}
+
+class ControlBar_serialIcon extends BaseComponent {
+  private instancePlay;
+  private serialIcon;
+  constructor() {
+    super();
+    this.instancePlay = this.model.getInstance("Play");
+    this.serialIcon = this.instancePlay.getValue("serialIcon");
+    this.serialIcon.subscribe(this);
+  }
+  protected create() {
+    var _ = this.serialIcon.get();
+    var div = document.createElement("div");
+    var text = document.createElement("div");
+    var img = document.createElement("img");
+    div.appendChild(text);
+    div.appendChild(img);
+    text.innerHTML = _.name;
+    img.src = _.img;
+    div.className = "app_Play_ControlBar_serialIcon";
+    text.className = "app_Play_ControlBar_serialIcon_text";
+    img.className = "app_Play_ControlBar_serialIcon_img";
+    return div;
+  }
 }
 
 class ControlBar_progress_blank extends BaseComponent {
@@ -273,25 +302,27 @@ class ControlBar_playSettingMenu extends BaseComponent {
 }
 
 class ControlBar_timeShiftSizeBar extends BaseComponent {
-  constructor () {
-    super()
+  constructor() {
+    super();
     this.Play = this.model.getInstance("Play");
-    this.timeShiftSize = this.Play.getValue("timeShiftSize")
-    this.timeShiftSize.subscribe(this)
+    this.timeShiftSize = this.Play.getValue("timeShiftSize");
+    this.timeShiftSize.subscribe(this);
   }
   protected create() {
-    var timeShiftSize = this.timeShiftSize.get()
+    var timeShiftSize = this.timeShiftSize.get();
     var div = document.createElement("div");
-    div.className = 'app_Play_ControlBar_timeShiftSizeBar'
-    var p = document.createElement("p")
-    div.appendChild(p)
-    p.innerHTML = timeShiftSize.name
-    var twotone_arrow_drop_down_white_24dp = document.createElement("span")
-    var twotone_arrow_drop_up_white_24dp = document.createElement("span")
-    twotone_arrow_drop_down_white_24dp.className = "twotone_arrow_drop_down_white_24dp"
-    twotone_arrow_drop_up_white_24dp.className = "twotone_arrow_drop_up_white_24dp"
-    div.appendChild(twotone_arrow_drop_down_white_24dp)
-    div.appendChild(twotone_arrow_drop_up_white_24dp)
+    div.className = "app_Play_ControlBar_timeShiftSizeBar";
+    var p = document.createElement("p");
+    div.appendChild(p);
+    p.innerHTML = timeShiftSize.name;
+    var twotone_arrow_drop_down_white_24dp = document.createElement("span");
+    var twotone_arrow_drop_up_white_24dp = document.createElement("span");
+    twotone_arrow_drop_down_white_24dp.className =
+      "twotone_arrow_drop_down_white_24dp";
+    twotone_arrow_drop_up_white_24dp.className =
+      "twotone_arrow_drop_up_white_24dp";
+    div.appendChild(twotone_arrow_drop_down_white_24dp);
+    div.appendChild(twotone_arrow_drop_up_white_24dp);
     return div;
   }
   private timeShiftSize;
